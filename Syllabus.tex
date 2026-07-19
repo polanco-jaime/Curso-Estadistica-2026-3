@@ -1,0 +1,422 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt plus 2pt}
+\setlist[itemize]{topsep=2pt, itemsep=1pt, leftmargin=16pt}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\newcommand{\sechead}[1]{%
+  \vspace{10pt}%
+  \noindent{\large\bfseries #1}\\[-6pt]%
+  \rule{\linewidth}{0.5pt}%
+  \vspace{2pt}%
+}
+
+\pagestyle{plain}
+
+\begin{document}
+
+% ─── ENCABEZADO ────────────────────────────────────────────────────────
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Económicas y Administrativas\\[2pt]
+\textit{Programa de Asignatura}\\[6pt]
+{\LARGE\bfseries Estadística}\\[3pt]
+% {\large Economía y Negocios Internacionales}
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+\vspace{2pt}
+
+% ─── INFORMACIÓN GENERAL ───────────────────────────────────────────────
+\sechead{Información General}
+
+\begin{tabularx}{\linewidth}{L{4.5cm} X}
+% \toprule
+Departamento           & Ciencias Económicas y Administrativas \\
+Período académico      & 2026-II \\
+Intensidad horaria     & 3 horas semanales \\
+Horario                & Viernes 7:00 -- 10:00 a.m. \\
+Fechas del curso       & 31 de julio -- 27 de noviembre de 2026 \\
+Sin clase              & 7 agosto (Batalla de Boyacá) y 28 agosto (Semana de Reflexión) \\
+Profesor               & {Jaime Polanco Jimenez} \\
+Correo                 & {jaime.polanco@javeriana.edu.co} \\
+Campus virtual         & \url{https://campusvirtuallms.javeriana.edu.co} \\
+Software               & R y RStudio \\
+Datos                  & ICFES Saber 11 y Saber Pro (\url{icfes.gov.co}) \\
+Repositorio            & \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3} \\
+% \bottomrule
+\end{tabularx}
+
+% ─── OBJETIVOS ─────────────────────────────────────────────────────────
+\sechead{Objetivos de Formación}
+
+Al finalizar el curso el estudiante estará en capacidad de:
+
+\begin{itemize}
+  \item Aplicar técnicas de estadística descriptiva e inferencial sobre microdatos del ICFES para producir conclusiones relevantes.
+  \item Comprender y usar las distribuciones muestrales fundamentales ($\chi^2$, $t$-Student y $F$-Fisher) y el papel que cumplen en la inferencia estadística.
+  \item Estimar parámetros por máxima verosimilitud y mínimos cuadrados, e interpretar intervalos de confianza, errores estándar y diagnósticos de regresión.
+  \item Especificar, estimar e interpretar modelos de regresión lineal simple, múltiple y logística.
+  \item Diseñar, ejecutar e interpretar pruebas de hipótesis paramétricas y no paramétricas, incluyendo pruebas de bondad de ajuste.
+  \item Desarrollar un proyecto integrador de análisis estadístico sobre datos ICFES, implementado en R.
+\end{itemize}
+
+% ─── CONTENIDOS MÍNIMOS ────────────────────────────────────────────────
+\sechead{Contenidos Mínimos}
+
+\begin{tabularx}{\linewidth}{L{3.5cm} X}
+\toprule
+\textbf{Unidad} & \textbf{Temas} \\
+\midrule
+U1 --- Estadística Descriptiva &
+  Tendencia central y dispersión. Estadística gráfica. Muestreo y distribuciones muestrales.
+  Distribuciones $\chi^2$, $t$-Student y $F$-Fisher. Correlación, EDA, Paradoja de Simpson. \\[4pt]
+U2 --- Estimación Puntual &
+  Propiedades de estimadores (insesgamiento, consistencia, eficiencia, MSE).
+  Máxima Verosimilitud (MLE). Regresión lineal simple y múltiple (OLS).
+  Diagnósticos de regresión. Regresión logística. \\[4pt]
+U3 --- Estimación por Intervalo &
+  IC para medias, proporciones y varianzas ($z$, $t$, $\chi^2$).
+  IC bootstrap (percentil y BCa). Tamaño de muestra óptimo. \\[4pt]
+U4 --- Pruebas de Hipótesis &
+  Error tipo I y II, potencia estadística, $d$ de Cohen.
+  Pruebas $t$, ANOVA, Chow. $\chi^2$ de independencia y bondad de ajuste.
+  Pruebas no paramétricas: Mann-Whitney, Kruskal-Wallis. \\
+\bottomrule
+\end{tabularx}
+
+% ─── METODOLOGÍA ───────────────────────────────────────────────────────
+\sechead{Estrategias Metodológicas}
+
+Cada sesión de viernes (7:00--10:00 a.m.) se divide en tres bloques de trabajo:
+
+\begin{itemize}
+  \item \textbf{Bloque 1 (7:00--8:00):} Exposición teórica con derivaciones y ejemplos.
+  \item \textbf{Bloque 2 (8:10--9:10):} Aplicación práctica en R sobre microdatos ICFES . La variable central del curso
+        es \texttt{MOD\_INGLES\_PUNT} como proxy de competitividad internacional.
+  \item \textbf{Bloque 3 (9:20--10:00):} Taller grupal, debate o repaso.
+        Retroalimentación de Problem Sets y del Proyecto Estadístico.
+\end{itemize}
+
+% ─── EVALUACIÓN ────────────────────────────────────────────────────────
+\sechead{Evaluación}
+
+\begin{tabularx}{\linewidth}{L{3.5cm} C{1.5cm} L{2.8cm} X}
+\toprule
+\textbf{Componente} & \textbf{Peso} & \textbf{Fecha} & \textbf{Descripción} \\
+\midrule
+Primer Parcial   & 25\% & Vie 4 sep 2026  &
+  Unidad 1: descriptiva, muestreo, distribuciones $\chi^2$/$t$/$F$, correlación, EDA. \\[3pt]
+Segundo Parcial  & 25\% & Vie 9 oct 2026  &
+  Unidad 2: MLE, OLS simple y múltiple, diagnósticos, regresión logística. \\[3pt]
+Examen Final     & 30\% & Vie 27 nov 2026 &
+  Integración de las 4 unidades. Incluye ensayo de recomendación de política basada en
+  datos Saber Pro NI. \\[3pt]
+Proyecto Estadístico & 20\% & 3 entregas + 27 nov &
+  Proyecto grupal (3--4 personas) en R con datos ICFES. Tres fases progresivas y
+  presentación oral final. \\[3pt]
+Problem Sets $\times 8$ & $+$0.5 bono & Semanal &
+  Ocho talleres individuales sobre datos ICFES en R. Bono acumulativo de $+$0.5
+  sobre la nota final. \\
+\bottomrule
+\end{tabularx}
+
+Los exámenes permiten calculadora científica y una hoja A4 de fórmulas (ambas caras).
+
+\medskip
+\textit{Nota sobre el calendario:} el 28 de agosto (Semana de Reflexión) no hay clase.
+Esa semana es ideal para avanzar en el PS3 y prepararse para el Primer Parcial del 4 de septiembre.
+
+\newpage
+
+% ─── PLAN TEMÁTICO ─────────────────────────────────────────────────────
+\sechead{Plan Temático por Sesión}
+
+\textit{Viernes 7:00--10:00 a.m. \quad 31 julio -- 27 noviembre 2026
+\quad $|$ \quad Sin clase: 7 ago (festivo) y 28 ago (Semana de Reflexión)}
+
+\vspace{6pt}
+{\small
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{C{0.7cm} L{2.1cm} L{6.4cm} L{5.2cm}}
+\toprule
+\textbf{\#} & \textbf{Fecha} & \textbf{Tema} & \textbf{Actividades / Entregas} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\itshape (continuación)} \\
+\toprule
+\textbf{\#} & \textbf{Fecha} & \textbf{Tema} & \textbf{Actividades / Entregas} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+%
+1  & Vie 31 jul &
+  \textbf{U1 --- Descriptiva numérica.}
+  Intro al curso y datos ICFES. Medidas de tendencia central y dispersión.
+  Asimetría y curtosis con \texttt{MOD\_INGLES\_PUNT} en R. &
+  Asigna PS1. Asigna Proyecto~F1. \\[3pt]
+%
+-- & \textit{Vie 7 ago} &
+  \textit{Festivo --- Batalla de Boyacá. Sin clase.} & \\[3pt]
+%
+2  & Vie 14 ago &
+  \textbf{U1 --- Descriptiva gráfica.}
+  Histograma, KDE, box plot, scatter y heatmap departamental en R.
+  Comparación IES pública vs.\ privada. &
+  Entrega PS1. Asigna PS2. \\[3pt]
+%
+3  & Vie 21 ago &
+  \textbf{U1 --- Muestreo, distribuciones y correlación.}
+  TCL simulado con Saber 11. Las distribuciones $\chi^2(k)$, $t(k)$ y $F(k_1,k_2)$:
+  de dónde vienen y cuándo aparecen. IC con $t$ vs.\ $z$ en R.
+  Correlación Pearson y Spearman. Paradoja de Simpson. Pipeline EDA completo. &
+  Entrega PS2. Asigna PS3. \\[3pt]
+%
+-- & \textit{Vie 28 ago} &
+  \textit{Semana de Reflexión --- Sin clase.}
+  \textit{Tiempo para PS3 y repaso antes del Parcial 1.} & \\[3pt]
+%
+E1 & Vie 4 sep &
+  \textbf{Primer Parcial --- 25\%.}
+  Parte I: preguntas conceptuales (MC + V/F + gráficos impresos).
+  Parte II: dataset impreso ($n = 30$), cálculos y correlación.
+  Parte III: interpretación de output R y diseño muestral. & \\[3pt]
+%
+4  & Vie 11 sep &
+  \textbf{U2 --- Propiedades de estimadores y MLE.}
+  Retroalimentación del Parcial~1. Insesgamiento, consistencia, eficiencia, MSE
+  y bias-variance. Log-verosimilitud y \texttt{MASS::fitdistr()} en R. &
+  Entrega PS3. Asigna PS4.
+  \textbf{Entrega Proyecto~F1} (EDA, presentación oral 3~min). \\[3pt]
+%
+5  & Vie 18 sep &
+  \textbf{U2 --- Regresión lineal simple (OLS).}
+  Supuestos Gauss-Markov, derivación de $\hat{\beta}$, $R^2$, prueba $t$ y $F$.
+  OLS en R: razonamiento $\sim$ inglés NI. Modelo con dummy \texttt{PRIVADA}. &
+  Entrega PS4. Asigna PS5. \\[3pt]
+%
+6  & Vie 25 sep &
+  \textbf{U2 --- Regresión lineal múltiple.}
+  Sesgo por variable omitida (OVB), VIF, multicolinealidad, AIC/BIC.
+  Modelo completo del inglés en NI en R. Interacción privada~$\times$~estrato. &
+  Entrega PS5. Asigna PS6. \\[3pt]
+%
+7  & Vie 2 oct &
+  \textbf{U2 --- Diagnósticos y regresión logística.}
+  Breusch-Pagan, Durbin-Watson, Cook's $D$, errores estándar robustos.
+  Logit para \texttt{supera\_B2}, odds ratios y AUC-ROC en R. &
+  Entrega PS6.
+  \textbf{Entrega Proyecto~F2} (modelo OLS/logit + IC, 3~min oral). \\[3pt]
+%
+E2 & Vie 9 oct &
+  \textbf{Segundo Parcial --- 25\%.}
+  Parte I: estimadores y supuestos OLS.
+  Parte II: regresión múltiple con datos ICFES NI (coeficientes, VIF, OVB).
+  Parte III: diagnósticos + logit + ensayo. & \\[3pt]
+%
+8  & Vie 16 oct &
+  \textbf{U3 --- Intervalos de confianza.}
+  Retroalimentación del Parcial~2. Lógica frecuentista, IC con $z$, $t$ y $\chi^2$.
+  IC para proporciones. Forest plot de 33 departamentos en R. &
+  Asigna PS7 (2 semanas). \\[3pt]
+%
+9  & Vie 23 oct &
+  \textbf{U3 --- Bootstrap y tamaño de muestra.}
+  IC bootstrap percentil y BCa con \texttt{boot::boot()} en R.
+  Fórmula de $n$ óptimo. Muestreo estratificado y costo-eficiencia. & \\[3pt]
+%
+10 & Vie 30 oct &
+  \textbf{U4 --- Errores y potencia estadística.}
+  $H_0$ y $H_1$, $p$-valor (errores frecuentes de interpretación).
+  Error tipo I y II, potencia $= 1 - \beta$, $d$ de Cohen. Curva de potencia en R. &
+  Entrega PS7. Asigna PS8 (2 semanas). \\[3pt]
+%
+11 & Vie 6 nov &
+  \textbf{U4 --- Pruebas paramétricas.}
+  Prueba $t$ (1 muestra, 2 muestras, pareada). ANOVA + Tukey.
+  Prueba de Chow: quiebre estructural en el inglés de NI antes y después de la pandemia. & \\[3pt]
+%
+12 & Vie 13 nov &
+  \textbf{U4 --- Pruebas no paramétricas y bondad de ajuste.}
+  $\chi^2$ de independencia y bondad de ajuste (¿es normal \texttt{MOD\_INGLES\_PUNT}?).
+  Mann-Whitney, Kruskal-Wallis. Tablas de contingencia con dos criterios en R. &
+  Entrega PS8. \\[3pt]
+%
+13 & Vie 20 nov &
+  \textbf{Repaso final e instrucciones.}
+  Práctica de problemas integradores (tipo examen) de las 4 unidades.
+  Retroalimentación colectiva de PS8.
+  Ensayo de presentaciones del proyecto (3~min/grupo). &
+  Ensayo de presentaciones. Logística del examen final. \\[3pt]
+%
+F  & Vie 27 nov &
+  \textbf{Sesión de cierre --- Examen Final (30\%) + Presentaciones (20\%).}
+  7:00--8:20: presentaciones del proyecto (10~min/grupo + preguntas).
+  8:20--8:30: descanso.
+  8:30--10:00: examen final integrado (4 unidades). &
+  Examen Final 30\%.
+  \textbf{Entrega Proyecto~F3: informe escrito ($\leq$15~págs.) al inicio.} \\
+%
+\end{longtable}
+}
+
+\newpage
+
+% ─── PROBLEM SETS ──────────────────────────────────────────────────────
+\sechead{Problem Sets --- Trabajo Autónomo}
+
+Los Problem Sets son individuales y se resuelven en R sobre microdatos ICFES. Cada
+entrega completa suma $\mathbf{+0.0625}$ a la nota final (total si entrega los 8: $\mathbf{+0.5}$).
+Entrega digital al inicio de la clase indicada. El código R debe incluirse.
+
+\vspace{6pt}
+{\small
+\begin{tabularx}{\linewidth}{C{0.8cm} L{1.8cm} L{1.8cm} X}
+\toprule
+\textbf{PS} & \textbf{Asignado} & \textbf{Entrega} & \textbf{Enunciado} \\
+\midrule
+1 & Jul 31 (Ses 1) & Ago 14 (Ses 2) &
+  Análisis descriptivo completo de \texttt{MOD\_INGLES\_PUNT} en NI: media, mediana, DE,
+  asimetría, curtosis y cuartiles por departamento, tipo de IES y estrato. Mínimo 5
+  visualizaciones en R. \\[4pt]
+2 & Ago 14 (Ses 2) & Ago 21 (Ses 3) &
+  Simulación del TCL con 2000 muestras de \texttt{PUNT\_INGLES} del Saber 11 para
+  $n = 30, 100, 500$. Graficar convergencia a $N(\mu,\,\sigma/\sqrt{n})$
+  y calcular el error estándar teórico vs.\ simulado. \\[4pt]
+3 & Ago 21 (Ses 3) & Sep 11 (Ses 4) &
+  Matriz de correlaciones Pearson y Spearman de los 5 módulos Saber Pro en NI.
+  Tabla de contingencia género $\times$ nivel inglés MCER.
+  Demostración de la Paradoja de Simpson con datos ICFES.
+  \textit{Plazo extendido: la Semana de Reflexión (28~ago) y el Parcial~1 (4~sep)
+  permiten tres semanas para este PS.} \\[4pt]
+4 & Sep 11 (Ses 4) & Sep 18 (Ses 5) &
+  MLE en R (\texttt{MASS::fitdistr}) para distribución de \texttt{MOD\_RAZONA\_CUANTITAT\_PUNT}
+  en NI: comparar normal vs.\ $t$ vs.\ beta por AIC. OLS simple: ¿predice el inglés
+  del Saber 11 el razonamiento cuantitativo del Saber Pro? \\[4pt]
+5 & Sep 18 (Ses 5) & Sep 25 (Ses 6) &
+  OLS múltiple del inglés en NI: \texttt{ESTRATO + PRIVADA + log(INGRESOS) + HORAS + REGION}.
+  Interpretar cada $\hat{\beta}$, calcular VIF y mostrar el sesgo por variable omitida
+  comparando el modelo simple con el múltiple. \\[4pt]
+6 & Sep 25 (Ses 6) & Oct 2 (Ses 7) &
+  Diagnósticos del modelo OLS en R: 4 gráficos de residuos, Breusch-Pagan,
+  Durbin-Watson, Cook's $D$. Identificar los 3 puntos más influyentes y aplicar
+  errores estándar robustos (Huber-White). \\[4pt]
+7 & Oct 16 (Ses 8) & Oct 30 (Ses 10) &
+  IC bootstrap BCa ($B = 2000$) al 95\% para la brecha pública--privada en inglés
+  NI por macro-región. ¿Es significativa en todas las regiones? Calcular el $n$
+  óptimo para $E = \pm 2$ puntos al 95\%. \\[4pt]
+8 & Oct 30 (Ses 10) & Nov 13 (Ses 12) &
+  (1) $\chi^2$ de independencia: nivel inglés MCER $\times$ tipo IES, con $V$ de Cramér.
+  (2) Mann-Whitney $+$ $d$ de Cohen: ¿difiere el inglés por género en NI?
+  (3) Chow o Kruskal-Wallis: ¿hubo quiebre en el inglés en NI con la pandemia? \\
+\bottomrule
+\end{tabularx}
+}
+
+% ─── PROYECTO ESTADÍSTICO ──────────────────────────────────────────────
+\sechead{Proyecto Integrador de Análisis Estadístico (20\%)}
+
+Grupos de 3--4 personas, conformados en la primera sesión. El proyecto se desarrolla
+íntegramente en R con microdatos ICFES. El informe escrito final ($\leq 15$~páginas)
+se entrega el 27 de noviembre al inicio de la clase.
+
+\vspace{6pt}
+\begin{tabularx}{\linewidth}{L{3.2cm} C{1.5cm} L{2.8cm} X}
+\toprule
+\textbf{Fase} & \textbf{Peso} & \textbf{Entrega} & \textbf{Contenido} \\
+\midrule
+Fase 1 --- EDA & 20\% & \textbf{Sep 11} (Ses 4)\newline oral 3 min &
+  Limpieza y exploración del dataset ICFES elegido: estadísticos descriptivos,
+  $\geq 6$ visualizaciones (\texttt{ggplot2}), tratamiento de outliers y 3 hallazgos
+  clave. La Semana de Reflexión (28~ago) es tiempo útil para esta fase. \\[4pt]
+Fase 2 --- Modelo + IC & 35\% & \textbf{Oct 2} (Ses 7)\newline oral 3 min &
+  OLS múltiple o regresión logística en R, diagnósticos completos (residuos, VIF,
+  Breusch-Pagan), IC al 95\% para coeficientes clave. Evaluación: $R^2$ o AUC. \\[4pt]
+Fase 3 --- Pruebas + Informe & 45\% & \textbf{Nov 27} (Ses F)\newline oral 10 min &
+  Pruebas de hipótesis sobre los hallazgos ($t$, ANOVA, $\chi^2$ o Mann-Whitney),
+  análisis de potencia, $d$ de Cohen, implicaciones para NI.
+  Presentación oral 10~min $+$ informe escrito entregado al inicio de la sesión. \\
+\bottomrule
+\end{tabularx}
+
+\vspace{6pt}
+\textbf{Preguntas de investigación sugeridas:}
+(1)~¿Qué determina el nivel de inglés al graduarse en NI?
+(2)~¿Qué variables predicen superar el B2?
+(3)~¿Ha cerrado la brecha de género en inglés en NI entre 2014 y 2024?
+(4)~¿Cuánto valor agrega la universidad sobre el perfil de entrada del estudiante?
+(5)~¿Difieren significativamente los promedios de inglés entre macro-regiones?
+
+% ─── REGLAS ────────────────────────────────────────────────────────────
+\sechead{Reglas del Curso}
+
+\begin{itemize}
+  \item \textbf{Asistencia.} La asistencia es fundamental. Cada sesión integra teoría,
+        aplicación en R y taller; su contenido no se recupera con notas de compañeros.
+  \item \textbf{Problem Sets.} Son individuales. Entrega digital al inicio de la clase
+        indicada. Las entregas tardías pierden el bono. El código R debe incluirse.
+  \item \textbf{Proyecto.} Los grupos no se modifican una vez conformados.
+        Cada fase es condición para la siguiente. El código R se entrega como anexo.
+  \item \textbf{Reclamos.} En la sesión en que se devuelve la evaluación, con argumento
+        claro. Los reclamos de PS se hacen con el monitor en su horario.
+  \item \textbf{Honestidad académica.} Cualquier copia o intento de copia se sancionará
+        según el Reglamento Estudiantil (Párrs.~118, 123-d y~128):
+        pérdida de la asignatura con nota~0.0.
+  \item \textbf{Exámenes.} Calculadora científica y una hoja A4 de fórmulas (ambas caras).
+        Sin computadores ni celulares. Exámenes individuales.
+\end{itemize}
+
+% ─── BIBLIOGRAFÍA ──────────────────────────────────────────────────────
+\sechead{Fuentes de Información}
+
+\textbf{Textos guía}
+\begin{itemize}
+  \item Canavos, G. \textit{Probabilidad y estadística, aplicación y métodos}. McGraw-Hill, 1988.
+  \item Freund, J.; Miller, I.; Miller, M. \textit{Estadística Matemática con Aplicaciones}.
+        6.ª ed. Prentice Hall.
+  \item Wackerly, D.; Mendenhall, W.; Sheaffer, R. \textit{Estadística Matemática con
+        Aplicaciones}. Thomson.
+\end{itemize}
+
+\begin{sloppypar}
+\textbf{Software y datos (gratuitos)}
+\begin{itemize}
+  \item R Project: \url{https://www.r-project.org} \quad RStudio: \url{https://posit.co}
+  \item Paquetes clave: \texttt{tidyverse}, \texttt{ggplot2}, \texttt{car},
+        \texttt{lmtest}, \texttt{sandwich}, \texttt{MASS}, \texttt{boot},
+        \texttt{pwr}, \texttt{effsize}, \texttt{strucchange}
+  \item ICFES microdatos: \url{https://icfes.gov.co/resultados-saber}
+  \item Canal YouTube del curso anterior (Prof.\ Ronderos):
+        \url{https://www.youtube.com/@nicolasronderos615}
+\end{itemize}
+\end{sloppypar}
+
+\textbf{Referencias avanzadas}
+\begin{itemize}
+  \item Casella, G.; Berger, R. \textit{Statistical Inference}. 2.ª ed. Duxbury Press, 2002.
+  \item DeGroot, M.\ H. \textit{Probability and Statistics}. 2.ª ed. Addison-Wesley, 1989.
+\end{itemize}
+
+\vspace{16pt}
+\begin{center}
+\rule{0.5\linewidth}{0.4pt}\\[4pt]
+{\small Pontificia Universidad Javeriana $\cdot$
+  Facultad de Ciencias Económicas y Administrativas $\cdot$ 2026-II}
+\end{center}
+
+\end{document}

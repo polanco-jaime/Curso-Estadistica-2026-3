@@ -1,0 +1,848 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 8: Chi-Cuadrado: Independencia y Bondad de Ajuste}
+\subtitle{Probando asociación entre variables categóricas}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Vie 16 oct 2026}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Tablas de contingencia}
+% ============================================================================
+
+\begin{frame}{¿Qué es una tabla de contingencia?}
+\begin{block}{Definición}
+Una \textbf{tabla de contingencia} (o tabla cruzada) resume la distribución conjunta de dos variables categóricas, mostrando las frecuencias observadas de cada combinación de categorías.
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Estructura básica:}
+\begin{itemize}
+  \item Filas: categorías de la variable 1
+  \item Columnas: categorías de la variable 2
+  \item Celdas: número de observaciones en cada combinación
+  \item Márgenes: totales por fila y columna
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplo en nuestro contexto}
+¿Cómo se relaciona el nivel de inglés MCER (A-, A1, A2, B1, B+) con el tipo de IES (pública/privada) entre estudiantes de Negocios Internacionales?
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Construyendo una tabla de contingencia en R}
+\begin{lstlisting}
+# Cargar datos ICFES para Negocios Internacionales
+icfes_ni <- read.csv("datos/icfes_ni_2025.csv")
+
+# Crear tabla de contingencia: nivel MCER x tipo IES
+tabla_obs <- table(icfes_ni$NIVEL_MCER, icfes_ni$TIPO_IES)
+tabla_obs
+
+#             privada publica
+#   A-            245     312
+#   A1            580     698
+#   A2            892     756
+#   B1            623     384
+#   B+            410     185
+\end{lstlisting}
+
+\begin{alertblock}{Interpretación}
+Hay 892 estudiantes de IES privadas con nivel A2 en inglés.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Frecuencias marginales y relativas}
+\textbf{Frecuencias marginales} (totales por fila/columna):
+\begin{lstlisting}
+# Totales por fila (nivel MCER)
+margin.table(tabla_obs, 1)
+#   A-   A1   A2   B1   B+
+#  557 1278 1648 1007  595
+
+# Totales por columna (tipo IES)
+margin.table(tabla_obs, 2)
+# privada publica
+#    2750    2335
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Frecuencias relativas}:
+\begin{lstlisting}
+# Proporciones del total
+prop.table(tabla_obs)
+
+# Proporciones por fila (% dentro de cada nivel MCER)
+prop.table(tabla_obs, 1)
+
+# Proporciones por columna (% dentro de cada tipo IES)
+prop.table(tabla_obs, 2)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización: mosaico}
+\begin{lstlisting}
+# Grafico de mosaico
+mosaicplot(tabla_obs,
+           main = "Nivel MCER x Tipo IES",
+           xlab = "Nivel MCER",
+           ylab = "Tipo IES",
+           color = c("steelblue", "coral"))
+
+# Alternativa: barplot apilado
+barplot(tabla_obs,
+        legend = TRUE,
+        col = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"),
+        main = "Distribucion por tipo de IES",
+        xlab = "Tipo IES",
+        ylab = "Frecuencia")
+\end{lstlisting}
+
+\begin{block}{Observación visual}
+Parece haber una diferencia: las IES privadas tienen mayor proporción de estudiantes en niveles B1 y B+. ¿Es estadísticamente significativa?
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Prueba $\chi^2$ de independencia}
+% ============================================================================
+
+\begin{frame}{Hipótesis de independencia}
+\begin{block}{Pregunta de investigación}
+¿El nivel de inglés MCER es \textbf{independiente} del tipo de IES?
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Hipótesis:}
+\begin{itemize}
+  \item $H_0$: El nivel MCER y el tipo de IES son \textbf{independientes}\\
+        (no hay asociación entre las dos variables)
+  \item $H_1$: Existe \textbf{asociación} entre el nivel MCER y el tipo de IES\\
+        (las variables están relacionadas)
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Nivel de significancia}
+Usaremos $\alpha = 0.05$ (estándar en ciencias sociales).
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Frecuencias esperadas bajo independencia}
+Si las dos variables fueran \textbf{independientes}, ¿cuántas observaciones esperaríamos en cada celda?
+
+\vspace{0.2cm}
+\begin{block}{Fórmula}
+La frecuencia esperada en la celda $(i,j)$ es:
+\[
+E_{ij} = \frac{R_i \times C_j}{n}
+\]
+donde:
+\begin{itemize}
+  \item $R_i$ = total de la fila $i$
+  \item $C_j$ = total de la columna $j$
+  \item $n$ = total general
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Ejemplo:} celda (A2, privada)
+\[
+E_{\text{A2,privada}} = \frac{1648 \times 2750}{5085} = \frac{4532000}{5085} \approx 891.24
+\]
+
+Observamos 892, esperábamos 891.24 (muy cercano).
+\end{frame}
+
+\begin{frame}{El estadístico $\chi^2$}
+Medimos la \textbf{discrepancia total} entre frecuencias observadas y esperadas:
+
+\begin{block}{Estadístico de prueba}
+\[
+\chi^2 = \sum_{i=1}^{r} \sum_{j=1}^{c} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
+\]
+donde:
+\begin{itemize}
+  \item $O_{ij}$ = frecuencia observada en celda $(i,j)$
+  \item $E_{ij}$ = frecuencia esperada en celda $(i,j)$
+  \item $r$ = número de filas
+  \item $c$ = número de columnas
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item $\chi^2$ cercano a 0 $\Rightarrow$ observado $\approx$ esperado $\Rightarrow$ independencia plausible
+  \item $\chi^2$ grande $\Rightarrow$ gran discrepancia $\Rightarrow$ evidencia contra independencia
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Distribución $\chi^2$ y grados de libertad}
+Bajo $H_0$ (independencia), el estadístico $\chi^2$ sigue aproximadamente una distribución chi-cuadrado con:
+
+\[
+\text{gl} = (r - 1)(c - 1)
+\]
+
+\vspace{0.2cm}
+\textbf{En nuestro ejemplo:}
+\begin{itemize}
+  \item $r = 5$ niveles MCER (A-, A1, A2, B1, B+)
+  \item $c = 2$ tipos IES (privada, pública)
+  \item gl $= (5-1)(2-1) = 4 \times 1 = 4$
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Regla de decisión}
+Rechazamos $H_0$ si:
+\[
+\chi^2_{\text{calc}} > \chi^2_{\alpha, \text{gl}}
+\]
+o equivalentemente, si el p-valor $< \alpha$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Condición de validez}
+\begin{alertblock}{Requisito importante}
+La aproximación $\chi^2$ es válida si:
+\[
+E_{ij} \geq 5 \quad \text{en al menos el 80\% de las celdas}
+\]
+\end{alertblock}
+
+\vspace{0.2cm}
+Si esta condición NO se cumple:
+\begin{itemize}
+  \item Combinar categorías con frecuencias bajas
+  \item Usar la prueba exacta de Fisher (solo para tablas $2 \times 2$)
+  \item Aumentar el tamaño muestral
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{En nuestro ejemplo:}\\
+Todas las celdas tienen $E_{ij} > 100$, así que la condición se cumple ampliamente.
+\end{frame}
+
+\begin{frame}[fragile]{Aplicación en R: \texttt{chisq.test()}}
+\begin{lstlisting}
+# Realizar la prueba chi-cuadrado
+resultado <- chisq.test(tabla_obs)
+resultado
+
+#   Pearson's Chi-squared test
+#
+# data:  tabla_obs
+# X-squared = 186.42, df = 4, p-value < 2.2e-16
+
+# Ver las frecuencias esperadas
+resultado$expected
+
+#             privada   publica
+#   A-      301.20     255.80
+#   A1      691.06     586.94
+#   A2      891.24     756.76
+#   B1      544.40     462.60
+#   B+      321.60     272.90
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del resultado}
+\begin{block}{Output de R}
+\begin{itemize}
+  \item $\chi^2 = 186.42$
+  \item gl $= 4$
+  \item p-valor $< 2.2 \times 10^{-16}$ (prácticamente 0)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Conclusión:}
+\begin{itemize}
+  \item Como p-valor $< 0.05$, rechazamos $H_0$.
+  \item Existe evidencia \textbf{muy fuerte} de que el nivel de inglés MCER y el tipo de IES \textbf{NO son independientes}.
+  \item Hay una asociación estadísticamente significativa entre ambas variables.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Importante}
+Rechazar $H_0$ indica \textbf{asociación}, pero no implica causalidad.\\
+La prueba NO nos dice qué tan \textbf{fuerte} es la asociación.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizando las diferencias}
+\begin{lstlisting}
+# Calcular residuos estandarizados
+residuos <- resultado$residuals
+residuos
+
+#             privada   publica
+#   A-        -3.24      3.51
+#   A1        -4.23      4.58
+#   A2         0.03     -0.03
+#   B1         3.37     -3.65
+#   B+         4.93     -5.34
+
+# Los residuos estandarizados > |2| indican celdas
+# con diferencias importantes respecto a independencia
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item IES privadas tienen \textbf{más} estudiantes B1 y B+ de lo esperado (+3.37, +4.93)
+  \item IES privadas tienen \textbf{menos} estudiantes A- y A1 de lo esperado (-3.24, -4.23)
+  \item La situación es simétrica para IES públicas
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización gráfica de residuos}
+\begin{lstlisting}
+# Mapa de calor de residuos estandarizados
+library(ggplot2)
+library(reshape2)
+
+residuos_df <- melt(resultado$residuals)
+names(residuos_df) <- c("Nivel", "TipoIES", "Residuo")
+
+ggplot(residuos_df, aes(x = TipoIES, y = Nivel, fill = Residuo)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red",
+                       midpoint = 0, limits = c(-6, 6)) +
+  geom_text(aes(label = round(Residuo, 2)), size = 5) +
+  labs(title = "Residuos estandarizados: Nivel MCER x Tipo IES",
+       x = "Tipo de IES", y = "Nivel MCER") +
+  theme_minimal()
+\end{lstlisting}
+
+\begin{block}{Lectura del gráfico}
+Azul = menos de lo esperado; Rojo = más de lo esperado
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{V de Cramér}
+% ============================================================================
+
+\begin{frame}{Midiendo la fuerza de la asociación}
+La prueba $\chi^2$ nos dice \textbf{si hay asociación}, pero no \textbf{qué tan fuerte} es.
+
+\vspace{0.2cm}
+\begin{block}{V de Cramér}
+Es una medida de asociación para tablas de contingencia:
+\[
+V = \sqrt{\frac{\chi^2}{n \times (\min(r,c) - 1)}}
+\]
+donde:
+\begin{itemize}
+  \item $\chi^2$ = estadístico chi-cuadrado
+  \item $n$ = tamaño muestral total
+  \item $r$ = número de filas
+  \item $c$ = número de columnas
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Rango:} $V \in [0, 1]$
+\begin{itemize}
+  \item $V = 0$ $\Rightarrow$ independencia completa
+  \item $V = 1$ $\Rightarrow$ asociación perfecta
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de V de Cramér en R}
+\begin{lstlisting}
+# Calcular V de Cramer
+chi2 <- resultado$statistic
+n <- sum(tabla_obs)
+min_dim <- min(nrow(tabla_obs), ncol(tabla_obs))
+
+V <- sqrt(chi2 / (n * (min_dim - 1)))
+V
+
+# [1] 0.1915
+
+# Usando el paquete DescTools (alternativa)
+library(DescTools)
+CramerV(tabla_obs)
+
+# [1] 0.1915
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Cálculo manual}
+\[
+V = \sqrt{\frac{186.42}{5085 \times (2-1)}} = \sqrt{\frac{186.42}{5085}} = \sqrt{0.0367} \approx 0.1915
+\]
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Interpretación de V de Cramér}
+\textbf{Reglas de pulgar generales:}
+\begin{itemize}
+  \item $V < 0.1$ $\Rightarrow$ asociación \textbf{muy débil}
+  \item $0.1 \leq V < 0.3$ $\Rightarrow$ asociación \textbf{moderada}
+  \item $V \geq 0.3$ $\Rightarrow$ asociación \textbf{fuerte}
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{En nuestro ejemplo:}
+\begin{itemize}
+  \item $V = 0.1915$ (entre 0.1 y 0.3)
+  \item Asociación \textbf{moderada} entre nivel MCER y tipo de IES
+  \item Estadísticamente significativa (p-valor $< 0.001$), pero la magnitud del efecto es moderada
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Significancia estadística vs práctica}
+Una asociación puede ser estadísticamente significativa (p-valor pequeño) pero de magnitud modesta en términos prácticos. Siempre reportar ambos: p-valor Y tamaño del efecto.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo adicional: Estrato × Región}
+\begin{lstlisting}
+# El estrato socioeconomico es independiente de la region?
+tabla_estrato_region <- table(icfes_ni$ESTRATO, icfes_ni$REGION)
+
+chi_est_reg <- chisq.test(tabla_estrato_region)
+chi_est_reg
+
+# X-squared = 523.67, df = 20, p-value < 2.2e-16
+
+# V de Cramer
+V_est_reg <- sqrt(chi_est_reg$statistic /
+                  (sum(tabla_estrato_region) *
+                   (min(dim(tabla_estrato_region)) - 1)))
+V_est_reg
+
+# [1] 0.226
+
+# Asociacion moderada y estadisticamente significativa
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Prueba $\chi^2$ de bondad de ajuste}
+% ============================================================================
+
+\begin{frame}{¿Qué es bondad de ajuste?}
+\begin{block}{Pregunta diferente}
+En la prueba de \textbf{independencia}, comparamos dos variables categóricas observadas.
+
+En la prueba de \textbf{bondad de ajuste}, comparamos una variable observada con una distribución teórica esperada.
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Hipótesis:}
+\begin{itemize}
+  \item $H_0$: Los datos provienen de la distribución especificada
+  \item $H_1$: Los datos NO provienen de esa distribución
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplos de preguntas}
+\begin{itemize}
+  \item ¿Los niveles MCER se distribuyen uniformemente?
+  \item ¿El puntaje de inglés sigue una distribución normal?
+  \item ¿La proporción de estudiantes por región coincide con la distribución poblacional de Colombia?
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Estadístico de bondad de ajuste}
+\begin{block}{Fórmula}
+\[
+\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}
+\]
+donde:
+\begin{itemize}
+  \item $O_i$ = frecuencia observada en la categoría $i$
+  \item $E_i$ = frecuencia esperada en la categoría $i$ (según la distribución teórica)
+  \item $k$ = número de categorías
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Grados de libertad:}
+\[
+\text{gl} = k - p - 1
+\]
+donde $p$ = número de parámetros estimados de los datos.
+
+\begin{itemize}
+  \item Si la distribución teórica está completamente especificada: $p = 0$
+  \item Si estimamos la media y desviación estándar de los datos: $p = 2$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo 1: Distribución uniforme de niveles MCER}
+\textbf{Pregunta:} ¿Los 5 niveles MCER se distribuyen uniformemente?
+
+\begin{lstlisting}
+# Frecuencias observadas
+niveles <- table(icfes_ni$NIVEL_MCER)
+niveles
+
+#   A-   A1   A2   B1   B+
+#  557 1278 1648 1007  595
+
+# Bajo uniformidad, esperariamos n/5 en cada nivel
+n <- sum(niveles)
+esperadas_unif <- rep(n / 5, 5)
+esperadas_unif
+
+# [1] 1017 1017 1017 1017 1017
+
+# Prueba chi-cuadrado
+chisq.test(niveles, p = rep(1/5, 5))
+
+# X-squared = 574.23, df = 4, p-value < 2.2e-16
+\end{lstlisting}
+
+\textbf{Conclusión:} Rechazamos $H_0$. La distribución NO es uniforme.
+\end{frame}
+
+\begin{frame}[fragile]{Visualización: observado vs esperado (uniforme)}
+\begin{lstlisting}
+# Comparar graficamente
+library(ggplot2)
+
+df_comp <- data.frame(
+  Nivel = names(niveles),
+  Observado = as.numeric(niveles),
+  Esperado = esperadas_unif
+)
+
+df_comp_long <- melt(df_comp, id.vars = "Nivel")
+
+ggplot(df_comp_long, aes(x = Nivel, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distribucion de niveles MCER: observado vs uniforme",
+       x = "Nivel MCER", y = "Frecuencia") +
+  scale_fill_manual(values = c("steelblue", "coral")) +
+  theme_minimal()
+\end{lstlisting}
+
+\begin{block}{Observación}
+Hay un pico en A2 y menor frecuencia en los extremos (A- y B+).
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo 2: ¿El puntaje de inglés sigue una distribución normal?}
+\textbf{Estrategia:}
+\begin{enumerate}
+  \item Dividir el rango de \variable{MOD\_INGLES\_PUNT} en intervalos
+  \item Calcular frecuencias observadas en cada intervalo
+  \item Calcular frecuencias esperadas bajo normalidad con $\mu$ y $\sigma$ muestrales
+  \item Aplicar prueba $\chi^2$ de bondad de ajuste
+\end{enumerate}
+
+\vspace{0.2cm}
+\begin{lstlisting}
+# Parametros muestrales
+media <- mean(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
+desv <- sd(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
+
+media  # 158.3
+desv   # 22.7
+
+# Crear intervalos (e.g., 10 intervalos equidistantes)
+breaks <- seq(min(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE),
+              max(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE),
+              length.out = 11)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de frecuencias esperadas bajo normalidad}
+\begin{lstlisting}
+# Frecuencias observadas
+obs_counts <- table(cut(icfes_ni$MOD_INGLES_PUNT,
+                        breaks = breaks,
+                        include.lowest = TRUE))
+
+# Probabilidades bajo N(media, desv^2)
+probs <- numeric(10)
+for(i in 1:10) {
+  probs[i] <- pnorm(breaks[i+1], mean = media, sd = desv) -
+              pnorm(breaks[i], mean = media, sd = desv)
+}
+
+# Frecuencias esperadas
+n <- sum(!is.na(icfes_ni$MOD_INGLES_PUNT))
+esp_counts <- n * probs
+
+# Prueba chi-cuadrado (df = 10 - 2 - 1 = 7)
+chisq.test(obs_counts, p = probs)
+
+# X-squared = 45.82, df = 7, p-value = 2.1e-07
+\end{lstlisting}
+
+\textbf{Conclusión:} Rechazamos $H_0$. La distribución del puntaje NO es normal.
+\end{frame}
+
+\begin{frame}[fragile]{Alternativa: Test de Shapiro-Wilk}
+Para probar normalidad en variables continuas, el test de \textbf{Shapiro-Wilk} es más potente:
+
+\begin{lstlisting}
+# Test de Shapiro-Wilk
+# (solo funciona con n <= 5000, usar una muestra)
+set.seed(123)
+muestra <- sample(icfes_ni$MOD_INGLES_PUNT, 5000)
+
+shapiro.test(muestra)
+
+#   Shapiro-Wilk normality test
+#
+# data:  muestra
+# W = 0.9823, p-value < 2.2e-16
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{alertblock}{Interpretación}
+\begin{itemize}
+  \item $H_0$: los datos provienen de una distribución normal
+  \item p-valor $< 0.001$ $\Rightarrow$ rechazamos $H_0$
+  \item Los puntajes de inglés NO siguen una distribución normal
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización: Q-Q plot}
+\begin{lstlisting}
+# Q-Q plot para evaluar normalidad visualmente
+qqnorm(icfes_ni$MOD_INGLES_PUNT,
+       main = "Q-Q Plot: Puntaje de Ingles",
+       pch = 20, col = "steelblue")
+qqline(icfes_ni$MOD_INGLES_PUNT, col = "red", lwd = 2)
+
+# Si los datos fueran normales, los puntos deberian
+# seguir aproximadamente la linea roja
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{block}{Interpretación del Q-Q plot}
+\begin{itemize}
+  \item Puntos alineados con la línea $\Rightarrow$ normalidad
+  \item Desviaciones en las colas $\Rightarrow$ distribución con colas más pesadas/ligeras
+  \item Patrón en S $\Rightarrow$ asimetría
+\end{itemize}
+\end{block}
+
+En nuestro caso: las colas superiores se desvían, indicando asimetría negativa.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo 3: Distribución regional esperada}
+\textbf{Pregunta:} ¿La distribución regional de estudiantes NI refleja la distribución poblacional de Colombia?
+
+\begin{lstlisting}
+# Frecuencias observadas
+obs_region <- table(icfes_ni$REGION)
+
+# Proporciones poblacionales de Colombia (ejemplo hipotetico)
+# Andina: 34%, Caribe: 21%, Pacifica: 18%, Orinoquia: 3%,
+# Amazonia: 2%, Bogota: 22%
+prop_poblacion <- c(Andina = 0.34, Caribe = 0.21,
+                     Pacifica = 0.18, Orinoquia = 0.03,
+                     Amazonia = 0.02, Bogota = 0.22)
+
+# Prueba chi-cuadrado
+chisq.test(obs_region, p = prop_poblacion)
+
+# X-squared = 128.56, df = 5, p-value < 2.2e-16
+\end{lstlisting}
+
+\textbf{Conclusión:} La distribución regional de estudiantes NI NO refleja la distribución poblacional (posiblemente por concentración de programas en ciertas regiones).
+\end{frame}
+
+% ============================================================================
+\section{Comparación de múltiples proporciones}
+% ============================================================================
+
+\begin{frame}{Extensión: k proporciones}
+\textbf{Pregunta:} ¿La proporción de estudiantes que supera B1 es igual en las 5 regiones principales?
+
+\vspace{0.2cm}
+Esto es equivalente a una tabla de contingencia $2 \times k$:
+\begin{itemize}
+  \item Fila 1: supera B1 (B1 o B+)
+  \item Fila 2: no supera B1 (A-, A1, A2)
+  \item $k$ columnas: una por cada región
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{block}{Hipótesis}
+\begin{itemize}
+  \item $H_0$: $p_1 = p_2 = \cdots = p_k$ (todas las proporciones son iguales)
+  \item $H_1$: al menos una proporción es diferente
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+Usamos la prueba $\chi^2$ de independencia (equivalente) o \texttt{prop.test()} en R.
+\end{frame}
+
+\begin{frame}[fragile]{Aplicación: prop.test() para k proporciones}
+\begin{lstlisting}
+# Crear variable binaria: supera B1
+icfes_ni$SUPERA_B1 <- ifelse(icfes_ni$NIVEL_MCER %in% c("B1", "B+"),
+                             1, 0)
+
+# Tabla 2x5: supera B1 x region
+tabla_b1_region <- table(icfes_ni$SUPERA_B1, icfes_ni$REGION)
+
+# Prueba chi-cuadrado de independencia
+chisq.test(tabla_b1_region)
+
+# X-squared = 38.72, df = 4, p-value = 7.8e-08
+
+# Alternativa: prop.test
+prop.test(tabla_b1_region)
+
+# 5-sample test for equality of proportions without continuity correction
+# X-squared = 38.72, df = 4, p-value = 7.8e-08
+\end{lstlisting}
+
+\textbf{Conclusión:} La proporción que supera B1 difiere significativamente entre regiones.
+\end{frame}
+
+\begin{frame}[fragile]{Visualización de proporciones por región}
+\begin{lstlisting}
+# Calcular proporciones por region
+prop_b1_region <- prop.table(tabla_b1_region, 2)
+
+# Grafico de barras
+barplot(prop_b1_region,
+        main = "Proporcion que supera B1 por region",
+        xlab = "Region",
+        ylab = "Proporcion",
+        legend = c("No supera B1", "Supera B1"),
+        col = c("coral", "steelblue"),
+        beside = FALSE)
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Observación}
+Bogota y la region Andina muestran las proporciones mas altas de estudiantes que superan B1.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Resumen U3 completa}
+% ============================================================================
+
+\begin{frame}{Diagrama de flujo: ¿Qué prueba usar?}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, auto,
+                    block/.style={rectangle, draw, fill=blue!10,
+                                  text width=5em, align=center,
+                                  rounded corners, minimum height=3em},
+                    decision/.style={diamond, draw, fill=orange!10,
+                                     text width=4em, align=center,
+                                     inner sep=0pt}]
+
+\node [decision] (tipo) {Tipo de variable};
+\node [block, below left=1cm and 1cm of tipo] (num) {Numérica};
+\node [block, below right=1cm and 1cm of tipo] (cat) {Categórica};
+
+\node [decision, below=0.8cm of num] (ngrupos) {¿Cuántos grupos?};
+\node [block, below left=0.8cm and 0.5cm of ngrupos] (ttest) {1 o 2:\\ t-test};
+\node [block, below right=0.8cm and 0.5cm of ngrupos] (anova) {3+:\\ ANOVA};
+
+\node [decision, below=0.8cm of cat] (pregunta) {¿Qué pregunta?};
+\node [block, below left=0.8cm and 0.5cm of pregunta] (indep) {Asociación:\\ $\chi^2$ indep.};
+\node [block, below right=0.8cm and 0.5cm of pregunta] (bondad) {Bondad:\\ $\chi^2$ ajuste};
+
+\draw[->] (tipo) -- (num);
+\draw[->] (tipo) -- (cat);
+\draw[->] (num) -- (ngrupos);
+\draw[->] (ngrupos) -- (ttest);
+\draw[->] (ngrupos) -- (anova);
+\draw[->] (cat) -- (pregunta);
+\draw[->] (pregunta) -- (indep);
+\draw[->] (pregunta) -- (bondad);
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Resumen: Pruebas para variables numéricas}
+\begin{block}{Comparación de medias}
+\begin{itemize}
+  \item \textbf{1 media:} t-test de una muestra\\
+    $H_0: \mu = \mu_0$ vs $H_1: \mu \neq \mu_0$ (o $>$, $<$)
+
+  \item \textbf{2 medias independientes:} t-test de dos muestras\\
+    $H_0: \mu_1 = \mu_2$ vs $H_1: \mu_1 \neq \mu_2$
+
+  \item \textbf{2 medias pareadas:} t-test pareado\\
+    $H_0: \mu_d = 0$ vs $H_1: \mu_d \neq 0$
+
+  \item \textbf{3+ medias:} ANOVA de un factor\\
+    $H_0: \mu_1 = \mu_2 = \cdots = \mu_k$ vs $H_1:$ al menos una diferente
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Alternativas no paramétricas} (si los supuestos de normalidad no se cumplen):
+\begin{itemize}
+  \item 2 grupos: Mann-Whitney U (Wilcoxon rank-sum)
+  \item 3+ grupos: Kruskal-Wallis
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Resumen: Pruebas para variables categóricas}
+\begin{block}{Prueba $\chi^2$ de independencia}
+\begin{itemize}
+  \item Compara dos variables categóricas
+  \item $H_0$: las variables son independientes
+  \item Estadístico: $\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+  \item gl $= (r-1)(c-1)$
+  \item Tamaño del efecto: V de Cramér
+\end{itemize}
+\end{block}
+
+\begin{block}{Prueba $\chi^2$ de bondad de ajuste}
+\begin{itemize}
+  \item Compara una variable categórica con una distribución teórica
+  \item $H_0$: los datos siguen la distribución especificada
+  \item Estadístico: $\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$
+  \item gl $= k - p - 1$
+  \item Casos especiales: uniformidad, normalidad (con Shapiro-Wilk)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Recomendaciones finales}
+\begin{alertblock}{Siempre verificar supuestos}
+\begin{itemize}
+  \item $\chi^2$: $E_{ij} \geq 5$ en al menos 80\% de celdas
+  \item t-test: normalidad (o $n$ grande), homocedasticidad
+  \item ANOVA: normalidad, homocedasticidad, independencia
+\end{itemize}
+\end{alertblock}
+
+\begin{block}{Reportar resultados completos}
+\begin{itemize}
+  \item Estadístico de prueba y grados de libertad
+  \item p-valor
+  \item Tamaño del efecto (V de Cramér, Cohen's d, $\eta^2$, etc.)
+  \item Intervalos de confianza cuando sea aplicable
+  \item Interpretación en contexto
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Próxima sesión}
+Regresión lineal simple (OLS): modelando la relación entre dos variables numéricas.
+\end{exampleblock}
+\end{frame}
+
+\end{document}

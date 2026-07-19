@@ -1,0 +1,1110 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 1: Estadística Descriptiva Numérica}
+\subtitle{Introducción al curso y medidas numéricas}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Vie 31 jul 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Introducción al curso}
+% ============================================================================
+
+\begin{frame}{¿Qué es la estadística?}
+\begin{block}{Definición}
+La estadística es la ciencia de recolectar, organizar, analizar e interpretar datos para tomar decisiones informadas bajo incertidumbre.
+\end{block}
+
+\vspace{0.5em}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Estadística Descriptiva}
+\begin{itemize}
+\item Resumir y visualizar datos
+\item Medidas numéricas (media, mediana, desviación estándar)
+\item Gráficos (histogramas, box plots, scatter plots)
+\item \alert{Describe lo que ya tenemos}
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Estadística Inferencial}
+\begin{itemize}
+\item Generalizar desde una muestra a la población
+\item Intervalos de confianza
+\item Pruebas de hipótesis
+\item Regresión y predicción
+\item \alert{Infiere sobre lo que no observamos}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Datos ICFES: Saber 11 y Saber Pro}
+\begin{block}{¿Qué es el ICFES?}
+Instituto Colombiano para la Evaluación de la Educación. Realiza exámenes estandarizados para evaluar la calidad educativa en Colombia.
+\end{block}
+
+\begin{itemize}
+\item \textbf{Saber 11}: examen al finalizar la educación media (bachillerato)
+  \begin{itemize}
+  \item Módulos: Lectura Crítica, Matemáticas, Sociales, Ciencias Naturales, Inglés
+  \item Usado para admisión universitaria
+  \end{itemize}
+\item \textbf{Saber Pro}: examen al finalizar la educación superior (último año de pregrado)
+  \begin{itemize}
+  \item Módulos genéricos: Lectura Crítica, Razonamiento Cuantitativo, Competencias Ciudadanas, Comunicación Escrita, Inglés
+  \item Módulos específicos por programa (ej: Gestión Financiera para NI)
+  \end{itemize}
+\end{itemize}
+
+\vspace{0.5em}
+\alert{En este curso trabajaremos con datos reales de estudiantes del programa de Negocios Internacionales (NI)}
+\end{frame}
+
+\begin{frame}{Variable central: MOD\_INGLES\_PUNT}
+\begin{exampleblock}{¿Por qué el puntaje de inglés?}
+Para estudiantes de Negocios Internacionales, la competencia en inglés es un \textbf{proxy de competitividad internacional}:
+\begin{itemize}
+\item Comunicación con clientes y proveedores internacionales
+\item Acceso a información y literatura de negocios global
+\item Movilidad laboral y oportunidades en empresas multinacionales
+\item Negociación en mercados internacionales
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Preguntas que exploraremos:}
+\begin{itemize}
+\item ¿Cuál es el puntaje promedio en inglés de estudiantes de NI?
+\item ¿Cómo varía según tipo de institución (pública vs privada)?
+\item ¿Cómo varía según estrato socioeconómico?
+\item ¿Está relacionado con el desempeño en Saber 11?
+\item ¿Hay diferencias regionales (por departamento)?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Software: R y RStudio}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{¿Qué es R?}
+\begin{itemize}
+\item Lenguaje de programación estadística
+\item Software libre y de código abierto
+\item Más de 19,000 paquetes disponibles
+\item Estándar en investigación y análisis de datos
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{¿Qué es RStudio?}
+\begin{itemize}
+\item Entorno de desarrollo integrado (IDE) para R
+\item Editor de código, consola, gráficos, ayuda
+\item Gestión de proyectos
+\item Integración con Git, Markdown, Shiny
+\end{itemize}
+\end{columns}
+
+\vspace{1em}
+\textbf{Instalación:}
+\begin{enumerate}
+\item Descargar R desde \url{https://cran.r-project.org}
+\item Descargar RStudio desde \url{https://posit.co/download/rstudio-desktop/}
+\end{enumerate}
+
+\vspace{0.5em}
+\begin{lstlisting}
+# Primeros comandos en R
+2 + 3
+x <- 10
+x * 2
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Tipos de datos}
+\begin{block}{Datos categóricos (cualitativos)}
+Describen cualidades o características. No tienen un orden numérico natural.
+\begin{itemize}
+\item \textbf{Nominal}: sin orden (ej: tipo de IES [pública, privada], departamento)
+\item \textbf{Ordinal}: con orden (ej: estrato [1, 2, 3, 4, 5, 6], nivel educativo)
+\end{itemize}
+\end{block}
+
+\begin{block}{Datos cuantitativos (numéricos)}
+Representan cantidades medibles.
+\begin{itemize}
+\item \textbf{Intervalo}: diferencias significativas, pero no hay cero absoluto (ej: temperatura en °C)
+\item \textbf{Razón}: hay cero absoluto, se pueden hacer cocientes (ej: puntajes ICFES, edad, ingreso)
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Ejemplo}
+\variable{MOD\_INGLES\_PUNT} es cuantitativa de razón (0 = ausencia total de conocimiento).\\
+\variable{ESTU\_TIPOREMUNERACION} es categórica nominal.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Datos de corte transversal vs series de tiempo}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Corte transversal (cross-section)}
+\begin{itemize}
+\item Observaciones de múltiples unidades en un \alert{único momento en el tiempo}
+\item Ejemplo: puntajes Saber Pro 2024 de todos los estudiantes de NI
+\item Nos permite comparar entre individuos, instituciones, regiones
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Series de tiempo (time series)}
+\begin{itemize}
+\item Observaciones de una unidad a lo largo del \alert{tiempo}
+\item Ejemplo: puntaje promedio en inglés de NI entre 2015 y 2025
+\item Nos permite identificar tendencias, estacionalidad
+\end{itemize}
+\end{columns}
+
+\vspace{1em}
+\begin{exampleblock}{En este curso}
+Trabajaremos principalmente con \textbf{datos de corte transversal}: estudiantes de NI en Saber Pro 2023 y 2024.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Medidas de tendencia central}
+% ============================================================================
+
+\begin{frame}{Media aritmética}
+\begin{block}{Definición}
+La \textbf{media aritmética} (o promedio) es la suma de los valores dividida por el número de observaciones.
+\end{block}
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Media muestral} (estadístico):
+\[
+\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i
+\]
+donde $n$ = tamaño de la muestra
+
+\column{0.48\textwidth}
+\textbf{Media poblacional} (parámetro):
+\[
+\mu = \frac{1}{N} \sum_{i=1}^N x_i
+\]
+donde $N$ = tamaño de la población
+\end{columns}
+
+\vspace{1em}
+\begin{exampleblock}{Ejemplo: puntajes de inglés de 5 estudiantes NI}
+Puntajes Saber Pro: 145, 160, 155, 170, 150
+\[
+\bar{x} = \frac{145 + 160 + 155 + 170 + 150}{5} = \frac{780}{5} = 156
+\]
+\end{exampleblock}
+
+\alert{Notación}: $\bar{x}$ (x-barra) para muestra, $\mu$ (mu) para población
+\end{frame}
+
+\begin{frame}[fragile]{Media aritmética en R}
+\begin{lstlisting}
+# Cargar datos (ejemplo simulado)
+library(tidyverse)
+
+# Vector de puntajes
+puntajes <- c(145, 160, 155, 170, 150, 162, 158, 149, 165, 153)
+
+# Calcular la media
+mean(puntajes)
+# [1] 156.7
+
+# Con datos faltantes (NA), usar na.rm = TRUE
+puntajes_na <- c(145, 160, NA, 170, 150)
+mean(puntajes_na, na.rm = TRUE)
+# [1] 156.25
+
+# Cargar datos ICFES completos
+icfes <- read_csv("datos/saber_pro_ni_2024.csv")
+mean(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+\end{lstlisting}
+
+\vspace{0.5em}
+\alert{Nota}: \code{na.rm = TRUE} elimina valores faltantes antes de calcular
+\end{frame}
+
+\begin{frame}{Media ponderada}
+\begin{block}{Definición}
+La \textbf{media ponderada} asigna pesos diferentes a cada observación según su importancia.
+\end{block}
+
+\[
+\bar{x}_w = \frac{\sum_{i=1}^n w_i x_i}{\sum_{i=1}^n w_i}
+\]
+
+donde $w_i$ es el peso de la observación $i$
+
+\vspace{1em}
+\begin{exampleblock}{Ejemplo: índice de calificaciones de NI}
+Estadística I tiene tres componentes:
+\begin{itemize}
+\item Talleres: 3.8 (peso 25\%)
+\item Parcial: 4.2 (peso 35\%)
+\item Proyecto final: 4.5 (peso 40\%)
+\end{itemize}
+\[
+\bar{x}_w = \frac{0.25(3.8) + 0.35(4.2) + 0.40(4.5)}{0.25 + 0.35 + 0.40} = \frac{4.22}{1} = 4.22
+\]
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Mediana}
+\begin{block}{Definición}
+La \textbf{mediana} es el valor que divide los datos ordenados en dos mitades iguales. 50\% de las observaciones están por debajo y 50\% por encima.
+\end{block}
+
+\textbf{Procedimiento:}
+\begin{enumerate}
+\item Ordenar los datos de menor a mayor
+\item Si $n$ es impar: la mediana es el valor central
+\item Si $n$ es par: la mediana es el promedio de los dos valores centrales
+\end{enumerate}
+
+\vspace{0.5em}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Ejemplo (n impar):}\\
+Datos: 145, 150, \alert{155}, 160, 170\\
+Mediana = 155
+
+\column{0.48\textwidth}
+\textbf{Ejemplo (n par):}\\
+Datos: 145, 150, \alert{155, 160}, 165, 170\\
+Mediana = (155+160)/2 = 157.5
+\end{columns}
+
+\vspace{1em}
+\begin{alertblock}{Propiedad clave}
+La mediana es \textbf{robusta a outliers} (valores extremos no la afectan mucho).
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Mediana en R}
+\begin{lstlisting}
+# Vector de puntajes
+puntajes <- c(145, 150, 155, 160, 170)
+median(puntajes)
+# [1] 155
+
+# Puntajes con un valor extremo
+puntajes_outlier <- c(145, 150, 155, 160, 250)
+mean(puntajes_outlier)    # [1] 172 (afectada por el outlier)
+median(puntajes_outlier)  # [1] 155 (no afectada)
+
+# Con datos ICFES
+median(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+
+# Comparar media vs mediana
+summary(icfes$MOD_INGLES_PUNT)
+\end{lstlisting}
+
+\vspace{0.5em}
+\alert{Interpretación}: Si media > mediana, distribución sesgada a la derecha (cola larga hacia valores altos). Si media < mediana, sesgada a la izquierda.
+\end{frame}
+
+\begin{frame}{Moda}
+\begin{block}{Definición}
+La \textbf{moda} es el valor que aparece con mayor frecuencia en los datos.
+\end{block}
+
+\begin{itemize}
+\item Datos pueden ser \textbf{unimodales} (una moda), \textbf{bimodales} (dos modas), o \textbf{multimodales}
+\item Es la única medida de tendencia central aplicable a datos categóricos
+\item Para datos continuos, es más útil identificar la región con mayor concentración
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Puntajes: 150, 155, 155, 160, 155, 165, 170, 155\\
+Moda = 155 (aparece 4 veces)
+\end{exampleblock}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo bimodal}
+Estrato: 2, 2, 2, 3, 4, 5, 5, 5, 6\\
+Modas = 2 y 5 (ambas aparecen 3 veces)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Moda en R}
+\begin{lstlisting}
+# R no tiene una funcion integrada para moda
+# Opcion 1: usar table() para ver frecuencias
+puntajes <- c(150, 155, 155, 160, 155, 165, 170, 155)
+table(puntajes)
+# puntajes
+# 150 155 160 165 170
+#   1   4   1   1   1
+
+# Opcion 2: funcion personalizada
+moda <- function(x) {
+  freq <- table(x)
+  as.numeric(names(freq)[which.max(freq)])
+}
+moda(puntajes)
+# [1] 155
+
+# Para categoricas
+table(icfes$ESTU_DEPTO_RESIDE)
+# Muestra frecuencia por departamento
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{¿Cuándo usar cada medida?}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lp{6cm}p{5cm}}
+\toprule
+\textbf{Medida} & \textbf{Cuándo usar} & \textbf{Ventajas / Desventajas} \\
+\midrule
+Media & Distribuciones simétricas, datos numéricos & Usa toda la información; sensible a outliers \\
+\addlinespace
+Mediana & Distribuciones sesgadas, presencia de outliers & Robusta; ignora valores extremos \\
+\addlinespace
+Moda & Datos categóricos, distribuciones multimodales & Única para categorías; puede no existir o no ser única \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{1em}
+\begin{alertblock}{Regla práctica}
+\begin{itemize}
+\item Distribución simétrica: media $\approx$ mediana $\approx$ moda
+\item Sesgada a la derecha: moda < mediana < media
+\item Sesgada a la izquierda: media < mediana < moda
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Medidas de dispersión}
+% ============================================================================
+
+\begin{frame}{Rango}
+\begin{block}{Definición}
+El \textbf{rango} es la diferencia entre el valor máximo y el valor mínimo.
+\[
+\text{Rango} = \max(x) - \min(x)
+\]
+\end{block}
+
+\begin{itemize}
+\item Medida más simple de dispersión
+\item Muy sensible a outliers (basta un valor extremo para inflarlo)
+\item No usa información de los valores intermedios
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Puntajes: 145, 150, 155, 160, 170\\
+Rango = 170 - 145 = 25 puntos
+\end{exampleblock}
+
+\begin{exampleblock}{Ejemplo con outlier}
+Puntajes: 145, 150, 155, 160, 250\\
+Rango = 250 - 145 = 105 puntos (mucho mayor)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Rango intercuartílico (IQR)}
+\begin{block}{Definición}
+El \textbf{rango intercuartílico} (IQR) es la diferencia entre el tercer cuartil (Q3) y el primer cuartil (Q1). Contiene el 50\% central de los datos.
+\[
+\text{IQR} = Q_3 - Q_1
+\]
+\end{block}
+
+\begin{itemize}
+\item Robusto a outliers (ignora el 25\% más bajo y el 25\% más alto)
+\item Usado en box plots para identificar outliers
+\item Outlier si: $x < Q_1 - 1.5 \times \text{IQR}$ o $x > Q_3 + 1.5 \times \text{IQR}$
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Si Q1 = 150 y Q3 = 165:\\
+IQR = 165 - 150 = 15\\
+Límite inferior outlier: 150 - 1.5(15) = 127.5\\
+Límite superior outlier: 165 + 1.5(15) = 187.5
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Rango e IQR en R}
+\begin{lstlisting}
+# Rango
+puntajes <- c(145, 150, 155, 160, 165, 170)
+range(puntajes)
+# [1] 145 170
+diff(range(puntajes))
+# [1] 25
+
+# Rango intercuartilico
+IQR(puntajes)
+# [1] 15
+
+# Cuartiles
+quantile(puntajes, probs = c(0.25, 0.75))
+#   25%   75%
+# 151.25 163.75
+
+# Con datos ICFES
+summary(icfes$MOD_INGLES_PUNT)
+IQR(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Varianza}
+\begin{block}{Definición}
+La \textbf{varianza} mide la dispersión promedio de los datos respecto a la media. Es el promedio de las desviaciones cuadradas.
+\end{block}
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Varianza muestral}:
+\[
+s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2
+\]
+
+\column{0.48\textwidth}
+\textbf{Varianza poblacional}:
+\[
+\sigma^2 = \frac{1}{N} \sum_{i=1}^N (x_i - \mu)^2
+\]
+\end{columns}
+
+\vspace{1em}
+\begin{alertblock}{¿Por qué $n-1$ y no $n$?}
+Dividir por $n-1$ (grados de libertad) hace que $s^2$ sea un \textbf{estimador insesgado} de $\sigma^2$. Dividir por $n$ subestimaría la varianza poblacional sistemáticamente.
+\end{alertblock}
+
+\vspace{0.5em}
+\textbf{Propiedades}:
+\begin{itemize}
+\item Siempre $s^2 \geq 0$
+\item Unidades: cuadrado de las unidades originales (puntos$^2$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Desviación estándar}
+\begin{block}{Definición}
+La \textbf{desviación estándar} es la raíz cuadrada positiva de la varianza. Mide la dispersión en las mismas unidades que los datos.
+\end{block}
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Desviación estándar muestral}:
+\[
+s = \sqrt{s^2} = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2}
+\]
+
+\column{0.48\textwidth}
+\textbf{Desviación estándar poblacional}:
+\[
+\sigma = \sqrt{\sigma^2} = \sqrt{\frac{1}{N} \sum_{i=1}^N (x_i - \mu)^2}
+\]
+\end{columns}
+
+\vspace{1em}
+\textbf{Interpretación}:
+\begin{itemize}
+\item Mide cuánto se desvían los datos de la media \alert{en promedio}
+\item $s$ pequeña: datos concentrados cerca de $\bar{x}$
+\item $s$ grande: datos dispersos, alejados de $\bar{x}$
+\item Mismas unidades que los datos originales (más interpretable que $s^2$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Varianza y desviación estándar en R (1/2)}
+\begin{lstlisting}
+puntajes <- c(145, 150, 155, 160, 165, 170)
+
+# Varianza (usa n-1)
+var(puntajes)
+# [1] 104.1667
+
+# Desviacion estandar
+sd(puntajes)
+# [1] 10.20621
+
+# Verificar que sd = sqrt(var)
+sqrt(var(puntajes))
+# [1] 10.20621
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Varianza y desviación estándar en R (2/2)}
+\begin{lstlisting}
+# Calculo manual (para entender)
+puntajes <- c(145, 150, 155, 160, 165, 170)
+n <- length(puntajes)
+media <- mean(puntajes)
+varianza_manual <- sum((puntajes - media)^2) / (n - 1)
+varianza_manual
+# [1] 104.1667
+
+# Con datos ICFES
+sd(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Coeficiente de variación}
+\begin{block}{Definición}
+El \textbf{coeficiente de variación} (CV) expresa la desviación estándar como porcentaje de la media. Permite comparar la dispersión relativa de variables con diferentes unidades o escalas.
+\[
+CV = \frac{s}{\bar{x}} \times 100\%
+\]
+\end{block}
+
+\textbf{Interpretación}:
+\begin{itemize}
+\item CV bajo (< 15\%): datos homogéneos, poca variabilidad relativa
+\item CV medio (15-30\%): variabilidad moderada
+\item CV alto (> 30\%): datos heterogéneos, alta variabilidad relativa
+\item Sólo válido para variables de razón ($\bar{x} > 0$)
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Si $\bar{x} = 157$ puntos y $s = 20$ puntos:\\
+$CV = (20/157) \times 100\% = 12.7\%$ (variabilidad baja/moderada)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Coeficiente de variación en R}
+\begin{lstlisting}
+# R no tiene funcion integrada para CV
+# Funcion personalizada
+cv <- function(x, na.rm = FALSE) {
+  (sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)) * 100
+}
+
+puntajes <- c(145, 150, 155, 160, 165, 170)
+cv(puntajes)
+# [1] 6.52
+
+# Comparar CV de ingles vs matematicas
+cv_ingles <- cv(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+cv_matematicas <- cv(icfes$MOD_RAZONA_CUANTITAT_PUNT, na.rm = TRUE)
+
+cat("CV Ingles:", round(cv_ingles, 2), "%\n")
+cat("CV Matematicas:", round(cv_matematicas, 2), "%\n")
+
+# ?Cual tiene mayor variabilidad relativa?
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Forma de la distribución}
+% ============================================================================
+
+\begin{frame}{Puntajes estandarizados (z-scores)}
+\begin{block}{Definición}
+El \textbf{puntaje estandarizado} o \textbf{z-score} indica cuántas desviaciones estándar se encuentra una observación por encima (o por debajo) de la media.
+\[
+z_i = \frac{x_i - \bar{x}}{s}
+\]
+\end{block}
+
+\textbf{Propiedades}:
+\begin{itemize}
+\item Sin unidades (adimensional)
+\item Media de los z-scores = 0
+\item Desviación estándar de los z-scores = 1
+\item $z > 0$: observación por encima de la media
+\item $z < 0$: observación por debajo de la media
+\item $|z| > 2$: observación inusual
+\item $|z| > 3$: posible outlier
+\end{itemize}
+
+\begin{exampleblock}{Ejemplo}
+Si $\bar{x} = 155$, $s = 15$, y un estudiante obtuvo $x = 185$:\\
+$z = (185 - 155)/15 = 2$, está 2 desviaciones estándar por encima de la media.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Z-scores en R (1/2)}
+\begin{lstlisting}
+puntajes <- c(130, 140, 150, 155, 160, 170, 185)
+
+# Funcion para calcular z-scores
+z_scores <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+
+z <- z_scores(puntajes)
+z
+# [1] -1.456  -0.873  -0.291  0.000  0.291  0.873  1.456
+
+# Verificar propiedades
+mean(z)  # [1] 0 (aproximadamente)
+sd(z)    # [1] 1
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Z-scores en R (2/2)}
+\begin{lstlisting}
+# Identificar outliers (|z| > 3)
+puntajes <- c(130, 140, 150, 155, 160, 170, 185)
+z <- (puntajes - mean(puntajes)) / sd(puntajes)
+outliers <- puntajes[abs(z) > 3]
+outliers
+
+# Con datos ICFES
+icfes <- icfes %>%
+  mutate(z_ingles = (MOD_INGLES_PUNT - mean(MOD_INGLES_PUNT, na.rm=T)) /
+                     sd(MOD_INGLES_PUNT, na.rm=T))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Teorema de Chebyshev}
+\begin{block}{Teorema de Chebyshev}
+Para \alert{cualquier distribución}, al menos $1 - \frac{1}{k^2}$ de las observaciones caen dentro de $k$ desviaciones estándar de la media, donde $k > 1$.
+\end{block}
+
+\begin{table}
+\centering
+\begin{tabular}{ccc}
+\toprule
+$k$ & Intervalo & \% mínimo de datos \\
+\midrule
+1.5 & $\bar{x} \pm 1.5s$ & $1 - 1/(1.5)^2 = 55.6\%$ \\
+2 & $\bar{x} \pm 2s$ & $1 - 1/4 = 75\%$ \\
+3 & $\bar{x} \pm 3s$ & $1 - 1/9 = 88.9\%$ \\
+4 & $\bar{x} \pm 4s$ & $1 - 1/16 = 93.75\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.5em}
+\begin{alertblock}{Importante}
+Este teorema aplica a \textbf{cualquier distribución} (no requiere normalidad). Es una cota conservadora: distribuciones específicas pueden tener proporciones mayores.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Regla empírica (68-95-99.7)}
+\begin{block}{Regla empírica}
+Para distribuciones \alert{aproximadamente normales} (en forma de campana):
+\begin{itemize}
+\item Aproximadamente 68\% de los datos caen dentro de $\bar{x} \pm 1s$
+\item Aproximadamente 95\% de los datos caen dentro de $\bar{x} \pm 2s$
+\item Aproximadamente 99.7\% de los datos caen dentro de $\bar{x} \pm 3s$
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\begin{axis}[
+  domain=-4:4, samples=100,
+  axis lines=middle, xlabel={$z$}, ylabel={},
+  ytick=\empty, xtick={-3,-2,-1,0,1,2,3},
+  xticklabels={$-3s$,$-2s$,$-1s$,$\bar{x}$,$1s$,$2s$,$3s$},
+  height=4cm, width=11cm,
+  every axis x label/.style={at={(ticklabel* cs:1)},anchor=west},
+  enlargelimits=false, clip=false
+]
+\addplot[very thick, javeriana] {exp(-x^2/2)/sqrt(2*pi)};
+\addplot[fill=javerianalight, opacity=0.3, domain=-1:1] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+\node at (0, 0.2) {68\%};
+\addplot[fill=javerianalight, opacity=0.15, domain=-2:-1] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+\addplot[fill=javerianalight, opacity=0.15, domain=1:2] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+\node at (1.5, 0.05) {\tiny 13.5\%};
+\node at (-1.5, 0.05) {\tiny 13.5\%};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\alert{Importante}: Sólo aplica a distribuciones aproximadamente normales.
+\end{frame}
+
+\begin{frame}{Asimetría (skewness)}
+\begin{block}{Definición}
+La \textbf{asimetría} mide el grado de simetría de una distribución.
+\[
+g_1 = \frac{1}{n} \sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^3
+\]
+\end{block}
+
+\begin{columns}[T]
+\column{0.33\textwidth}
+\textbf{Simétrica} ($g_1 \approx 0$)\\
+\textit{Visualización generada en R con} \code{plot()} \textit{y} \code{hist()}\\
+Media = Mediana
+
+\column{0.33\textwidth}
+\textbf{Asimetría positiva} ($g_1 > 0$)\\
+Cola larga a la derecha\\
+Media > Mediana
+
+\column{0.33\textwidth}
+\textbf{Asimetría negativa} ($g_1 < 0$)\\
+Cola larga a la izquierda\\
+Media < Mediana
+\end{columns}
+
+\vspace{1em}
+\alert{Interpretación}:
+\begin{itemize}
+\item $|g_1| < 0.5$: aproximadamente simétrica
+\item $0.5 \leq |g_1| < 1$: asimetría moderada
+\item $|g_1| \geq 1$: asimetría pronunciada
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Curtosis}
+\begin{block}{Definición}
+La \textbf{curtosis} mide el peso de las colas y la altura del pico de una distribución, comparado con la distribución normal.
+\[
+g_2 = \frac{1}{n} \sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^4 - 3
+\]
+(El $-3$ es para que la distribución normal tenga curtosis = 0)
+\end{block}
+
+\begin{itemize}
+\item \textbf{Leptocúrtica} ($g_2 > 0$): colas pesadas, pico alto, más concentrada que la normal
+\item \textbf{Mesocúrtica} ($g_2 \approx 0$): similar a la normal
+\item \textbf{Platocúrtica} ($g_2 < 0$): colas ligeras, pico bajo, más plana que la normal
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Importancia práctica}:
+\begin{itemize}
+\item $g_2 > 0$ indica mayor presencia de valores extremos (riesgo financiero)
+\item Afecta la validez de pruebas estadísticas que asumen normalidad
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Asimetría y curtosis en R (1/2)}
+\begin{lstlisting}
+# Instalar y cargar paquete moments
+install.packages("moments")
+library(moments)
+
+puntajes <- c(130, 135, 140, 145, 150, 155, 160, 165, 190)
+
+# Asimetria
+skewness(puntajes)
+# [1] 0.847 (asimetria positiva moderada)
+
+# Curtosis (exceso de curtosis)
+kurtosis(puntajes) - 3
+# [1] -0.312 (aproximadamente mesocurtica)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Asimetría y curtosis en R (2/2)}
+\begin{lstlisting}
+# Con datos ICFES
+skewness(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+kurtosis(icfes$MOD_INGLES_PUNT, na.rm = TRUE) - 3
+
+# Interpretacion
+if (skewness(icfes$MOD_INGLES_PUNT, na.rm=T) > 0) {
+  print("Distribucion sesgada a la derecha")
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Detección de outliers}
+\begin{block}{Métodos para detectar outliers}
+\end{block}
+
+\textbf{1. Método IQR (box plot)}:
+\begin{itemize}
+\item Outlier si: $x < Q_1 - 1.5 \times \text{IQR}$ o $x > Q_3 + 1.5 \times \text{IQR}$
+\item Outlier extremo si: $x < Q_1 - 3 \times \text{IQR}$ o $x > Q_3 + 3 \times \text{IQR}$
+\end{itemize}
+
+\textbf{2. Método z-score}:
+\begin{itemize}
+\item Inusual si: $|z| > 2$
+\item Outlier si: $|z| > 3$
+\end{itemize}
+
+\textbf{3. Método de desviación absoluta mediana (MAD)}:
+\begin{itemize}
+\item Más robusto que z-score para distribuciones no normales
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{¿Qué hacer con outliers?}
+\begin{itemize}
+\item Verificar si es un error de medición o entrada de datos
+\item Investigar si representa un fenómeno real
+\item Considerar análisis con y sin outliers
+\item Nunca eliminar sin justificación
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Percentiles y cuartiles}
+% ============================================================================
+
+\begin{frame}{Percentiles}
+\begin{block}{Definición}
+El \textbf{percentil $p$} es el valor tal que al menos el $p\%$ de las observaciones son menores o iguales a él.
+\end{block}
+
+\textbf{Ejemplos}:
+\begin{itemize}
+\item Percentil 25 (P$_{25}$) = Q$_1$ (primer cuartil): 25\% de los datos están por debajo
+\item Percentil 50 (P$_{50}$) = Q$_2$ = mediana: 50\% de los datos están por debajo
+\item Percentil 75 (P$_{75}$) = Q$_3$ (tercer cuartil): 75\% de los datos están por debajo
+\item Percentil 90 (P$_{90}$): 90\% de los datos están por debajo
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Interpretación}
+Si un estudiante está en el percentil 80 en inglés, significa que superó al 80\% de los estudiantes y el 20\% restante obtuvo puntajes mayores o iguales.
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Deciles}: dividen los datos en 10 partes (D$_1$, D$_2$, ..., D$_9$)\\
+\textbf{Quintiles}: dividen los datos en 5 partes (Q$_1$, Q$_2$, Q$_3$, Q$_4$)
+\end{frame}
+
+\begin{frame}{Cuartiles y five-number summary}
+\begin{block}{Cuartiles}
+Los \textbf{cuartiles} dividen los datos ordenados en cuatro partes iguales:
+\begin{itemize}
+\item Q$_1$: primer cuartil (25\%)
+\item Q$_2$: segundo cuartil (50\%) = mediana
+\item Q$_3$: tercer cuartil (75\%)
+\end{itemize}
+\end{block}
+
+\begin{block}{Five-number summary}
+Resumen de 5 números que describe la distribución:
+\[
+\{\text{mín}, Q_1, Q_2, Q_3, \text{máx}\}
+\]
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+Five-number summary de puntajes de inglés:\\
+\{100, 145, 157, 168, 200\}
+\begin{itemize}
+\item 25\% de estudiantes obtuvo $\leq$ 145 puntos
+\item 50\% obtuvo $\leq$ 157 puntos (mediana)
+\item 75\% obtuvo $\leq$ 168 puntos
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Percentiles y cuartiles en R}
+\begin{lstlisting}
+puntajes <- c(120, 130, 140, 145, 150, 155, 160, 165, 170, 180)
+
+# Cuartiles
+quantile(puntajes)
+#   0%  25%  50%  75% 100%
+#  120  141  152  163  180
+
+# Percentiles especificos
+quantile(puntajes, probs = c(0.10, 0.25, 0.50, 0.75, 0.90))
+#  10%  25%  50%  75%  90%
+#  130  141  152  163  174
+
+# Five-number summary
+fivenum(puntajes)
+# [1] 120 140 152 165 180
+
+# Summary completo (incluye media)
+summary(puntajes)
+#  Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#   120     141     152     151     163     180
+
+# Con datos ICFES
+summary(icfes$MOD_INGLES_PUNT)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Aplicación con datos ICFES}
+% ============================================================================
+
+\begin{frame}[fragile]{Ejemplo completo: cargar y explorar datos}
+\begin{lstlisting}
+# Cargar librerias
+library(tidyverse)
+
+# Cargar datos
+icfes <- read_csv("datos/saber_pro_ni_2024.csv")
+
+# Dimension de los datos
+dim(icfes)
+# [1] 3245   42
+
+# Primeras filas
+head(icfes)
+
+# Estructura
+str(icfes)
+
+# Resumen de variables numericas
+summary(icfes %>% select(MOD_INGLES_PUNT, MOD_LECTURA_CRITICA_PUNT,
+                          MOD_RAZONA_CUANTITAT_PUNT))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Medidas descriptivas para MOD\_INGLES\_PUNT}
+\begin{lstlisting}
+# Medidas de tendencia central
+media_ingles <- mean(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+mediana_ingles <- median(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+
+cat("Media:", round(media_ingles, 2), "\n")
+cat("Mediana:", round(mediana_ingles, 2), "\n")
+
+# Medidas de dispersion
+sd_ingles <- sd(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+var_ingles <- var(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+cv_ingles <- (sd_ingles / media_ingles) * 100
+
+cat("Desviacion estandar:", round(sd_ingles, 2), "\n")
+cat("Varianza:", round(var_ingles, 2), "\n")
+cat("CV:", round(cv_ingles, 2), "%\n")
+
+# Forma
+library(moments)
+skew_ingles <- skewness(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+kurt_ingles <- kurtosis(icfes$MOD_INGLES_PUNT, na.rm = TRUE) - 3
+
+cat("Asimetria:", round(skew_ingles, 2), "\n")
+cat("Curtosis:", round(kurt_ingles, 2), "\n")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Desagregación por tipo de IES}
+\begin{lstlisting}
+# Comparar puntajes por tipo de institucion
+icfes %>%
+  group_by(INST_CARACTER_ACADEMICO) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT, na.rm = TRUE),
+    mediana = median(MOD_INGLES_PUNT, na.rm = TRUE),
+    sd = sd(MOD_INGLES_PUNT, na.rm = TRUE),
+    cv = (sd / media) * 100,
+    min = min(MOD_INGLES_PUNT, na.rm = TRUE),
+    max = max(MOD_INGLES_PUNT, na.rm = TRUE)
+  ) %>%
+  arrange(desc(media))
+
+# Resultado esperado:
+# INST_CARACTER_ACADEMICO    n  media mediana    sd    cv  min  max
+# Universidad (privada)    1850  162.3   161.0  18.5  11.4  110  200
+# Universidad (publica)     950  157.8   156.0  19.2  12.2  105  198
+# Inst. Tecnica/Tecnologica 445  148.5   147.0  20.1  13.5  100  195
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Desagregación por estrato}
+\begin{lstlisting}
+# Comparar puntajes por estrato socioeconomico
+icfes %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA)) %>%
+  group_by(FAMI_ESTRATOVIVIENDA) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT, na.rm = TRUE),
+    mediana = median(MOD_INGLES_PUNT, na.rm = TRUE),
+    sd = sd(MOD_INGLES_PUNT, na.rm = TRUE),
+    Q1 = quantile(MOD_INGLES_PUNT, 0.25, na.rm = TRUE),
+    Q3 = quantile(MOD_INGLES_PUNT, 0.75, na.rm = TRUE),
+    IQR = Q3 - Q1
+  ) %>%
+  arrange(FAMI_ESTRATOVIVIENDA)
+
+# ?Hay una relacion clara entre estrato y puntaje de ingles?
+# ?Como varia la dispersion entre estratos?
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Tabla resumen consolidada}
+\begin{lstlisting}
+# Funcion para calcular todas las estadisticas
+estadisticas_completas <- function(x) {
+  tibble(
+    n = sum(!is.na(x)),
+    media = mean(x, na.rm = TRUE),
+    mediana = median(x, na.rm = TRUE),
+    sd = sd(x, na.rm = TRUE),
+    cv = (sd / media) * 100,
+    min = min(x, na.rm = TRUE),
+    Q1 = quantile(x, 0.25, na.rm = TRUE),
+    Q3 = quantile(x, 0.75, na.rm = TRUE),
+    max = max(x, na.rm = TRUE),
+    IQR = Q3 - Q1,
+    asimetria = skewness(x, na.rm = TRUE),
+    curtosis = kurtosis(x, na.rm = TRUE) - 3
+  )
+}
+
+# Aplicar a puntaje de ingles
+estadisticas_completas(icfes$MOD_INGLES_PUNT)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Resumen y próxima sesión}
+% ============================================================================
+
+\begin{frame}{Resumen de la sesión}
+\textbf{Conceptos clave cubiertos}:
+
+\begin{enumerate}
+\item \textbf{Introducción}: estadística descriptiva vs inferencial, datos ICFES, tipos de datos
+\item \textbf{Tendencia central}: media, mediana, moda
+\item \textbf{Dispersión}: rango, IQR, varianza, desviación estándar, CV
+\item \textbf{Forma}: z-scores, Chebyshev, regla empírica, asimetría, curtosis
+\item \textbf{Posición}: percentiles, cuartiles, five-number summary
+\item \textbf{Aplicación}: análisis completo de MOD\_INGLES\_PUNT
+\end{enumerate}
+
+\vspace{1em}
+\begin{alertblock}{Para la próxima sesión}
+\begin{itemize}
+\item Repasar funciones de R: \code{mean()}, \code{median()}, \code{sd()}, \code{quantile()}, \code{summary()}
+\item Traer computadora con R y RStudio instalados
+\item Descargar los datos ICFES del repositorio del curso
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Próxima sesión: Estadística Descriptiva Gráfica}
+\textbf{Vie 14 ago 2026}
+
+\textbf{Temas a cubrir}:
+\begin{itemize}
+\item Distribuciones de frecuencia
+\item Visualización de una variable: histogramas, box plots, density plots
+\item Visualización de dos variables: scatter plots, heatmaps
+\item Covarianza y correlación (Pearson y Spearman)
+\item Paradoja de Simpson
+\item Pipeline completo de análisis exploratorio de datos (EDA)
+\end{itemize}
+
+\vspace{1em}
+\textbf{Paquetes de R a instalar}:
+\begin{lstlisting}
+install.packages(c("ggplot2", "dplyr", "corrplot", "GGally"))
+\end{lstlisting}
+\end{frame}
+
+\end{document}

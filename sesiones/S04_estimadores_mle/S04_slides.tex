@@ -1,0 +1,1006 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 4: Estimación Puntual e Intervalos de Confianza}
+\subtitle{De estimadores puntuales a intervalos para medias y varianzas}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Viernes 11 de septiembre de 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Estimación Puntual}
+% ============================================================================
+
+\begin{frame}{Parámetros vs Estadísticos: Repaso}
+\begin{block}{Conceptos fundamentales}
+\begin{itemize}
+  \item \textbf{Parámetro}: característica numérica de la \emph{población}
+  \begin{itemize}
+    \item Ejemplos: $\mu$ (media poblacional), $\sigma^2$ (varianza poblacional), $p$ (proporción poblacional)
+    \item Usualmente \alert{desconocidos} (¿cuál es la media verdadera de inglés de TODOS los estudiantes de NI en Colombia?)
+  \end{itemize}
+  \item \textbf{Estadístico}: característica numérica de la \emph{muestra}
+  \begin{itemize}
+    \item Ejemplos: $\bar{x}$ (media muestral), $s^2$ (varianza muestral), $\hat{p}$ (proporción muestral)
+    \item Son \alert{observables} (calculamos $\bar{x}$ con nuestra muestra)
+  \end{itemize}
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Problema central de la inferencia}: usar estadísticos para aprender sobre parámetros
+\end{frame}
+
+\begin{frame}{¿Qué es la Estimación Puntual?}
+\begin{definition}[Estimación puntual]
+Es el proceso de usar un \textbf{estadístico muestral} para aproximar el valor de un \textbf{parámetro poblacional}.
+\end{definition}
+
+\vspace{0.3cm}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Estimadores comunes}:
+\begin{align*}
+\bar{x} &\text{ estima } \mu \\
+s^2 &\text{ estima } \sigma^2 \\
+s &\text{ estima } \sigma \\
+\hat{p} &\text{ estima } p
+\end{align*}
+
+\column{0.48\textwidth}
+\textbf{Notación}:
+\begin{itemize}
+  \item $\hat{\theta}$ = estimador puntual del parámetro $\theta$
+  \item Ejemplo: $\hat{\mu} = \bar{x}$
+  \item $\hat{\sigma}^2 = s^2$
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+\alert{Limitación}: un solo número no captura la incertidumbre de la estimación
+\end{frame}
+
+\begin{frame}{Propiedades Deseables de un Estimador}
+\textbf{1. Insesgamiento (unbiasedness)}
+\begin{itemize}
+  \item Un estimador $\hat{\theta}$ es insesgado si $E(\hat{\theta}) = \theta$
+  \item Su valor esperado (promedio a largo plazo) es igual al parámetro
+  \item Ejemplos: $E(\bar{x}) = \mu$, $E(s^2) = \sigma^2$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{2. Eficiencia}
+\begin{itemize}
+  \item Entre dos estimadores insesgados, preferimos el de \alert{menor varianza}
+  \item Menor varianza $\Rightarrow$ estimaciones más concentradas alrededor del parámetro
+  \item Ejemplo: $\bar{x}$ es más eficiente que la mediana para estimar $\mu$ en distribuciones normales
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{3. Consistencia}
+\begin{itemize}
+  \item A medida que $n \to \infty$, el estimador converge al parámetro
+  \item $\bar{x} \xrightarrow{p} \mu$ cuando $n \to \infty$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Estimación Puntual con Datos ICFES}
+\textbf{Contexto}: Queremos estimar la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de Negocios Internacionales en Colombia.
+
+\vspace{0.3cm}
+\begin{lstlisting}
+# Cargar datos
+icfes_ni <- read.csv("datos/icfes_ni_2023.csv")
+
+# Estimacion puntual de mu
+mu_estimado <- mean(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
+cat("Estimacion puntual de mu:", round(mu_estimado, 2))
+
+# Estimacion puntual de sigma^2
+sigma2_estimado <- var(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
+cat("\nEstimacion puntual de sigma^2:", round(sigma2_estimado, 2))
+
+# Estimacion puntual de sigma
+sigma_estimado <- sd(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
+cat("\nEstimacion puntual de sigma:", round(sigma_estimado, 2))
+\end{lstlisting}
+
+\vspace{0.2cm}
+\alert{Pregunta}: ¿Qué tan confiables son estas estimaciones? ¿Cuánto error hay?
+\end{frame}
+
+\begin{frame}{De Estimación Puntual a Intervalos}
+\begin{columns}[c]
+\column{0.48\textwidth}
+\textbf{Estimación puntual}:
+\begin{itemize}
+  \item $\hat{\mu} = 162.5$ puntos
+  \item Un solo valor
+  \item No cuantifica incertidumbre
+\end{itemize}
+
+\vspace{0.5cm}
+¿Es $\mu$ exactamente 162.5?\\
+\alert{No}, pero probablemente está cerca.
+
+\column{0.48\textwidth}
+\textbf{Intervalo de confianza}:
+\begin{itemize}
+  \item $(159.8, 165.2)$ puntos
+  \item Un rango de valores plausibles
+  \item Cuantifica incertidumbre
+\end{itemize}
+
+\vspace{0.5cm}
+Estamos \alert{95\% confiados} de que $\mu$ está en ese intervalo.
+\end{columns}
+
+\vspace{0.5cm}
+\begin{block}{Transición}
+Pasamos de un \textbf{punto} (estimación puntual) a un \textbf{intervalo} (estimación por intervalo) que refleja nuestra incertidumbre.
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Lógica de los Intervalos de Confianza}
+% ============================================================================
+
+\begin{frame}{¿Qué es un Intervalo de Confianza?}
+\begin{definition}[Intervalo de confianza]
+Un \textbf{intervalo de confianza (IC)} para un parámetro $\theta$ al nivel $(1-\alpha) \times 100\%$ es un rango de valores que, si repitiéramos el muestreo muchas veces, contendría al parámetro verdadero en $(1-\alpha) \times 100\%$ de las muestras.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Estructura general}:
+\[
+\text{IC} = \text{Estimación puntual} \pm \text{Margen de error}
+\]
+
+\vspace{0.3cm}
+\begin{block}{Nivel de confianza}
+\begin{itemize}
+  \item $(1-\alpha)$ = nivel de confianza (típicamente 0.90, 0.95, 0.99)
+  \item $\alpha$ = nivel de significancia (típicamente 0.10, 0.05, 0.01)
+  \item Ejemplo: IC al 95\% $\Rightarrow$ $(1-\alpha) = 0.95$, $\alpha = 0.05$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Interpretación Correcta del IC}
+\begin{alertblock}{Interpretación CORRECTA}
+``Si tomáramos 100 muestras aleatorias diferentes y construyéramos un IC al 95\% con cada una, esperaríamos que aproximadamente \alert{95 de esos intervalos} contengan el parámetro verdadero $\mu$.''
+\end{alertblock}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Interpretación alternativa correcta}
+``Estamos 95\% confiados de que el intervalo $(a, b)$ contiene a $\mu$.''
+\end{exampleblock}
+
+\vspace{0.3cm}
+\begin{block}{Interpretación INCORRECTA}
+\textcolor{red}{\textbf{NO}}: ``Hay un 95\% de probabilidad de que $\mu$ esté en $(a, b)$''.
+
+\vspace{0.2cm}
+\textbf{¿Por qué es incorrecta?} Porque $\mu$ es un valor \emph{fijo} (aunque desconocido), no una variable aleatoria. El intervalo es lo que varía de muestra a muestra.
+\end{block}
+\end{frame}
+
+\begin{frame}{Visualización del Concepto de IC}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  % Linea del parametro verdadero
+  \draw[very thick, blue] (0,0) -- (10,0) node[right] {$\mu$ verdadero};
+  \draw[blue, very thick] (5,0) circle (0.08);
+
+  % Intervalos de confianza (simulados)
+  \foreach \y/\xmin/\xmax/\color in {
+    1/4.2/5.8/green!70!black,
+    2/4.5/6.1/green!70!black,
+    3/4.0/5.6/green!70!black,
+    4/3.8/5.4/green!70!black,
+    5/5.5/7.1/red,
+    6/4.3/5.9/green!70!black,
+    7/4.1/5.7/green!70!black,
+    8/4.6/6.2/green!70!black}{
+    \draw[\color, very thick] (\xmin,\y) -- (\xmax,\y);
+    \draw[\color, fill=\color] (\xmin,\y) circle (0.04);
+    \draw[\color, fill=\color] (\xmax,\y) circle (0.04);
+    \pgfmathparse{(\xmin+\xmax)/2}
+    \draw[\color, fill=white] (\pgfmathresult,\y) circle (0.06);
+  }
+
+  \node[anchor=west] at (10.2,4) {\small 8 muestras};
+  \node[anchor=west, green!70!black] at (10.2,3) {\small 7 intervalos};
+  \node[anchor=west, green!70!black] at (10.2,2.5) {\small contienen $\mu$};
+  \node[anchor=west, red] at (10.2,2) {\small 1 intervalo};
+  \node[anchor=west, red] at (10.2,1.5) {\small NO contiene $\mu$};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\small
+En este ejemplo, 7 de 8 IC (87.5\%) contienen a $\mu$. Con más muestras, converge a 95\%.
+\end{frame}
+
+\begin{frame}{Margen de Error}
+\begin{definition}[Margen de error]
+La mitad del ancho del intervalo de confianza. Para la media con $\sigma$ conocida:
+\[
+E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
+\]
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Componentes}:
+\begin{itemize}
+  \item $z_{\alpha/2}$ = valor crítico de la distribución normal estándar
+  \item $\frac{\sigma}{\sqrt{n}}$ = error estándar de $\bar{x}$
+  \item Mayor confianza $(1-\alpha)$ $\Rightarrow$ mayor $z_{\alpha/2}$ $\Rightarrow$ mayor $E$
+  \item Mayor $n$ $\Rightarrow$ menor $E$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Trade-off}: Confianza vs Precisión
+\begin{itemize}
+  \item Más confianza (ej. 99\%) $\Rightarrow$ intervalo más ancho
+  \item Menos confianza (ej. 90\%) $\Rightarrow$ intervalo más estrecho
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{IC para la Media: $\sigma$ Conocida}
+% ============================================================================
+
+\begin{frame}{IC para $\mu$ con $\sigma$ Conocida}
+\textbf{Supuestos}:
+\begin{itemize}
+  \item Muestra aleatoria simple de tamaño $n$
+  \item Población normal O $n \geq 30$ (TLC)
+  \item Desviación estándar poblacional $\sigma$ \alert{conocida}
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Fórmula del IC al $(1-\alpha) \times 100\%$}
+\[
+\bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}
+\]
+Equivalentemente:
+\[
+\left( \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \quad \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right)
+\]
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Fundamento}: Por el TLC, $\bar{x} \sim N\left(\mu, \frac{\sigma^2}{n}\right)$, entonces
+\[
+Z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\]
+\end{frame}
+
+\begin{frame}{Valores Críticos de $z$}
+\begin{table}
+\centering
+\begin{tabular}{cccc}
+\toprule
+\textbf{Nivel de confianza} & $(1-\alpha)$ & $\alpha/2$ & $z_{\alpha/2}$ \\
+\midrule
+90\% & 0.90 & 0.05 & 1.645 \\
+95\% & 0.95 & 0.025 & 1.960 \\
+99\% & 0.99 & 0.005 & 2.576 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Interpretación}: Para un IC al 95\%, usamos $z_{0.025} = 1.96$, que deja 2.5\% en cada cola de la distribución normal estándar.
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+  \draw[->] (-3.5,0) -- (3.5,0) node[right] {$z$};
+  \draw[->] (0,0) -- (0,2.5) node[above] {};
+  \draw[domain=-3.2:3.2, smooth, variable=\x, thick] plot ({\x},{2*exp(-0.5*\x*\x)});
+
+  \fill[blue!20] (-1.96,0) -- plot[domain=-1.96:1.96] ({\x},{2*exp(-0.5*\x*\x)}) -- (1.96,0) -- cycle;
+  \draw[dashed] (-1.96,0) -- (-1.96,{2*exp(-0.5*1.96*1.96)});
+  \draw[dashed] (1.96,0) -- (1.96,{2*exp(-0.5*1.96*1.96)});
+
+  \node[below] at (-1.96,0) {$-1.96$};
+  \node[below] at (1.96,0) {$1.96$};
+  \node at (0,1) {95\%};
+  \node at (-2.7,0.3) {\small 2.5\%};
+  \node at (2.7,0.3) {\small 2.5\%};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de Valores Críticos en R}
+\begin{lstlisting}
+# Valor critico para IC al 95%
+z_95 <- qnorm(0.975)  # P(Z <= z) = 0.975
+cat("z para 95%:", z_95)
+# Resultado: 1.959964
+
+# Valor critico para IC al 99%
+z_99 <- qnorm(0.995)  # P(Z <= z) = 0.995
+cat("\nz para 99%:", z_99)
+# Resultado: 2.575829
+
+# Valor critico para IC al 90%
+z_90 <- qnorm(0.95)   # P(Z <= z) = 0.95
+cat("\nz para 90%:", z_90)
+# Resultado: 1.644854
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Nota}: Usamos \code{qnorm(1 - $\alpha$/2)} porque queremos el cuantil superior que deja $\alpha/2$ en la cola derecha.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo Numérico: IC con $\sigma$ Conocida}
+\textbf{Escenario}: Supongamos que de censos anteriores sabemos que $\sigma = 18$ para \variable{MOD\_INGLES\_PUNT} en NI. Tenemos una muestra de $n = 120$ estudiantes con $\bar{x} = 162.5$.
+
+\vspace{0.3cm}
+\textbf{Calcular IC al 95\%}:
+
+\begin{lstlisting}
+# Datos
+xbar <- 162.5
+sigma <- 18
+n <- 120
+confianza <- 0.95
+alpha <- 1 - confianza
+
+# Valor critico
+z_critico <- qnorm(1 - alpha/2)
+
+# Error estandar
+ee <- sigma / sqrt(n)
+
+# Margen de error
+E <- z_critico * ee
+
+# Limites del IC
+ic_inferior <- xbar - E
+ic_superior <- xbar + E
+
+cat("IC al 95%: (", round(ic_inferior, 2), ",",
+    round(ic_superior, 2), ")")
+# IC al 95%: ( 159.28 , 165.72 )
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del Resultado}
+\begin{exampleblock}{Resultado}
+IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Interpretación correcta}:
+\begin{itemize}
+  \item Estamos 95\% confiados de que la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI está entre 159.28 y 165.72 puntos.
+  \item Si repitiéramos el muestreo 100 veces, aproximadamente 95 de los intervalos construidos contendrían el verdadero valor de $\mu$.
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Implicación práctica}:
+\begin{itemize}
+  \item El margen de error es $E = 3.22$ puntos
+  \item ¿Es suficientemente preciso para nuestros propósitos?
+  \item Si necesitamos más precisión, podemos aumentar $n$
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{IC para la Media: $\sigma$ Desconocida (Distribución $t$)}
+% ============================================================================
+
+\begin{frame}{El Problema: $\sigma$ Desconocida}
+\textbf{Situación real}: En la práctica, \alert{casi nunca} conocemos $\sigma$.
+
+\vspace{0.3cm}
+\textbf{Solución}: Usar la desviación estándar muestral $s$ en lugar de $\sigma$.
+
+\vspace{0.3cm}
+\begin{block}{Consecuencia}
+Al reemplazar $\sigma$ por $s$, introducimos una fuente adicional de variabilidad. El estadístico
+\[
+t = \frac{\bar{x} - \mu}{s/\sqrt{n}}
+\]
+ya NO sigue una distribución normal estándar, sino una \alert{distribución $t$ de Student} con $n-1$ grados de libertad.
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Notación}: $t \sim t(n-1)$ o $t_{n-1}$
+\end{frame}
+
+\begin{frame}{Distribución $t$ de Student}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Características}:
+\begin{itemize}
+  \item Simétrica, centrada en 0
+  \item Forma de campana (similar a $N(0,1)$)
+  \item \alert{Colas más pesadas} que la normal
+  \item Depende de los grados de libertad (gl = $n-1$)
+  \item Con $n$ grande, $t(n-1) \approx N(0,1)$
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{tikzpicture}[scale=0.65]
+  \draw[->] (-3.5,0) -- (3.5,0) node[right] {$t$};
+  \draw[->] (0,0) -- (0,2.5);
+
+  % Normal estandar
+  \draw[domain=-3.2:3.2, smooth, variable=\x, thick, blue]
+    plot ({\x},{2*exp(-0.5*\x*\x)}) node[above right] {\small $N(0,1)$};
+
+  % t con gl=5
+  \draw[domain=-3.2:3.2, smooth, variable=\x, thick, red, dashed]
+    plot ({\x},{2*0.92*(1+\x*\x/5)^(-3)}) node[above left] {\small $t(5)$};
+
+  \node[below] at (0,0) {0};
+\end{tikzpicture}
+
+\vspace{0.2cm}
+\small La $t$ con pocos gl tiene colas más anchas.
+\end{columns}
+
+\vspace{0.3cm}
+\textbf{Implicación}: Para el mismo nivel de confianza, los valores críticos $t_{\alpha/2, n-1}$ son \alert{mayores} que $z_{\alpha/2}$, lo que resulta en intervalos \alert{más anchos}.
+\end{frame}
+
+\begin{frame}{IC para $\mu$ con $\sigma$ Desconocida}
+\textbf{Supuestos}:
+\begin{itemize}
+  \item Muestra aleatoria simple de tamaño $n$
+  \item Población normal (más importante cuando $n$ es pequeño)
+  \item $\sigma$ \alert{desconocida}
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Fórmula del IC al $(1-\alpha) \times 100\%$}
+\[
+\bar{x} \pm t_{\alpha/2, n-1} \frac{s}{\sqrt{n}}
+\]
+donde:
+\begin{itemize}
+  \item $t_{\alpha/2, n-1}$ = valor crítico de la distribución $t$ con $n-1$ grados de libertad
+  \item $s$ = desviación estándar muestral
+  \item $\frac{s}{\sqrt{n}}$ = error estándar estimado de $\bar{x}$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Comparación de Valores Críticos: $z$ vs $t$}
+\begin{table}
+\centering
+\small
+\begin{tabular}{ccccc}
+\toprule
+\textbf{gl} & $n$ & $t_{0.025, n-1}$ & $z_{0.025}$ & Diferencia \\
+\midrule
+5  & 6   & 2.571 & 1.960 & +31\% \\
+10 & 11  & 2.228 & 1.960 & +14\% \\
+20 & 21  & 2.086 & 1.960 & +6\% \\
+30 & 31  & 2.042 & 1.960 & +4\% \\
+60 & 61  & 2.000 & 1.960 & +2\% \\
+$\infty$ & $\infty$ & 1.960 & 1.960 & 0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Observación}: Con $n \geq 30$, la diferencia es pequeña ($<5\%$), pero sigue siendo mejor usar $t$ cuando $\sigma$ es desconocida.
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de Valores Críticos $t$ en R}
+\begin{lstlisting}
+# Valor critico t para IC al 95% con diferentes gl
+gl_valores <- c(5, 10, 20, 30, 60, 120)
+alpha <- 0.05
+
+resultados <- data.frame(
+  gl = gl_valores,
+  n = gl_valores + 1,
+  t_critico = qt(1 - alpha/2, df = gl_valores),
+  z_critico = qnorm(1 - alpha/2)
+)
+
+resultados$diferencia <-
+  (resultados$t_critico / resultados$z_critico - 1) * 100
+
+print(round(resultados, 3))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Función clave}: \code{qt(p, df)} devuelve el cuantil $p$ de la distribución $t$ con \code{df} grados de libertad.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: IC para la Media de MOD\_INGLES\_PUNT en NI}
+\textbf{Datos reales}: Muestra de $n = 120$ estudiantes de NI.
+
+\begin{lstlisting}
+# Cargar datos
+icfes_ni <- read.csv("datos/icfes_ni_2023.csv")
+
+# Calcular estadisticos muestrales
+ingles <- icfes_ni$MOD_INGLES_PUNT
+n <- length(ingles)
+xbar <- mean(ingles, na.rm = TRUE)
+s <- sd(ingles, na.rm = TRUE)
+
+# IC al 95% usando la formula
+alpha <- 0.05
+gl <- n - 1
+t_critico <- qt(1 - alpha/2, df = gl)
+ee <- s / sqrt(n)
+E <- t_critico * ee
+
+ic_inf <- xbar - E
+ic_sup <- xbar + E
+
+cat("n =", n, "\nxbar =", round(xbar, 2),
+    "\ns =", round(s, 2))
+cat("\nIC al 95%: (", round(ic_inf, 2), ",",
+    round(ic_sup, 2), ")")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Método Directo con \code{t.test()}}
+\R\ tiene una función integrada que calcula el IC automáticamente:
+
+\begin{lstlisting}
+# Metodo directo: t.test()
+resultado <- t.test(ingles, conf.level = 0.95)
+
+# Ver el resultado completo
+print(resultado)
+
+# Extraer solo el IC
+ic <- resultado$conf.int
+cat("IC al 95%:", round(ic, 2))
+
+# Cambiar el nivel de confianza
+ic_99 <- t.test(ingles, conf.level = 0.99)$conf.int
+cat("\nIC al 99%:", round(ic_99, 2))
+
+ic_90 <- t.test(ingles, conf.level = 0.90)$conf.int
+cat("\nIC al 90%:", round(ic_90, 2))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Ventaja}: \code{t.test()} también realiza una prueba de hipótesis (que veremos en sesiones futuras).
+\end{frame}
+
+\begin{frame}[fragile]{Interpretación del Output de \code{t.test()}}
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+	One Sample t-test
+
+data:  ingles
+t = 42.356, df = 119, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 159.28 165.72
+sample estimates:
+mean of x
+   162.50
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Elementos clave}:
+\begin{itemize}
+  \item \textbf{t = 42.356}: estadístico $t$ para prueba $H_0: \mu = 0$ (no relevante aquí)
+  \item \textbf{df = 119}: grados de libertad ($n-1$)
+  \item \textbf{95\% CI: (159.28, 165.72)}: ¡el intervalo de confianza!
+  \item \textbf{mean of x = 162.50}: estimación puntual $\bar{x}$
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{IC para la Varianza (Distribución $\chi^2$)}
+% ============================================================================
+
+\begin{frame}{IC para la Varianza $\sigma^2$}
+\textbf{Motivación}: A veces queremos estimar la \alert{variabilidad} poblacional, no solo la media.
+
+\vspace{0.3cm}
+\textbf{Aplicaciones}:
+\begin{itemize}
+  \item Educación: ¿qué tan heterogéneo es el rendimiento en inglés entre estudiantes de NI?
+  \item Comercio internacional: volatilidad de la TRM (tasa de cambio) para planear importaciones
+  \item Logística: variabilidad en tiempos de entrega de MercadoLibre o Rappi
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Distribución muestral de $s^2$}
+Si la población es normal, entonces:
+\[
+\frac{(n-1)s^2}{\sigma^2} \sim \chi^2(n-1)
+\]
+donde $\chi^2(n-1)$ es la distribución chi-cuadrado con $n-1$ grados de libertad.
+\end{block}
+\end{frame}
+
+\begin{frame}{Distribución Chi-Cuadrado ($\chi^2$)}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Características}:
+\begin{itemize}
+  \item \alert{Asimétrica} (sesgada a la derecha)
+  \item Solo valores positivos ($\chi^2 \geq 0$)
+  \item Depende de los gl
+  \item Con gl grandes, se aproxima a la normal
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Implicación}: El IC para $\sigma^2$ será \alert{asimétrico}.
+
+\column{0.48\textwidth}
+\begin{tikzpicture}[scale=0.65]
+  \draw[->] (-0.3,0) -- (10,0) node[right] {$\chi^2$};
+  \draw[->] (0,0) -- (0,3);
+
+  % Chi-cuadrado con gl=3
+  \draw[domain=0.1:9, smooth, variable=\x, thick, blue, samples=100]
+    plot ({\x},{2.5*(\x^0.5)*exp(-\x/2)}) node[right] {\small $\chi^2(3)$};
+
+  % Chi-cuadrado con gl=6
+  \draw[domain=0.1:9, smooth, variable=\x, thick, red, dashed, samples=100]
+    plot ({\x},{1.8*(\x^1)*exp(-\x/2)}) node[above right] {\small $\chi^2(6)$};
+
+  \node[below] at (0,0) {0};
+\end{tikzpicture}
+\end{columns}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: A diferencia de $z$ y $t$, la $\chi^2$ NO es simétrica, así que los dos valores críticos no son opuestos.
+\end{frame}
+
+\begin{frame}{Fórmula del IC para $\sigma^2$}
+\textbf{Supuestos}:
+\begin{itemize}
+  \item Muestra aleatoria simple de tamaño $n$
+  \item Población \alert{normal} (más importante que para la media)
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{IC al $(1-\alpha) \times 100\%$ para $\sigma^2$}
+\[
+\left( \frac{(n-1)s^2}{\chi^2_{\alpha/2, n-1}}, \quad \frac{(n-1)s^2}{\chi^2_{1-\alpha/2, n-1}} \right)
+\]
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Valores críticos}:
+\begin{itemize}
+  \item $\chi^2_{\alpha/2, n-1}$ = valor que deja $\alpha/2$ en la cola \alert{derecha} (cuantil superior)
+  \item $\chi^2_{1-\alpha/2, n-1}$ = valor que deja $\alpha/2$ en la cola \alert{izquierda} (cuantil inferior)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{IC para $\sigma$}: Tomar raíz cuadrada de los límites.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: IC para la Varianza de MOD\_INGLES\_PUNT}
+\begin{lstlisting}
+# Datos
+n <- 120
+s2 <- var(ingles, na.rm = TRUE)
+gl <- n - 1
+alpha <- 0.05
+
+# Valores criticos chi-cuadrado
+chi2_inf <- qchisq(alpha/2, df = gl)       # Cola izquierda
+chi2_sup <- qchisq(1 - alpha/2, df = gl)   # Cola derecha
+
+# IC para sigma^2
+ic_var_inf <- (gl * s2) / chi2_sup
+ic_var_sup <- (gl * s2) / chi2_inf
+
+cat("s^2 =", round(s2, 2))
+cat("\nIC al 95% para sigma^2: (",
+    round(ic_var_inf, 2), ",", round(ic_var_sup, 2), ")")
+
+# IC para sigma (tomar raiz cuadrada)
+ic_sd_inf <- sqrt(ic_var_inf)
+ic_sd_sup <- sqrt(ic_var_sup)
+
+cat("\nIC al 95% para sigma: (",
+    round(ic_sd_inf, 2), ",", round(ic_sd_sup, 2), ")")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Asimetría del IC para $\sigma^2$}
+\textbf{Ejemplo numérico}: Supongamos $n = 120$, $s^2 = 324$ (entonces $s = 18$).
+
+\vspace{0.3cm}
+\begin{itemize}
+  \item $\chi^2_{0.025, 119} = 152.22$ (cola derecha)
+  \item $\chi^2_{0.975, 119} = 89.39$ (cola izquierda)
+\end{itemize}
+
+\vspace{0.3cm}
+IC para $\sigma^2$:
+\[
+\left( \frac{119 \times 324}{152.22}, \quad \frac{119 \times 324}{89.39} \right) = (253.5, 431.6)
+\]
+
+\vspace{0.3cm}
+IC para $\sigma$:
+\[
+(\sqrt{253.5}, \sqrt{431.6}) = (15.9, 20.8)
+\]
+
+\vspace{0.3cm}
+\textbf{Observación}: La estimación puntual $s = 18$ NO está en el centro del intervalo (15.9, 20.8) debido a la asimetría de la distribución $\chi^2$.
+\end{frame}
+
+% ============================================================================
+\section{Forest Plot Departamental}
+% ============================================================================
+
+\begin{frame}{IC por Departamento: Motivación}
+\textbf{Pregunta}: ¿El nivel de inglés varía significativamente entre departamentos de Colombia?
+
+\vspace{0.3cm}
+\textbf{Estrategia}:
+\begin{enumerate}
+  \item Calcular IC al 95\% para $\mu$ en cada departamento
+  \item Visualizar todos los IC en un \alert{forest plot}
+  \item Comparar: si dos intervalos NO se solapan, hay evidencia de diferencia
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Aplicación}: Identificar regiones con rendimiento excepcionalmente alto o bajo en inglés para diseñar políticas educativas focalizadas.
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de IC por Departamento en R}
+\begin{lstlisting}
+library(dplyr)
+
+# Calcular IC por departamento
+ic_deptos <- icfes_ni %>%
+  group_by(ESTU_DEPTO_RESIDE) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT, na.rm = TRUE),
+    sd = sd(MOD_INGLES_PUNT, na.rm = TRUE),
+    ee = sd / sqrt(n),
+    gl = n - 1,
+    t_critico = qt(0.975, df = gl),
+    ic_inf = media - t_critico * ee,
+    ic_sup = media + t_critico * ee
+  ) %>%
+  filter(n >= 30)  # Solo deptos con muestra suficiente
+
+# Ver primeros resultados
+head(ic_deptos)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Crear Forest Plot con ggplot2}
+\begin{lstlisting}
+library(ggplot2)
+
+# Ordenar por media para mejor visualizacion
+ic_deptos <- ic_deptos %>%
+  arrange(media)
+
+# Forest plot
+ggplot(ic_deptos, aes(x = media, y = reorder(ESTU_DEPTO_RESIDE, media))) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = ic_inf, xmax = ic_sup),
+                 height = 0.3, color = "steelblue") +
+  geom_vline(xintercept = mean(ic_deptos$media),
+             linetype = "dashed", color = "red") +
+  labs(x = "Media de MOD_INGLES_PUNT (IC 95%)",
+       y = "Departamento",
+       title = "Intervalos de Confianza por Departamento",
+       subtitle = "Estudiantes de Negocios Internacionales") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del Forest Plot}
+\textbf{Elementos visuales}:
+\begin{itemize}
+  \item \textbf{Punto}: estimación puntual $\bar{x}$ para cada departamento
+  \item \textbf{Barra horizontal}: IC al 95\%
+  \item \textbf{Línea vertical roja}: media nacional (de los departamentos con $n \geq 30$)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item Departamentos con IC que NO cruzan la línea roja son significativamente diferentes de la media nacional
+  \item Si dos IC NO se solapan, hay evidencia de diferencia entre esos departamentos
+  \item IC más anchos $\Rightarrow$ muestras más pequeñas o mayor variabilidad
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo hipotético}:
+\begin{itemize}
+  \item Bogotá: IC = (168, 172) $\Rightarrow$ significativamente superior
+  \item Chocó: IC = (140, 148) $\Rightarrow$ significativamente inferior
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Identificar Departamentos Atípicos}
+\begin{lstlisting}
+# Media nacional (ponderada por n)
+media_nacional <- weighted.mean(ic_deptos$media, ic_deptos$n)
+
+# Departamentos significativamente superiores
+superiores <- ic_deptos %>%
+  filter(ic_inf > media_nacional) %>%
+  select(ESTU_DEPTO_RESIDE, media, ic_inf, ic_sup)
+
+cat("Departamentos significativamente superiores:\n")
+print(superiores)
+
+# Departamentos significativamente inferiores
+inferiores <- ic_deptos %>%
+  filter(ic_sup < media_nacional) %>%
+  select(ESTU_DEPTO_RESIDE, media, ic_inf, ic_sup)
+
+cat("\nDepartamentos significativamente inferiores:\n")
+print(inferiores)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparación Visual: Ancho de los IC}
+\begin{lstlisting}
+# Calcular ancho del IC
+ic_deptos <- ic_deptos %>%
+  mutate(ancho_ic = ic_sup - ic_inf)
+
+# Grafico: ancho vs tamano de muestra
+ggplot(ic_deptos, aes(x = n, y = ancho_ic)) +
+  geom_point(size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE,
+              color = "red", linetype = "dashed") +
+  labs(x = "Tamano de muestra (n)",
+       y = "Ancho del IC",
+       title = "Relacion entre n y Precision",
+       subtitle = "Ancho del IC = f(1/sqrt(n))") +
+  theme_minimal()
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Relación esperada}: $\text{Ancho} = 2 \times t_{\alpha/2} \times \frac{s}{\sqrt{n}}$, entonces el ancho $\propto 1/\sqrt{n}$.
+\end{frame}
+
+% ============================================================================
+\section{Resumen: ¿Cuándo usar $z$, $t$, $\chi^2$?}
+% ============================================================================
+
+\begin{frame}{Tabla Resumen de Intervalos de Confianza}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{2.5cm}p{2.5cm}p{3cm}p{3cm}}
+\toprule
+\textbf{Parámetro} & \textbf{Condición} & \textbf{Distribución} & \textbf{Fórmula} \\
+\midrule
+$\mu$ & $\sigma$ conocida & $z$ (normal) & $\bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}$ \\[0.3cm]
+$\mu$ & $\sigma$ desconocida & $t(n-1)$ & $\bar{x} \pm t_{\alpha/2,n-1} \frac{s}{\sqrt{n}}$ \\[0.3cm]
+$\sigma^2$ & Población normal & $\chi^2(n-1)$ & $\left(\frac{(n-1)s^2}{\chi^2_{\alpha/2}}, \frac{(n-1)s^2}{\chi^2_{1-\alpha/2}}\right)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Nota}: En la práctica, casi siempre usamos la distribución $t$ para la media, porque $\sigma$ es desconocida.
+\end{frame}
+
+\begin{frame}{Diagrama de Flujo para Elegir el IC}
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.2cm and 1.5cm,
+  decision/.style={diamond, draw, fill=blue!20, text width=3cm, align=center, inner sep=0pt},
+  block/.style={rectangle, draw, fill=green!20, text width=3.5cm, align=center, rounded corners, minimum height=1cm},
+  line/.style={draw, -{Latex[length=2mm]}}
+]
+
+  \node [block] (inicio) {?`Qu\'e par\'ametro estimar?};
+
+  \node [decision, below=0.8cm of inicio] (param) {$\mu$ o $\sigma^2$?};
+
+  \node [decision, below left=1.2cm and 2cm of param] (sigma_conocida) {?`$\sigma$ conocida?};
+  \node [block, below=1cm of sigma_conocida] (usa_z) {Usar distribuci\'on $z$};
+  \node [block, right=2cm of usa_z] (usa_t) {Usar distribuci\'on $t$};
+
+  \node [block, below right=1.2cm and 2cm of param] (usa_chi2) {Usar distribuci\'on $\chi^2$};
+
+  \path [line] (inicio) -- (param);
+  \path [line] (param) -- node[above, sloped] {\small $\mu$} (sigma_conocida);
+  \path [line] (param) -- node[above, sloped] {\small $\sigma^2$} (usa_chi2);
+  \path [line] (sigma_conocida) -- node[left] {\small S\'i} (usa_z);
+  \path [line] (sigma_conocida) -- node[above] {\small No} (usa_t);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\small
+\textbf{Regla práctica}: Si estás estimando $\mu$ y no te dicen explícitamente que $\sigma$ es conocida, \alert{usa la distribución $t$}.
+\end{frame}
+
+\begin{frame}{Supuestos y Robustez}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+\textbf{Método} & \textbf{Supuesto clave} & \textbf{Robustez} \\
+\midrule
+IC para $\mu$ (z o t) & Normalidad de la población O $n \geq 30$ (TLC) & \textbf{Robusta} con $n$ grande incluso si la población no es normal \\[0.3cm]
+IC para $\sigma^2$ ($\chi^2$) & Población \alert{normal} & \textbf{NO robusta}. Sensible a desviaciones de normalidad \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Recomendaciones}:
+\begin{itemize}
+  \item Para $\mu$: si $n < 30$, verificar normalidad con QQ-plot o Shapiro-Wilk
+  \item Para $\sigma^2$: siempre verificar normalidad, considerar métodos bootstrap si hay dudas
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Conclusiones}
+% ============================================================================
+
+\begin{frame}{Resumen de la Sesión}
+\textbf{Hoy aprendimos}:
+\begin{enumerate}
+  \item \textbf{Estimación puntual}: usar $\bar{x}$ para estimar $\mu$, $s^2$ para estimar $\sigma^2$
+  \item \textbf{Intervalos de confianza}: cuantificar incertidumbre alrededor de la estimación
+  \item \textbf{IC para $\mu$}:
+  \begin{itemize}
+    \item Con $\sigma$ conocida: distribución $z$
+    \item Con $\sigma$ desconocida: distribución $t$ (caso real)
+  \end{itemize}
+  \item \textbf{IC para $\sigma^2$}: distribución $\chi^2$ (asimétrico)
+  \item \textbf{Forest plots}: comparar IC entre grupos (departamentos)
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Próxima sesión}: IC para proporciones, tamaño de muestra, y muestreo estratificado.
+\end{frame}
+
+\begin{frame}{Ejercicios para la Próxima Clase}
+\textbf{Con los datos de ICFES}:
+\begin{enumerate}
+  \item Calcular IC al 95\% y 99\% para la media de \variable{MOD\_RAZONA\_CUANTITAT} en NI
+  \item Calcular IC al 95\% para la desviación estándar de \variable{MOD\_INGLES\_PUNT}
+  \item Crear un forest plot comparando IC de inglés entre tipo de IES (pública vs privada)
+  \item Investigar: ¿Cuántos departamentos tienen IC que NO se solapan con Bogotá?
+  \item \textbf{Desafío}: Calcular el IC para la \emph{mediana} usando bootstrap (investigar método)
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Lectura}: Anderson et al., Capítulo 8 (Intervalos de Confianza)
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Large
+¡Gracias por su atención!
+
+\vspace{1cm}
+\normalsize
+Preguntas y discusión
+\end{center}
+\end{frame}
+
+\end{document}

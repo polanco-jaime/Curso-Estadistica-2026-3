@@ -1,0 +1,198 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, frame=single, breaklines=true, showstringspaces=false}
+
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Problem Set 8}\\[3pt]
+{\large Regresi\'on Lineal M\'ultiple y Diagn\'osticos Avanzados}\\[6pt]
+Asignado: Octubre 30 (Sesi\'on 10) \quad$|$\quad Entrega: Noviembre 13 (Sesi\'on 12)\\[3pt]
+\textit{Plazo extendido: 2 semanas}
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+\vspace{2pt}
+{\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
+\vspace{6pt}
+
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
+microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+El c\'odigo R debe incluirse. Este PS integra los conceptos de regresi\'on
+m\'ultiple y diagn\'osticos avanzados como cierre del curso.
+
+\vspace{10pt}
+
+\section*{Enunciado}
+
+En este Problem Set (capstone) estimar\'a un modelo de regresi\'on lineal
+m\'ultiple para predecir el puntaje de ingl\'es en Saber Pro de estudiantes
+de Negocios Internacionales (NI), usando m\'ultiples regresores de Saber 11,
+y realizar\'a un diagn\'ostico exhaustivo del modelo.
+
+\begin{enumerate}[label=\arabic*)]
+  \item \textbf{Modelo OLS m\'ultiple con regresores de Saber 11:} estime un
+        modelo para predecir \texttt{MOD\_INGLES\_PUNT} (Saber Pro) usando
+        \textbf{al menos 4 regresores} del examen Saber 11:
+        \begin{enumerate}[label=\alph*)]
+          \item Seleccione 4 o m\'as variables de Saber 11 como regresores.
+                Sugerencias:
+                \begin{itemize}
+                  \item \texttt{PUNT\_INGLES} (ingl\'es)
+                  \item \texttt{PUNT\_MATEMATICAS} (matem\'aticas)
+                  \item \texttt{PUNT\_LECTURA\_CRITICA} (lectura cr\'itica)
+                  \item \texttt{PUNT\_SOCIALES\_CIUDADANAS} (sociales y
+                        ciudadanas)
+                  \item \texttt{PUNT\_CIENCIAS\_NATURALES} (ciencias naturales)
+                \end{itemize}
+          \item Estime el modelo OLS:
+                \[
+                  \texttt{MOD\_INGLES\_PUNT}_i = \beta_0 + \beta_1 X_{1i} +
+                  \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \varepsilon_i
+                \]
+                usando \texttt{lm()} y presente el \texttt{summary()} completo.
+          \item Interprete cada coeficiente $\hat{\beta}_j$ en contexto.
+                ¿Cu\'al regresor tiene el mayor efecto sobre el puntaje de
+                ingl\'es en Saber Pro?
+        \end{enumerate}
+
+  \item \textbf{Multicolinealidad: Factor de Inflaci\'on de la Varianza (VIF):}
+        eval\'ue si existe multicolinealidad entre los regresores.
+        \begin{enumerate}[label=\alph*)]
+          \item Calcule el VIF para cada regresor usando \texttt{car::vif()}.
+          \item Reporte los valores de VIF. ¿Hay alg\'un regresor con
+                $\text{VIF} > 5$ o $\text{VIF} > 10$?
+          \item Si hay multicolinealidad alta, ¿qu\'e implica para la
+                precisi\'on de las estimaciones de los coeficientes?
+          \item ¿Considera necesario eliminar alg\'un regresor del modelo?
+                Justifique.
+        \end{enumerate}
+
+  \item \textbf{Sesgo por variable omitida (OVB):} compare el coeficiente de
+        \texttt{PUNT\_INGLES} en dos modelos para ilustrar el sesgo por
+        omisi\'on de variables:
+        \begin{enumerate}[label=\alph*)]
+          \item Estime un modelo simple:
+                \[
+                  \texttt{MOD\_INGLES\_PUNT}_i = \gamma_0 + \gamma_1
+                  \texttt{PUNT\_INGLES}_i + u_i
+                \]
+          \item Compare $\hat{\gamma}_1$ (modelo simple) con
+                $\hat{\beta}_1$ (modelo m\'ultiple del punto 1).
+          \item ¿Cambi\'o el coeficiente? ¿En qu\'e direcci\'on (aument\'o o
+                disminuy\'o)?
+          \item Explique el sesgo por variable omitida: ¿por qu\'e el modelo
+                simple sobrestima o subestima el efecto de
+                \texttt{PUNT\_INGLES}?
+        \end{enumerate}
+
+  \item \textbf{Diagn\'osticos gr\'aficos: 4 gr\'aficos base:} produzca los
+        4 gr\'aficos diagn\'osticos est\'andar de \texttt{plot(modelo)} para
+        el modelo m\'ultiple:
+        \begin{enumerate}[label=\alph*)]
+          \item Residuos vs.\ valores ajustados
+          \item Q-Q plot de residuos
+          \item Scale-Location (ra\'iz de residuos estandarizados vs.\
+                ajustados)
+          \item Residuos vs.\ leverage (con curvas de distancia de Cook)
+        \end{enumerate}
+        Interprete cada gr\'afico: ¿qu\'e supuesto eval\'ua (linealidad,
+        homocedasticidad, normalidad, observaciones influyentes) y qu\'e
+        concluye?
+
+  \item \textbf{Prueba de heterocedasticidad (Breusch-Pagan):} eval\'ue si
+        los errores tienen varianza constante.
+        \begin{enumerate}[label=\alph*)]
+          \item Plantee las hip\'otesis:
+                \[
+                  H_0: \text{homocedasticidad} \quad \text{vs.} \quad
+                  H_1: \text{heterocedasticidad}
+                \]
+          \item Aplique la prueba de Breusch-Pagan usando
+                \texttt{lmtest::bptest()}.
+          \item Reporte el estad\'istico de prueba y el $p$-valor.
+          \item ¿Rechaza $H_0$ al 5\%? ¿Qu\'e implica para los errores
+                est\'andar OLS si hay heterocedasticidad?
+        \end{enumerate}
+
+  \item \textbf{Observaciones influyentes: distancia de Cook:} identifique
+        observaciones que tienen influencia desproporcionada en el modelo.
+        \begin{enumerate}[label=\alph*)]
+          \item Calcule la distancia de Cook para cada observaci\'on usando
+                \texttt{cooks.distance()}.
+          \item Identifique las 5 observaciones m\'as influyentes (mayor
+                distancia de Cook).
+          \item ¿Alguna observaci\'on supera el umbral $D_i > 4/n$?
+          \item Examine esas observaciones: ¿qu\'e caracter\'isticas tienen?
+                ¿Son outliers genuinos o datos at\'ipicos v\'alidos?
+        \end{enumerate}
+
+  \item \textbf{Errores est\'andar robustos (HC1):} si detect\'o
+        heterocedasticidad, reestime los errores est\'andar usando la
+        correcci\'on de Huber-White.
+        \begin{enumerate}[label=\alph*)]
+          \item Use \texttt{sandwich::vcovHC()} con \texttt{type = "HC1"}
+                para calcular la matriz de varianza-covarianza robusta.
+          \item Reporte los coeficientes con errores est\'andar robustos
+                usando \texttt{lmtest::coeftest()}.
+          \item Compare los errores est\'andar OLS (del punto 1) con los
+                robustos. ¿Cu\'ales son m\'as grandes?
+          \item ¿Cambian las conclusiones de significancia estad\'istica para
+                alg\'un regresor?
+        \end{enumerate}
+
+  \item \textbf{Bondad de ajuste y comparaci\'on de modelos:} eval\'ue el
+        poder explicativo del modelo.
+        \begin{enumerate}[label=\alph*)]
+          \item Reporte $R^2$ y $R^2$ ajustado del modelo m\'ultiple.
+          \item Compare el $R^2$ del modelo m\'ultiple con el $R^2$ del modelo
+                simple del punto 3. ¿Cu\'anto aumenta el poder explicativo al
+                incluir m\'as regresores?
+          \item ¿El aumento en $R^2$ justifica la complejidad adicional del
+                modelo? (Use el criterio del $R^2$ ajustado).
+        \end{enumerate}
+
+  \item \textbf{Conclusiones y recomendaciones finales:} sintetice el
+        an\'alisis completo.
+        \begin{enumerate}[label=\alph*)]
+          \item ¿Cu\'ales son los principales determinantes del puntaje de
+                ingl\'es en Saber Pro para estudiantes de NI?
+          \item ¿El modelo cumple razonablemente los supuestos de Gauss-Markov?
+                ¿Qu\'e violaciones identific\'o?
+          \item Si tuviera que recomendar un solo ajuste al modelo para
+                mejorar su validez, ¿cu\'al ser\'ia? (Ejemplos: eliminar un
+                regresor por VIF alto, usar errores robustos, excluir outliers,
+                transformar variables).
+          \item ¿El modelo tiene utilidad pr\'actica para predecir el
+                rendimiento en Saber Pro de futuros estudiantes de NI?
+        \end{enumerate}
+\end{enumerate}
+
+\vspace{10pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Cada entrega completa suma $+0.0625$ a la nota final.}
+\end{center}
+
+\end{document}

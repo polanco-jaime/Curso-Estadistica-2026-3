@@ -1,0 +1,1106 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 10: Regresión Lineal Múltiple}
+\subtitle{Múltiples regresores, OVB y multicolinealidad}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Vie 30 oct 2026}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Modelo de regresión múltiple}
+% ============================================================================
+
+\begin{frame}{Más allá de un solo predictor}
+\begin{block}{Limitación de la regresión simple}
+En regresión simple ($Y = \beta_0 + \beta_1 X + \varepsilon$), solo consideramos \textbf{un} predictor. Pero en la práctica, múltiples factores influyen en $Y$ simultáneamente.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Ejemplo:} El puntaje de inglés en Saber Pro puede depender de:
+\begin{itemize}
+  \item Puntaje en Saber 11 (INGLES\_SABER11\_PUNT)
+  \item Estrato socioeconómico (ESTRATO)
+  \item Tipo de IES: privada/pública (PRIVADA)
+  \item Nivel educativo de los padres (EDUCACION\_PADRE)
+  \item Región del país (REGION)
+  \item Ingresos del hogar (INGRESOS)
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Objetivo de regresión múltiple}
+Estimar el efecto de cada predictor \textbf{controlando por} (manteniendo constantes) los demás predictores.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{El modelo de regresión lineal múltiple}
+\begin{block}{Modelo poblacional}
+\[
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} + \varepsilon_i
+\]
+donde:
+\begin{itemize}
+  \item $Y_i$ = variable dependiente (respuesta)
+  \item $X_{1i}, X_{2i}, \ldots, X_{pi}$ = variables independientes (predictores, regresores)
+  \item $\beta_0$ = intercepto
+  \item $\beta_j$ = coeficiente de $X_j$ ($j = 1, 2, \ldots, p$)
+  \item $\varepsilon_i$ = error aleatorio
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Interpretación de $\beta_j$:}\\
+$\beta_j$ representa el cambio esperado en $Y$ cuando $X_j$ aumenta en una unidad, \textbf{manteniendo constantes todas las demás variables} (ceteris paribus).
+\end{frame}
+
+\begin{frame}{Ecuación estimada}
+Estimamos los parámetros $\beta_0, \beta_1, \ldots, \beta_p$ usando OLS (mínimos cuadrados ordinarios), obteniendo:
+\[
+\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{1i} + \hat{\beta}_2 X_{2i} + \cdots + \hat{\beta}_p X_{pi}
+\]
+
+\vspace{0.2cm}
+\textbf{Residuos:}
+\[
+e_i = Y_i - \hat{Y}_i
+\]
+
+\vspace{0.2cm}
+\textbf{OLS minimiza:}
+\[
+\text{SSE} = \sum_{i=1}^{n} e_i^2 = \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2
+\]
+
+\vspace{0.2cm}
+\begin{alertblock}{Interpretación matricial}
+En álgebra matricial: $\boldsymbol{\hat{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$\\
+(No entraremos en detalle, pero R usa esta fórmula internamente)
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Sintaxis en R: \texttt{lm(Y \textasciitilde{} X1 + X2 + ...)}}
+\begin{lstlisting}
+# Cargar datos ICFES para Negocios Internacionales
+icfes_ni <- read.csv("datos/icfes_ni_2025.csv")
+
+# Regresion multiple: MOD_INGLES_PUNT como funcion de
+# varias variables
+modelo_mult <- lm(MOD_INGLES_PUNT ~
+                    INGLES_SABER11_PUNT +
+                    ESTRATO +
+                    PRIVADA +
+                    EDUCACION_PADRE,
+                  data = icfes_ni)
+
+# Ver coeficientes
+coef(modelo_mult)
+
+#        (Intercept) INGLES_SABER11_PUNT             ESTRATO
+#              32.45                1.67                2.13
+#            PRIVADA     EDUCACION_PADRE
+#               3.82                1.25
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación de los coeficientes}
+Del modelo anterior:
+\[
+\widehat{\text{MOD\_INGLES}} = 32.45 + 1.67 \times \text{Saber11} + 2.13 \times \text{Estrato} + 3.82 \times \text{Privada} + 1.25 \times \text{EducPadre}
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretaciones ceteris paribus:}
+\begin{itemize}
+  \item $\hat{\beta}_1 = 1.67$: Por cada punto adicional en Saber 11, el puntaje de inglés en Saber Pro aumenta \textbf{en promedio} 1.67 puntos, \textbf{manteniendo constantes} estrato, tipo de IES y educación del padre.
+
+  \item $\hat{\beta}_2 = 2.13$: Por cada nivel adicional de estrato, el puntaje aumenta 2.13 puntos, \textbf{controlando por} los demás factores.
+
+  \item $\hat{\beta}_3 = 3.82$: Los estudiantes de IES privadas obtienen 3.82 puntos más que los de públicas, \textbf{en promedio}, controlando por las demás variables.
+
+  \item $\hat{\beta}_4 = 1.25$: Por cada año adicional de educación del padre, el puntaje aumenta 1.25 puntos (ceteris paribus).
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Ejemplo: modelo completo del inglés en NI}
+% ============================================================================
+
+\begin{frame}[fragile]{Modelo extendido con transformaciones}
+\begin{lstlisting}
+# Crear variables dummy para region (referencia: Andina)
+icfes_ni$REGION_CARIBE <- ifelse(icfes_ni$REGION == "Caribe", 1, 0)
+icfes_ni$REGION_PACIFICA <- ifelse(icfes_ni$REGION == "Pacifica", 1, 0)
+icfes_ni$REGION_ORINOQUIA <- ifelse(icfes_ni$REGION == "Orinoquia", 1, 0)
+icfes_ni$REGION_BOGOTA <- ifelse(icfes_ni$REGION == "Bogota", 1, 0)
+
+# Transformacion logaritmica de ingresos (reduce asimetria)
+icfes_ni$LOG_INGRESOS <- log(icfes_ni$INGRESOS + 1)
+
+# Modelo completo
+modelo_completo <- lm(MOD_INGLES_PUNT ~
+                        INGLES_SABER11_PUNT +
+                        ESTRATO +
+                        PRIVADA +
+                        LOG_INGRESOS +
+                        REGION_CARIBE +
+                        REGION_PACIFICA +
+                        REGION_ORINOQUIA +
+                        REGION_BOGOTA,
+                      data = icfes_ni)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Resultados del modelo completo}
+\begin{lstlisting}
+summary(modelo_completo)
+
+# Coefficients:
+#                      Estimate Std. Error t value Pr(>|t|)
+# (Intercept)           28.342      2.145   13.21  < 2e-16 ***
+# INGLES_SABER11_PUNT    1.612      0.025   64.48  < 2e-16 ***
+# ESTRATO                1.876      0.312    6.01  2.1e-09 ***
+# PRIVADA                3.254      0.672    4.84  1.3e-06 ***
+# LOG_INGRESOS           2.145      0.421    5.09  3.6e-07 ***
+# REGION_CARIBE         -2.543      0.834   -3.05  0.00230 **
+# REGION_PACIFICA       -1.267      0.752   -1.68  0.09234 .
+# REGION_ORINOQUIA      -4.123      1.234   -3.34  0.00084 ***
+# REGION_BOGOTA          5.234      0.812    6.44  1.3e-10 ***
+# ---
+# Residual standard error: 10.85 on 5076 DF
+# Multiple R-squared:  0.7145, Adjusted R-squared:  0.7140
+# F-statistic: 1586 on 8 and 5076 DF,  p-value: < 2.2e-16
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del modelo completo}
+\textbf{Variables continuas:}
+\begin{itemize}
+  \item INGLES\_SABER11\_PUNT: $\hat{\beta} = 1.61$ (altamente significativo)\\
+    Por cada punto adicional en Saber 11, +1.61 en Saber Pro (controlando por todo lo demás)
+
+  \item ESTRATO: $\hat{\beta} = 1.88$ (significativo)\\
+    Por cada nivel de estrato, +1.88 puntos
+
+  \item LOG\_INGRESOS: $\hat{\beta} = 2.15$ (significativo)\\
+    Interpretación: un aumento del 1\% en ingresos $\Rightarrow$ +0.0215 puntos\\
+    (semi-elasticidad: $\beta/100$)
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Variable dummy:}
+\begin{itemize}
+  \item PRIVADA: $\hat{\beta} = 3.25$ (significativo)\\
+    IES privadas obtienen 3.25 puntos más que públicas, en promedio, controlando por estrato, ingresos, región, etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretación de dummies regionales}
+\textbf{Región de referencia:} Andina (omitida para evitar multicolinealidad perfecta)
+
+\vspace{0.2cm}
+\textbf{Coeficientes regionales (relativo a Andina):}
+\begin{itemize}
+  \item REGION\_CARIBE: $\hat{\beta} = -2.54$ (significativo)\\
+    Estudiantes del Caribe obtienen 2.54 puntos \textbf{menos} que los de la Andina (controlando por todo)
+
+  \item REGION\_PACIFICA: $\hat{\beta} = -1.27$ (no significativo, p = 0.092)\\
+    No hay diferencia estadísticamente significativa con Andina
+
+  \item REGION\_ORINOQUIA: $\hat{\beta} = -4.12$ (significativo)\\
+    Orinoquia obtiene 4.12 puntos menos que Andina
+
+  \item REGION\_BOGOTA: $\hat{\beta} = +5.23$ (altamente significativo)\\
+    Bogotá obtiene 5.23 puntos \textbf{más} que Andina
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Nota}
+Siempre se omite una categoría de referencia en variables categóricas para evitar colinealidad perfecta (dummy variable trap).
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{$R^2$ y $R^2$ ajustado}
+% ============================================================================
+
+\begin{frame}{$R^2$ en regresión múltiple}
+El $R^2$ se define igual que en regresión simple:
+\[
+R^2 = \frac{\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
+\]
+
+\vspace{0.2cm}
+\textbf{Problema:} $R^2$ \textbf{siempre aumenta} (o se mantiene) al agregar variables, incluso si son irrelevantes.
+
+\vspace{0.2cm}
+\begin{exampleblock}{Ejemplo}
+\begin{itemize}
+  \item Modelo 1: $Y \sim X_1$ $\Rightarrow$ $R^2 = 0.65$
+  \item Modelo 2: $Y \sim X_1 + X_2$ $\Rightarrow$ $R^2 = 0.66$
+  \item Modelo 3: $Y \sim X_1 + X_2 + X_3$ $\Rightarrow$ $R^2 = 0.662$
+\end{itemize}
+
+Incluso si $X_3$ es ruido puro, $R^2$ no disminuirá (a lo sumo se mantiene).
+\end{exampleblock}
+
+\vspace{0.2cm}
+\begin{alertblock}{Consecuencia}
+No podemos comparar modelos con diferente número de variables usando solo $R^2$. Necesitamos una medida que \textbf{penalice} la complejidad.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{$R^2$ ajustado}
+\begin{block}{Definición}
+\[
+R^2_{\text{adj}} = 1 - \frac{\text{SSE}/(n - p - 1)}{\text{SST}/(n - 1)} = 1 - \frac{\text{MSE}}{\text{MST}}
+\]
+donde:
+\begin{itemize}
+  \item $n$ = número de observaciones
+  \item $p$ = número de predictores (sin contar el intercepto)
+  \item MSE = cuadrado medio del error
+  \item MST = cuadrado medio total
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Propiedades:}
+\begin{itemize}
+  \item $R^2_{\text{adj}} \leq R^2$
+  \item $R^2_{\text{adj}}$ puede disminuir si agregamos una variable irrelevante
+  \item Penaliza por el número de predictores
+  \item Útil para comparar modelos con diferente número de variables
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Comparación: $R^2$ vs $R^2$ ajustado}
+\begin{lstlisting}
+# Modelo simple
+modelo1 <- lm(MOD_INGLES_PUNT ~ INGLES_SABER11_PUNT,
+              data = icfes_ni)
+summary(modelo1)$r.squared      # 0.6524
+summary(modelo1)$adj.r.squared  # 0.6523
+
+# Modelo multiple (4 variables)
+modelo2 <- lm(MOD_INGLES_PUNT ~ INGLES_SABER11_PUNT +
+                ESTRATO + PRIVADA + LOG_INGRESOS,
+              data = icfes_ni)
+summary(modelo2)$r.squared      # 0.6982
+summary(modelo2)$adj.r.squared  # 0.6979
+
+# Modelo completo (8 variables)
+summary(modelo_completo)$r.squared      # 0.7145
+summary(modelo_completo)$adj.r.squared  # 0.7140
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Observación:} $R^2_{\text{adj}}$ es ligeramente menor que $R^2$. La diferencia crece cuando agregamos muchas variables poco útiles.
+\end{frame}
+
+\begin{frame}{¿Cuándo usar $R^2$ ajustado?}
+\begin{block}{Regla práctica}
+\begin{itemize}
+  \item Para \textbf{reportar} el ajuste de un modelo: usar ambos ($R^2$ y $R^2_{\text{adj}}$)
+  \item Para \textbf{comparar} modelos con diferente número de variables: usar $R^2_{\text{adj}}$
+  \item Para \textbf{seleccionar} el mejor modelo: complementar con AIC/BIC (siguiente sección)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{alertblock}{Precaución}
+$R^2_{\text{adj}}$ NO es una probabilidad ni una proporción estricta. Puede ser negativo si el modelo es muy malo (aunque en la práctica esto es raro).
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Interpretación aproximada}
+Si $R^2_{\text{adj}} = 0.714$, aproximadamente el 71\% de la variabilidad de $Y$ se explica por los predictores, ajustando por el número de variables.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Pruebas de significancia}
+% ============================================================================
+
+\begin{frame}{Prueba F global}
+\begin{block}{Hipótesis}
+\begin{itemize}
+  \item $H_0$: $\beta_1 = \beta_2 = \cdots = \beta_p = 0$ (todos los coeficientes son cero; el modelo no es útil)
+  \item $H_1$: Al menos un $\beta_j \neq 0$ (al menos un predictor es útil)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Estadístico:}
+\[
+F = \frac{\text{MSR}}{\text{MSE}} = \frac{\text{SSR}/p}{\text{SSE}/(n - p - 1)} \sim F_{p, n-p-1} \quad \text{bajo } H_0
+\]
+
+\vspace{0.2cm}
+\textbf{Regla de decisión:}
+\begin{itemize}
+  \item Rechazamos $H_0$ si $F > F_{\alpha, p, n-p-1}$ o si p-valor $< \alpha$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Interpretación}
+Si rechazamos $H_0$, concluimos que \textbf{al menos una} variable predictora tiene efecto significativo sobre $Y$. El modelo en conjunto es útil.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Relación entre $F$ y $R^2$}
+El estadístico $F$ se puede expresar en función de $R^2$:
+\[
+F = \frac{R^2 / p}{(1 - R^2)/(n - p - 1)}
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item $R^2$ alto $\Rightarrow$ $F$ alto $\Rightarrow$ modelo significativo
+  \item $R^2$ cercano a 0 $\Rightarrow$ $F$ cercano a 0 $\Rightarrow$ modelo no útil
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplo}
+Modelo con $R^2 = 0.714$, $p = 8$, $n = 5085$:
+\[
+F = \frac{0.714 / 8}{(1 - 0.714) / (5085 - 8 - 1)} = \frac{0.08925}{0.0000564} \approx 1583
+\]
+Con p-valor $< 2.2 \times 10^{-16}$, rechazamos $H_0$: el modelo es altamente significativo.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Prueba t individual}
+\begin{block}{Hipótesis para cada coeficiente}
+\begin{itemize}
+  \item $H_0$: $\beta_j = 0$ (el predictor $X_j$ NO tiene efecto, controlando por los demás)
+  \item $H_1$: $\beta_j \neq 0$ (el predictor $X_j$ sí tiene efecto)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Estadístico:}
+\[
+t_j = \frac{\hat{\beta}_j}{\text{SE}(\hat{\beta}_j)} \sim t_{n - p - 1} \quad \text{bajo } H_0
+\]
+
+\vspace{0.2cm}
+\textbf{Regla de decisión:}
+\begin{itemize}
+  \item Rechazamos $H_0$ si $|t_j| > t_{\alpha/2, n-p-1}$ o si p-valor $< \alpha$
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Diferencia con regresión simple}
+En regresión múltiple, la prueba t para $\beta_j$ evalúa el efecto de $X_j$ \textbf{controlando por todas las demás variables}. El resultado puede cambiar drásticamente si agregamos o quitamos predictores.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Interpretando el output de \texttt{summary()}}
+\begin{lstlisting}
+summary(modelo_completo)
+
+# Coefficients:
+#                      Estimate Std. Error t value Pr(>|t|)
+# (Intercept)           28.342      2.145   13.21  < 2e-16 ***
+# INGLES_SABER11_PUNT    1.612      0.025   64.48  < 2e-16 ***
+# ESTRATO                1.876      0.312    6.01  2.1e-09 ***
+# PRIVADA                3.254      0.672    4.84  1.3e-06 ***
+# LOG_INGRESOS           2.145      0.421    5.09  3.6e-07 ***
+# REGION_CARIBE         -2.543      0.834   -3.05  0.00230 **
+# REGION_PACIFICA       -1.267      0.752   -1.68  0.09234 .
+# REGION_ORINOQUIA      -4.123      1.234   -3.34  0.00084 ***
+# REGION_BOGOTA          5.234      0.812    6.44  1.3e-10 ***
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:}
+\begin{itemize}
+  \item Todas las variables son significativas \textbf{excepto} REGION\_PACIFICA (p = 0.092)
+  \item La región Pacífica no difiere significativamente de la Andina (al 5\%)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Significancia conjunta vs individual}
+\begin{alertblock}{Posible discrepancia}
+Es posible que:
+\begin{itemize}
+  \item La prueba F global sea significativa (al menos un $\beta_j \neq 0$)
+  \item Pero ningún coeficiente individual sea significativo
+\end{itemize}
+
+O viceversa:
+\begin{itemize}
+  \item Varios coeficientes individuales sean significativos
+  \item Pero la prueba F global no lo sea (raro en la práctica)
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.2cm}
+\textbf{Causas:}
+\begin{itemize}
+  \item Multicolinealidad (predictores correlacionados)
+  \item Tamaño muestral pequeño
+  \item Efectos débiles pero múltiples
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{block}{Recomendación}
+Siempre reportar ambas pruebas (F global e individuales). Si hay discrepancia, investigar multicolinealidad (VIF) y considerar eliminar variables redundantes.
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Sesgo por variable omitida (OVB)}
+% ============================================================================
+
+\begin{frame}{¿Qué es el sesgo por variable omitida?}
+\begin{block}{Definición}
+El \textbf{sesgo por variable omitida} (Omitted Variable Bias, OVB) ocurre cuando:
+\begin{enumerate}
+  \item Omitimos una variable relevante del modelo
+  \item Esa variable está correlacionada con al menos uno de los predictores incluidos
+\end{enumerate}
+
+En este caso, los coeficientes estimados están \textbf{sesgados}: no estiman correctamente el efecto causal de los predictores.
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Ejemplo}
+Modelo simple: $\text{Inglés} = \beta_0 + \beta_1 \times \text{Privada} + \varepsilon$
+
+Si omitimos ESTRATO, y ESTRATO está correlacionado con PRIVADA (IES privadas suelen tener estudiantes de estrato alto), entonces $\hat{\beta}_1$ \textbf{sobre-estima} el efecto de IES privada, porque captura parte del efecto de ESTRATO.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Fórmula del sesgo}
+Si el modelo verdadero es:
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon
+\]
+
+Pero estimamos el modelo omitido:
+\[
+Y = \gamma_0 + \gamma_1 X_1 + u
+\]
+
+Entonces el sesgo de $\hat{\gamma}_1$ es:
+\[
+E(\hat{\gamma}_1) = \beta_1 + \beta_2 \times \frac{\text{Cov}(X_1, X_2)}{\text{Var}(X_1)}
+\]
+
+\vspace{0.2cm}
+\textbf{Dirección del sesgo:}
+\begin{itemize}
+  \item Si $\beta_2 > 0$ y $\text{Cov}(X_1, X_2) > 0$ $\Rightarrow$ sesgo positivo (sobre-estimación)
+  \item Si $\beta_2 > 0$ y $\text{Cov}(X_1, X_2) < 0$ $\Rightarrow$ sesgo negativo (sub-estimación)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo empírico: efecto de IES privada}
+\textbf{Modelo simple (omite ESTRATO):}
+\begin{lstlisting}
+modelo_omitido <- lm(MOD_INGLES_PUNT ~ PRIVADA, data = icfes_ni)
+coef(modelo_omitido)
+
+# (Intercept)     PRIVADA
+#      154.82        7.35
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Modelo controlando por ESTRATO:}
+\begin{lstlisting}
+modelo_con_estrato <- lm(MOD_INGLES_PUNT ~ PRIVADA + ESTRATO,
+                         data = icfes_ni)
+coef(modelo_con_estrato)
+
+# (Intercept)     PRIVADA      ESTRATO
+#      148.34        4.12         2.87
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Observación:} El coeficiente de PRIVADA cae de 7.35 a 4.12 al controlar por ESTRATO. El efecto aparente de IES privada estaba \textbf{inflado} por el sesgo de variable omitida.
+\end{frame}
+
+\begin{frame}[fragile]{Verificar la correlación entre PRIVADA y ESTRATO}
+\begin{lstlisting}
+# Correlacion entre PRIVADA y ESTRATO
+cor(icfes_ni$PRIVADA, icfes_ni$ESTRATO)
+
+# [1] 0.38  (correlacion positiva moderada)
+
+# Tabla cruzada
+table(icfes_ni$PRIVADA, icfes_ni$ESTRATO)
+
+#        1   2   3   4   5   6
+#   0  456 823 512 387 123  34  (publicas)
+#   1  234 512 687 823 412  82  (privadas)
+
+# Media de estrato por tipo IES
+tapply(icfes_ni$ESTRATO, icfes_ni$PRIVADA, mean)
+
+#        0        1
+#     2.43     3.21
+
+# Los estudiantes de IES privadas tienen estrato mas alto
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:} ESTRATO está correlacionado con PRIVADA, y afecta el puntaje de inglés. Omitir ESTRATO genera OVB.
+\end{frame}
+
+\begin{frame}{Implicaciones del OVB}
+\begin{alertblock}{Problema para inferencia causal}
+Si queremos estimar el \textbf{efecto causal} de IES privada sobre inglés, debemos controlar por \textbf{todas} las variables confusoras (confounders). De lo contrario, el coeficiente estimado NO representa el efecto causal, sino una mezcla de efectos directos e indirectos.
+\end{alertblock}
+
+\vspace{0.2cm}
+\textbf{Estrategias para mitigar OVB:}
+\begin{itemize}
+  \item Incluir todas las variables relevantes (si están disponibles)
+  \item Usar variables instrumentales (IV)
+  \item Diseños experimentales o cuasi-experimentales (RCT, DiD, RD)
+  \item Efectos fijos (panel data)
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Regla de oro}
+Nunca concluir causalidad solo con regresión observacional. Siempre considerar qué variables pueden estar omitidas y cómo sesgan los coeficientes.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{VIF y multicolinealidad}
+% ============================================================================
+
+\begin{frame}{¿Qué es la multicolinealidad?}
+\begin{block}{Definición}
+La \textbf{multicolinealidad} ocurre cuando dos o más predictores están \textbf{altamente correlacionados} entre sí.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Tipos:}
+\begin{itemize}
+  \item \textbf{Perfecta:} Una variable es combinación lineal exacta de otras (raro en datos reales; R lo detecta y elimina una variable automáticamente)
+  \item \textbf{Alta:} Correlación fuerte pero no perfecta (común en datos observacionales)
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Consecuencias de multicolinealidad alta:}
+\begin{itemize}
+  \item Errores estándar \textbf{inflados} (baja precisión de estimación)
+  \item Intervalos de confianza muy amplios
+  \item Coeficientes inestables (cambian mucho al agregar/quitar variables)
+  \item Dificultad para detectar significancia individual
+  \item No afecta $R^2$ ni la capacidad de predicción (solo la interpretación de coeficientes)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Factor de Inflación de la Varianza (VIF)}
+\begin{block}{Definición}
+El \textbf{VIF} (Variance Inflation Factor) mide cuánto se infla la varianza de $\hat{\beta}_j$ debido a la correlación con otros predictores.
+
+Para cada predictor $X_j$:
+\[
+\text{VIF}_j = \frac{1}{1 - R_j^2}
+\]
+donde $R_j^2$ es el $R^2$ de la regresión auxiliar:
+\[
+X_j = \alpha_0 + \alpha_1 X_1 + \cdots + \alpha_{j-1} X_{j-1} + \alpha_{j+1} X_{j+1} + \cdots + \alpha_p X_p + e
+\]
+
+Es decir, regresamos $X_j$ sobre todos los demás predictores.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item VIF = 1 $\Rightarrow$ $X_j$ no está correlacionado con otros predictores
+  \item VIF = 5 $\Rightarrow$ la varianza de $\hat{\beta}_j$ es 5 veces mayor que si $X_j$ fuera independiente
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Reglas de pulgar para VIF}
+\textbf{Umbrales comunes:}
+\begin{itemize}
+  \item VIF $< 5$ $\Rightarrow$ multicolinealidad \textbf{baja} (aceptable)
+  \item $5 \leq$ VIF $< 10$ $\Rightarrow$ multicolinealidad \textbf{moderada} (preocupante)
+  \item VIF $\geq 10$ $\Rightarrow$ multicolinealidad \textbf{severa} (requiere acción)
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Soluciones si VIF es alto}
+\begin{enumerate}
+  \item \textbf{Eliminar una de las variables correlacionadas} (la menos importante teóricamente)
+  \item \textbf{Combinar variables:} crear un índice o promedio
+  \item \textbf{Componentes principales (PCA):} reducir dimensionalidad
+  \item \textbf{Regularización:} Ridge regression (penaliza coeficientes grandes)
+  \item \textbf{Aumentar el tamaño muestral} (reduce errores estándar en general)
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Calcular VIF en R}
+\begin{lstlisting}
+# Instalar paquete car (si no esta instalado)
+# install.packages("car")
+library(car)
+
+# Calcular VIF para el modelo completo
+vif(modelo_completo)
+
+#  INGLES_SABER11_PUNT              ESTRATO
+#                 1.23                 2.87
+#              PRIVADA         LOG_INGRESOS
+#                 3.45                 4.12
+#        REGION_CARIBE      REGION_PACIFICA
+#                 1.18                 1.09
+#     REGION_ORINOQUIA        REGION_BOGOTA
+#                 1.05                 1.32
+
+# Todos los VIF < 5 => multicolinealidad baja
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:} No hay problemas serios de multicolinealidad en este modelo.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo con multicolinealidad severa}
+\begin{lstlisting}
+# Crear una variable casi perfectamente correlacionada
+icfes_ni$ESTRATO_x2 <- icfes_ni$ESTRATO * 2 + rnorm(nrow(icfes_ni), 0, 0.1)
+
+cor(icfes_ni$ESTRATO, icfes_ni$ESTRATO_x2)
+
+# [1] 0.9998  (correlacion casi perfecta)
+
+# Ajustar modelo con ambas
+modelo_colin <- lm(MOD_INGLES_PUNT ~ ESTRATO + ESTRATO_x2,
+                   data = icfes_ni)
+
+vif(modelo_colin)
+
+#       ESTRATO    ESTRATO_x2
+#       5432.12       5432.12
+
+# VIF extremadamente alto => multicolinealidad severa
+# Los errores estandar seran enormes
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Solución:} Eliminar una de las dos variables (son redundantes).
+\end{frame}
+
+% ============================================================================
+\section{Selección de modelos: AIC y BIC}
+% ============================================================================
+
+\begin{frame}{Criterios de información: AIC y BIC}
+\begin{block}{Problema}
+Queremos elegir el \textbf{mejor} modelo entre varios candidatos. ¿Cómo balanceamos ajuste (bondad de ajuste) y complejidad (número de parámetros)?
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Dos criterios populares:}
+
+\begin{enumerate}
+  \item \textbf{AIC} (Akaike Information Criterion):
+  \[
+  \text{AIC} = n \ln\left(\frac{\text{SSE}}{n}\right) + 2(p + 1)
+  \]
+
+  \item \textbf{BIC} (Bayesian Information Criterion):
+  \[
+  \text{BIC} = n \ln\left(\frac{\text{SSE}}{n}\right) + (p + 1) \ln(n)
+  \]
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item Menor AIC/BIC $\Rightarrow$ mejor modelo
+  \item BIC penaliza más la complejidad que AIC (especialmente si $n$ es grande)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{AIC vs BIC}
+\textbf{AIC:}
+\begin{itemize}
+  \item Derivado de teoría de información (Kullback-Leibler divergence)
+  \item Penaliza con $2(p+1)$
+  \item Favorece modelos más complejos (menos penalización)
+  \item Mejor para predicción
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{BIC:}
+\begin{itemize}
+  \item Derivado de teoría bayesiana
+  \item Penaliza con $(p+1) \ln(n)$
+  \item Si $n > 8$, BIC penaliza más que AIC
+  \item Favorece modelos más simples (parsimonia)
+  \item Mejor para inferencia (identificar el modelo verdadero)
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Regla práctica}
+\begin{itemize}
+  \item Si el objetivo es \textbf{predicción}: usar AIC
+  \item Si el objetivo es \textbf{inferencia/interpretación}: usar BIC
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Calcular AIC y BIC en R}
+\begin{lstlisting}
+# Modelo 1: solo Saber 11
+modelo1 <- lm(MOD_INGLES_PUNT ~ INGLES_SABER11_PUNT,
+              data = icfes_ni)
+
+# Modelo 2: + estrato y privada
+modelo2 <- lm(MOD_INGLES_PUNT ~ INGLES_SABER11_PUNT +
+                ESTRATO + PRIVADA,
+              data = icfes_ni)
+
+# Modelo 3: modelo completo (8 variables)
+# (ya ajustado: modelo_completo)
+
+# Comparar AIC
+AIC(modelo1, modelo2, modelo_completo)
+
+#                   df      AIC
+# modelo1            3  42345.2
+# modelo2            5  41823.6
+# modelo_completo   10  41234.8
+
+# Menor AIC => modelo_completo es el mejor segun AIC
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparar con BIC}
+\begin{lstlisting}
+# Comparar BIC
+BIC(modelo1, modelo2, modelo_completo)
+
+#                   df      BIC
+# modelo1            3  42367.1
+# modelo2            5  41856.8
+# modelo_completo   10  41302.4
+
+# Menor BIC => modelo_completo tambien es el mejor segun BIC
+
+# Diferencia AIC
+AIC(modelo2) - AIC(modelo_completo)
+
+# [1] 588.8  (modelo_completo es 589 puntos mejor en AIC)
+
+# Diferencia BIC
+BIC(modelo2) - BIC(modelo_completo)
+
+# [1] 554.4
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:} El modelo completo es sustancialmente mejor que los modelos más simples según ambos criterios.
+\end{frame}
+
+\begin{frame}[fragile]{Selección automática con \texttt{step()}}
+\begin{lstlisting}
+# Seleccion automatica hacia atras (backward)
+# Inicia con el modelo completo y va eliminando variables
+modelo_backward <- step(modelo_completo, direction = "backward")
+
+# Muestra los pasos:
+# Step 1: elimina REGION_PACIFICA (no significativa)
+# Step 2: se detiene (todas las demas son significativas)
+
+# Modelo final
+summary(modelo_backward)
+
+# Puede hacerse tambien forward (hacia adelante) o both (ambos)
+# backward: inicia con todas las variables, elimina una a una
+# forward: inicia sin variables, agrega una a una
+# both: combinacion de ambos
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{alertblock}{Precaución}
+La selección automática puede llevar a overfitting y problemas de inferencia (p-valores inflados). Úsela como exploración, pero siempre valide con teoría y conocimiento del problema.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Interacciones}
+% ============================================================================
+
+\begin{frame}{¿Qué es una interacción?}
+\begin{block}{Definición}
+Una \textbf{interacción} ocurre cuando el efecto de una variable $X_1$ sobre $Y$ \textbf{depende del nivel} de otra variable $X_2$.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Modelo con interacción:}
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 (X_1 \times X_2) + \varepsilon
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item $\beta_1$ = efecto de $X_1$ cuando $X_2 = 0$ (efecto principal de $X_1$)
+  \item $\beta_2$ = efecto de $X_2$ cuando $X_1 = 0$ (efecto principal de $X_2$)
+  \item $\beta_3$ = cómo cambia el efecto de $X_1$ cuando $X_2$ aumenta en 1 unidad (efecto de interacción)
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Ejemplo conceptual}
+¿El efecto de IES privada sobre inglés es el \textbf{mismo} para todos los estratos, o es \textbf{mayor} en estratos altos?
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Interpretación matemática de la interacción}
+Modelo con interacción:
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 (X_1 X_2) + \varepsilon
+\]
+
+Reordenando:
+\[
+Y = \beta_0 + (\beta_1 + \beta_3 X_2) X_1 + \beta_2 X_2 + \varepsilon
+\]
+
+\vspace{0.2cm}
+El \textbf{efecto marginal de $X_1$} es:
+\[
+\frac{\partial Y}{\partial X_1} = \beta_1 + \beta_3 X_2
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item Si $\beta_3 = 0$ $\Rightarrow$ no hay interacción (efecto constante)
+  \item Si $\beta_3 > 0$ $\Rightarrow$ el efecto de $X_1$ aumenta cuando $X_2$ aumenta
+  \item Si $\beta_3 < 0$ $\Rightarrow$ el efecto de $X_1$ disminuye cuando $X_2$ aumenta
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: interacción PRIVADA × ESTRATO}
+\textbf{Pregunta:} ¿El efecto de IES privada varía según el estrato?
+
+\begin{lstlisting}
+# Modelo con interaccion
+modelo_interaccion <- lm(MOD_INGLES_PUNT ~
+                           PRIVADA * ESTRATO,
+                         data = icfes_ni)
+
+summary(modelo_interaccion)
+
+# Coefficients:
+#                  Estimate Std. Error t value Pr(>|t|)
+# (Intercept)       149.23       1.12  133.24  < 2e-16 ***
+# PRIVADA             2.34       1.87    1.25  0.21123
+# ESTRATO             2.67       0.38    7.03  2.3e-12 ***
+# PRIVADA:ESTRATO     0.89       0.52    1.71  0.08734 .
+#
+# Residual standard error: 19.45 on 5081 DF
+# Multiple R-squared:  0.3512, Adjusted R-squared:  0.3508
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del modelo con interacción}
+Ecuación estimada:
+\[
+\widehat{\text{MOD\_INGLES}} = 149.23 + 2.34 \times \text{PRIVADA} + 2.67 \times \text{ESTRATO} + 0.89 \times (\text{PRIVADA} \times \text{ESTRATO})
+\]
+
+\vspace{0.2cm}
+\textbf{Efecto de PRIVADA según ESTRATO:}
+\[
+\frac{\partial \text{Inglés}}{\partial \text{PRIVADA}} = 2.34 + 0.89 \times \text{ESTRATO}
+\]
+
+\begin{itemize}
+  \item Estrato 1: efecto = $2.34 + 0.89 \times 1 = 3.23$ puntos
+  \item Estrato 3: efecto = $2.34 + 0.89 \times 3 = 5.01$ puntos
+  \item Estrato 5: efecto = $2.34 + 0.89 \times 5 = 6.79$ puntos
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Interpretación:} El efecto de IES privada \textbf{aumenta} con el estrato (0.89 puntos adicionales por cada nivel de estrato), aunque la interacción es solo marginalmente significativa (p = 0.087).
+\end{frame}
+
+\begin{frame}[fragile]{Visualización de la interacción}
+\begin{lstlisting}
+# Crear grafico de interaccion
+library(ggplot2)
+
+# Predecir para diferentes combinaciones
+predicciones <- expand.grid(
+  PRIVADA = c(0, 1),
+  ESTRATO = 1:6
+)
+predicciones$MOD_INGLES_PUNT <- predict(modelo_interaccion,
+                                         newdata = predicciones)
+
+ggplot(predicciones, aes(x = ESTRATO, y = MOD_INGLES_PUNT,
+                         color = factor(PRIVADA), group = PRIVADA)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  labs(title = "Interaccion PRIVADA x ESTRATO",
+       x = "Estrato", y = "Puntaje ingles predicho",
+       color = "Tipo IES") +
+  scale_color_manual(values = c("blue", "red"),
+                     labels = c("Publica", "Privada")) +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Interacción entre dos variables continuas}
+\begin{lstlisting}
+# Ejemplo: interaccion INGLES_SABER11 x LOG_INGRESOS
+modelo_cont_int <- lm(MOD_INGLES_PUNT ~
+                        INGLES_SABER11_PUNT * LOG_INGRESOS,
+                      data = icfes_ni)
+
+summary(modelo_cont_int)
+
+# Coefficients:
+#                                  Estimate Std. Error t value Pr(>|t|)
+# (Intercept)                       22.345      3.821    5.85  5.2e-09 ***
+# INGLES_SABER11_PUNT                1.523      0.062   24.56  < 2e-16 ***
+# LOG_INGRESOS                       1.234      0.512    2.41   0.0160 *
+# INGLES_SABER11_PUNT:LOG_INGRESOS   0.023      0.009    2.56   0.0105 *
+#
+# La interaccion es significativa (p = 0.01)
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Interpretación:} El efecto de Saber 11 sobre Saber Pro es \textbf{mayor} en estudiantes de hogares con mayores ingresos.
+\end{frame}
+
+% ============================================================================
+\section{Resumen}
+% ============================================================================
+
+\begin{frame}{Resumen de regresión múltiple}
+\begin{block}{Conceptos clave}
+\begin{itemize}
+  \item Modelo: $Y = \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p + \varepsilon$
+  \item $\beta_j$ = efecto de $X_j$ \textbf{controlando por} las demás variables
+  \item OLS minimiza $\sum e_i^2$ para estimar $\hat{\beta}_0, \ldots, \hat{\beta}_p$
+  \item $R^2_{\text{adj}}$ penaliza por número de variables
+  \item AIC/BIC balancean ajuste y complejidad
+\end{itemize}
+\end{block}
+
+\begin{block}{Pruebas de significancia}
+\begin{itemize}
+  \item Prueba F global: $H_0: \beta_1 = \cdots = \beta_p = 0$
+  \item Prueba t individual: $H_0: \beta_j = 0$ (controlando por los demás)
+  \item Reportar ambas + IC 95\%
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Problemas comunes y soluciones}
+\begin{block}{Sesgo por variable omitida (OVB)}
+\begin{itemize}
+  \item Omitir variables relevantes correlacionadas con $X$ sesga $\hat{\beta}$
+  \item Solución: incluir todas las variables confusoras
+  \item No sobre-interpretar causalidad sin diseño experimental
+\end{itemize}
+\end{block}
+
+\begin{block}{Multicolinealidad}
+\begin{itemize}
+  \item Predictores altamente correlacionados $\Rightarrow$ errores estándar inflados
+  \item Detectar con VIF (> 5 preocupante, > 10 severo)
+  \item Solución: eliminar variables redundantes, PCA, regularización
+\end{itemize}
+\end{block}
+
+\begin{block}{Interacciones}
+\begin{itemize}
+  \item El efecto de $X_1$ depende de $X_2$: $Y \sim X_1 \times X_2$
+  \item $\beta_3$ = cómo cambia el efecto de $X_1$ con $X_2$
+  \item Visualizar con gráficos de pendientes condicionales
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Checklist para análisis de regresión múltiple}
+\begin{enumerate}
+  \item \textbf{Exploración inicial:} scatter plots, correlaciones
+  \item \textbf{Ajustar modelo:} \texttt{lm(Y \textasciitilde{} X1 + X2 + ...)}
+  \item \textbf{Evaluar ajuste:} $R^2$, $R^2_{\text{adj}}$, prueba F global
+  \item \textbf{Significancia individual:} pruebas t, p-valores, IC 95\%
+  \item \textbf{Diagnóstico:}
+    \begin{itemize}
+      \item Residuos: \texttt{plot(modelo)}
+      \item Multicolinealidad: \texttt{vif(modelo)}
+      \item Normalidad: Shapiro-Wilk, Q-Q plot
+      \item Homocedasticidad: Breusch-Pagan test
+    \end{itemize}
+  \item \textbf{Selección de modelo:} AIC/BIC, validación cruzada
+  \item \textbf{Interacciones:} explorar si los efectos son condicionales
+  \item \textbf{Reportar:} tabla de coeficientes, IC, $R^2$, interpretación
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Ejemplo final: reporte profesional}
+\textbf{Objetivo:} Modelar el puntaje de inglés en Saber Pro para estudiantes de Negocios Internacionales.
+
+\vspace{0.2cm}
+\textbf{Variables:}
+\begin{itemize}
+  \item Dependiente: MOD\_INGLES\_PUNT
+  \item Independientes: Saber 11, estrato, tipo IES, log(ingresos), región
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Resultados:}
+\begin{itemize}
+  \item $R^2_{\text{adj}} = 0.714$ (71.4\% de variabilidad explicada)
+  \item Prueba F: $F = 1586$, p $< 0.001$ (modelo altamente significativo)
+  \item Todos los predictores significativos excepto Región Pacífica
+  \item VIF $< 5$ para todas las variables (sin multicolinealidad severa)
+  \item Residuos aproximadamente normales (Shapiro p = 0.08)
+  \item Leve heterocedasticidad (Breusch-Pagan p = 0.03), considerar errores robustos
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Conclusión:} El modelo ajusta bien y revela efectos significativos de Saber 11, estrato, tipo de IES, ingresos y región sobre el desempeño en inglés.
+\end{frame}
+
+\begin{frame}{Próximos pasos}
+\begin{exampleblock}{Temas avanzados (fuera del alcance de este curso)}
+\begin{itemize}
+  \item Diagnósticos avanzados: influential points (Cook's distance), leverage
+  \item Errores estándar robustos (HC, HAC)
+  \item Modelos no lineales: polinomios, splines, GAM
+  \item Regresión regularizada: Ridge, Lasso, Elastic Net
+  \item Regresión logística (para variables dependientes binarias)
+  \item Datos panel: efectos fijos y aleatorios
+  \item Causalidad: variables instrumentales, DiD, RD
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.2cm}
+\begin{block}{Recursos recomendados}
+\begin{itemize}
+  \item Wooldridge, J. (2019). \textit{Introductory Econometrics}. Capítulos 3-7.
+  \item James, G. et al. (2021). \textit{An Introduction to Statistical Learning}. Capítulo 3.
+  \item R Documentation: \texttt{?lm}, \texttt{?summary.lm}, \texttt{?vif}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

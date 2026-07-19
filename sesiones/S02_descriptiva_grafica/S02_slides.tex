@@ -1,0 +1,986 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 2: Estadística Descriptiva Gráfica, Correlación y EDA}
+\subtitle{Visualización de datos, correlación y Paradoja de Simpson}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Vie 14 ago 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Distribuciones de frecuencia}
+% ============================================================================
+
+\begin{frame}{Distribución de frecuencias}
+\begin{block}{Definición}
+Una \textbf{distribución de frecuencias} es una tabla que organiza los datos en clases o categorías, mostrando cuántas observaciones caen en cada una.
+\end{block}
+
+\textbf{Tipos de frecuencia}:
+\begin{itemize}
+\item \textbf{Frecuencia absoluta} ($f_i$): número de observaciones en la clase $i$
+\item \textbf{Frecuencia relativa} ($h_i$): proporción de observaciones en la clase $i$, $h_i = f_i / n$
+\item \textbf{Frecuencia acumulada} ($F_i$): suma de frecuencias hasta la clase $i$
+\item \textbf{Frecuencia relativa acumulada} ($H_i$): proporción acumulada hasta la clase $i$
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo: puntajes de inglés agrupados}
+\begin{tabular}{lcccc}
+\toprule
+Clase & $f_i$ & $h_i$ & $F_i$ & $H_i$ \\
+\midrule
+100-119 & 45 & 0.045 & 45 & 0.045 \\
+120-139 & 180 & 0.180 & 225 & 0.225 \\
+140-159 & 420 & 0.420 & 645 & 0.645 \\
+160-179 & 280 & 0.280 & 925 & 0.925 \\
+180-200 & 75 & 0.075 & 1000 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Tablas de frecuencia en R}
+\begin{lstlisting}
+# Para variables categoricas: usar table()
+tipo_ies <- c("Publica", "Privada", "Privada", "Publica", "Privada",
+              "Privada", "Publica", "Privada")
+
+# Frecuencias absolutas
+table(tipo_ies)
+# tipo_ies
+# Privada  Publica
+#       5        3
+
+# Frecuencias relativas
+prop.table(table(tipo_ies))
+# tipo_ies
+# Privada  Publica
+#   0.625    0.375
+
+# Con datos ICFES
+freq_ies <- table(icfes$INST_CARACTER_ACADEMICO)
+freq_ies
+prop.table(freq_ies)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución de frecuencias agrupadas (1/2)}
+\begin{lstlisting}
+# Para variables continuas: usar cut() para crear intervalos
+puntajes <- icfes$MOD_INGLES_PUNT
+
+# Crear intervalos
+intervalos <- cut(puntajes,
+                  breaks = seq(100, 200, by = 20),
+                  include.lowest = TRUE,
+                  right = FALSE)
+
+# Tabla de frecuencias
+freq_tabla <- table(intervalos)
+freq_tabla
+
+# Frecuencias relativas
+prop.table(freq_tabla)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución de frecuencias agrupadas (2/2)}
+\begin{lstlisting}
+# Tabla completa con frecuencias acumuladas
+library(tidyverse)
+tibble(
+  clase = names(freq_tabla),
+  f = as.numeric(freq_tabla),
+  h = f / sum(f),
+  F = cumsum(f),
+  H = cumsum(h)
+)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Visualización de una variable}
+% ============================================================================
+
+\begin{frame}{Histograma}
+\begin{block}{Definición}
+Un \textbf{histograma} es un gráfico de barras que muestra la distribución de frecuencias de una variable continua.
+\end{block}
+
+\textbf{Componentes}:
+\begin{itemize}
+\item \textbf{Bins} (intervalos): rangos en el eje x
+\item \textbf{Altura}: frecuencia absoluta o relativa (densidad)
+\item Área total = 1 cuando se usa densidad
+\end{itemize}
+
+\textbf{Interpretación}:
+\begin{itemize}
+\item Centro: ¿dónde se concentran los datos?
+\item Dispersión: ¿qué tan amplia es la distribución?
+\item Forma: ¿simétrica, sesgada, bimodal?
+\item Outliers: ¿hay valores aislados?
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Número de bins}
+Demasiados bins: mucho ruido, difícil ver patrón\\
+Muy pocos bins: se pierde detalle\\
+\textbf{Regla de Sturges}: $k = 1 + 3.322 \log_{10}(n)$
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Histograma en R con ggplot2}
+\begin{lstlisting}
+library(ggplot2)
+
+# Histograma basico
+ggplot(icfes, aes(x = MOD_INGLES_PUNT)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(title = "Distribucion de puntajes de ingles - Saber Pro NI",
+       x = "Puntaje de ingles",
+       y = "Frecuencia") +
+  theme_minimal()
+
+# Histograma con densidad
+ggplot(icfes, aes(x = MOD_INGLES_PUNT)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "steelblue", color = "white", alpha = 0.7) +
+  geom_density(color = "red", linewidth = 1) +
+  labs(title = "Distribucion de puntajes de ingles",
+       x = "Puntaje", y = "Densidad") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Estimación de densidad kernel (KDE)}
+\begin{block}{Kernel Density Estimation}
+Alternativa suavizada al histograma. Estima la función de densidad de probabilidad subyacente.
+\end{block}
+
+\begin{lstlisting}
+# Density plot
+ggplot(icfes, aes(x = MOD_INGLES_PUNT)) +
+  geom_density(fill = "lightblue", alpha = 0.5, color = "darkblue") +
+  geom_vline(aes(xintercept = mean(MOD_INGLES_PUNT, na.rm = TRUE)),
+             color = "red", linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = median(MOD_INGLES_PUNT, na.rm = TRUE)),
+             color = "green", linetype = "dashed", linewidth = 1) +
+  labs(title = "Estimacion de densidad - puntaje de ingles",
+       x = "Puntaje", y = "Densidad",
+       caption = "Rojo = media, Verde = mediana") +
+  theme_minimal()
+\end{lstlisting}
+
+\textbf{Ventajas}: suave, fácil de interpretar\\
+\textbf{Desventajas}: sensible al parámetro de ancho de banda
+\end{frame}
+
+\begin{frame}{Box plot (diagrama de caja)}
+\begin{block}{Definición}
+Un \textbf{box plot} es un gráfico que muestra el five-number summary y los outliers.
+\end{block}
+
+\textbf{Componentes}:
+\begin{itemize}
+\item \textbf{Caja}: va desde Q1 hasta Q3 (contiene el 50\% central)
+\item \textbf{Línea en la caja}: mediana (Q2)
+\item \textbf{Bigotes}: se extienden hasta el valor más lejano dentro de 1.5 $\times$ IQR
+\item \textbf{Puntos}: outliers (fuera de los bigotes)
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\draw[thick] (0,0) rectangle (4,1.5);
+\draw[thick, red] (2.5,0) -- (2.5,1.5);
+\draw[thick] (-1.5,0.75) -- (0,0.75);
+\draw[thick] (4,0.75) -- (5.5,0.75);
+\draw[thick] (-1.5,0.5) -- (-1.5,1);
+\draw[thick] (5.5,0.5) -- (5.5,1);
+\fill (6.5,0.75) circle (0.1);
+\fill (7,0.75) circle (0.1);
+\node[below] at (-1.5,-0.3) {Min};
+\node[below] at (0,-0.3) {Q1};
+\node[below] at (2.5,-0.3) {Q2};
+\node[below] at (4,-0.3) {Q3};
+\node[below] at (5.5,-0.3) {Max};
+\node[below] at (6.75,-0.3) {Outliers};
+\draw[<->] (0,-0.8) -- (4,-0.8);
+\node[below] at (2,-0.8) {IQR};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Ventajas}: compacto, fácil comparar grupos, identifica outliers
+\end{frame}
+
+\begin{frame}[fragile]{Box plot en R}
+\begin{lstlisting}
+# Box plot basico
+ggplot(icfes, aes(y = MOD_INGLES_PUNT)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(title = "Box plot de puntajes de ingles",
+       y = "Puntaje de ingles") +
+  theme_minimal()
+
+# Box plot horizontal
+ggplot(icfes, aes(x = MOD_INGLES_PUNT)) +
+  geom_boxplot(fill = "lightgreen", outlier.color = "red") +
+  labs(title = "Distribucion de puntajes de ingles - NI 2024",
+       x = "Puntaje de ingles") +
+  theme_minimal()
+
+# Identificar outliers numericamente
+Q1 <- quantile(icfes$MOD_INGLES_PUNT, 0.25, na.rm = TRUE)
+Q3 <- quantile(icfes$MOD_INGLES_PUNT, 0.75, na.rm = TRUE)
+IQR_val <- Q3 - Q1
+outliers <- icfes %>%
+  filter(MOD_INGLES_PUNT < Q1 - 1.5*IQR_val |
+         MOD_INGLES_PUNT > Q3 + 1.5*IQR_val)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Box plot comparativo}
+\begin{lstlisting}
+# Comparar por tipo de IES
+ggplot(icfes, aes(x = INST_CARACTER_ACADEMICO,
+                  y = MOD_INGLES_PUNT,
+                  fill = INST_CARACTER_ACADEMICO)) +
+  geom_boxplot(outlier.color = "red", outlier.alpha = 0.5) +
+  labs(title = "Puntajes de ingles por tipo de institucion",
+       x = "Tipo de institucion",
+       y = "Puntaje de ingles") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Comparar por estrato
+icfes %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA)) %>%
+  ggplot(aes(x = factor(FAMI_ESTRATOVIVIENDA),
+             y = MOD_INGLES_PUNT,
+             fill = factor(FAMI_ESTRATOVIVIENDA))) +
+  geom_boxplot() +
+  labs(title = "Puntajes de ingles por estrato",
+       x = "Estrato", y = "Puntaje de ingles") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Gráfico de barras para variables categóricas}
+\begin{lstlisting}
+# Grafico de barras simple
+ggplot(icfes, aes(x = INST_CARACTER_ACADEMICO)) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Distribucion de estudiantes NI por tipo de IES",
+       x = "Tipo de institucion",
+       y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Con proporciones
+icfes %>%
+  count(INST_CARACTER_ACADEMICO) %>%
+  mutate(prop = n / sum(n)) %>%
+  ggplot(aes(x = reorder(INST_CARACTER_ACADEMICO, -prop),
+             y = prop)) +
+  geom_bar(stat = "identity", fill = "coral") +
+  geom_text(aes(label = paste0(round(prop*100, 1), "%")),
+            vjust = -0.5) +
+  labs(title = "Proporcion de estudiantes por tipo de IES",
+       x = "Tipo de institucion", y = "Proporcion") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Buenas prácticas de visualización}
+\begin{alertblock}{Principios de visualización efectiva}
+\begin{enumerate}
+\item \textbf{Claridad}: título descriptivo, ejes etiquetados con unidades
+\item \textbf{Simplicidad}: eliminar elementos innecesarios (chartjunk)
+\item \textbf{Honestidad}: ejes que empiezan en cero (para barras), escalas apropiadas
+\item \textbf{Accesibilidad}: paletas de colores amigables para daltónicos
+\item \textbf{Contexto}: incluir leyenda, fuente de datos, notas explicativas
+\end{enumerate}
+\end{alertblock}
+
+\vspace{0.5em}
+\textbf{Errores comunes a evitar}:
+\begin{itemize}
+\item Gráficos 3D innecesarios (distorsionan percepción)
+\item Demasiados colores (usar 3-5 máximo)
+\item Ejes truncados o escalas manipuladas para exagerar diferencias
+\item Gráficos de pastel con muchas categorías (preferir barras)
+\item Falta de contexto o unidades
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Visualización de dos variables}
+% ============================================================================
+
+\begin{frame}{Scatter plot (diagrama de dispersión)}
+\begin{block}{Definición}
+Un \textbf{scatter plot} muestra la relación entre dos variables cuantitativas, con cada punto representando una observación.
+\end{block}
+
+\textbf{Qué buscar}:
+\begin{itemize}
+\item \textbf{Dirección}: positiva (ambas aumentan), negativa (una aumenta, otra disminuye), o ninguna
+\item \textbf{Forma}: lineal, curva, sin patrón
+\item \textbf{Fuerza}: puntos cerca de una línea (fuerte) o dispersos (débil)
+\item \textbf{Outliers}: puntos alejados del patrón general
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo de interpretación}
+Scatter plot de puntaje Saber 11 inglés (eje x) vs Saber Pro inglés (eje y):
+\begin{itemize}
+\item Dirección positiva: estudiantes con mejor Saber 11 tienden a tener mejor Saber Pro
+\item Forma aproximadamente lineal
+\item Fuerza moderada a fuerte (r $\approx$ 0.6-0.7)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Scatter plot en R}
+\begin{lstlisting}
+# Scatter plot basico
+ggplot(icfes, aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
+  geom_point(alpha = 0.3, color = "steelblue") +
+  labs(title = "Relacion entre Saber 11 y Saber Pro (Ingles)",
+       x = "Puntaje Saber 11 Ingles",
+       y = "Puntaje Saber Pro Ingles") +
+  theme_minimal()
+
+# Con linea de tendencia
+ggplot(icfes, aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
+  geom_point(alpha = 0.3, color = "steelblue") +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(title = "Relacion Saber 11 vs Saber Pro (Ingles)",
+       x = "Saber 11 Ingles",
+       y = "Saber Pro Ingles",
+       caption = paste("r =",
+         round(cor(icfes$PUNT_INGLES_S11, icfes$MOD_INGLES_PUNT,
+                   use = "complete.obs"), 3))) +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Scatter plot con grupos}
+\begin{lstlisting}
+# Colorear por tipo de IES
+ggplot(icfes, aes(x = PUNT_INGLES_S11,
+                  y = MOD_INGLES_PUNT,
+                  color = INST_CARACTER_ACADEMICO)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Relacion Saber 11 vs Saber Pro por tipo de IES",
+       x = "Saber 11 Ingles",
+       y = "Saber Pro Ingles",
+       color = "Tipo de IES") +
+  theme_minimal()
+
+# Facetas por estrato
+icfes %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA),
+         FAMI_ESTRATOVIVIENDA %in% c(1,2,3,4,5,6)) %>%
+  ggplot(aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
+  geom_point(alpha = 0.3, color = "steelblue") +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  facet_wrap(~ FAMI_ESTRATOVIVIENDA, nrow = 2) +
+  labs(title = "Relacion S11 vs SPro por estrato") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Heatmap: puntaje promedio por departamento (1/2)}
+\begin{lstlisting}
+# Calcular puntaje promedio por departamento
+mapa_depto <- icfes %>%
+  filter(!is.na(ESTU_DEPTO_RESIDE)) %>%
+  group_by(ESTU_DEPTO_RESIDE) %>%
+  summarise(
+    n = n(),
+    puntaje_medio = mean(MOD_INGLES_PUNT, na.rm = TRUE)
+  ) %>%
+  arrange(desc(puntaje_medio))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Heatmap: puntaje promedio por departamento (2/2)}
+\begin{lstlisting}
+# Heatmap simple (solo tabla)
+ggplot(mapa_depto %>% top_n(20, n),
+       aes(x = reorder(ESTU_DEPTO_RESIDE, puntaje_medio),
+           y = 1, fill = puntaje_medio)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(puntaje_medio, 1)), color = "white") +
+  scale_fill_gradient(low = "red", high = "green") +
+  labs(title = "Puntaje promedio de ingles por departamento (Top 20)",
+       x = "Departamento", fill = "Puntaje medio") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank())
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Gráficos de barras lado a lado y apilados}
+\begin{lstlisting}
+# Preparar datos: contar por tipo de IES y estrato
+datos_barras <- icfes %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA),
+         FAMI_ESTRATOVIVIENDA %in% c(2,3,4,5)) %>%
+  count(INST_CARACTER_ACADEMICO, FAMI_ESTRATOVIVIENDA)
+
+# Barras lado a lado
+ggplot(datos_barras, aes(x = factor(FAMI_ESTRATOVIVIENDA),
+                         y = n,
+                         fill = INST_CARACTER_ACADEMICO)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distribucion de estudiantes por estrato y tipo IES",
+       x = "Estrato", y = "Frecuencia", fill = "Tipo IES") +
+  theme_minimal()
+
+# Barras apiladas (100%)
+ggplot(datos_barras, aes(x = factor(FAMI_ESTRATOVIVIENDA),
+                         y = n,
+                         fill = INST_CARACTER_ACADEMICO)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(x = "Estrato", y = "Proporcion", fill = "Tipo IES") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Tablas cruzadas (crosstabulation)}
+\begin{lstlisting}
+# Tabla cruzada de dos variables categoricas
+tabla_cruzada <- table(icfes$INST_CARACTER_ACADEMICO,
+                       icfes$FAMI_ESTRATOVIVIENDA)
+tabla_cruzada
+
+# Proporciones por fila
+prop.table(tabla_cruzada, margin = 1)
+
+# Proporciones por columna
+prop.table(tabla_cruzada, margin = 2)
+
+# Con tidyverse
+icfes %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA)) %>%
+  count(INST_CARACTER_ACADEMICO, FAMI_ESTRATOVIVIENDA) %>%
+  group_by(INST_CARACTER_ACADEMICO) %>%
+  mutate(proporcion = n / sum(n)) %>%
+  arrange(INST_CARACTER_ACADEMICO, FAMI_ESTRATOVIVIENDA)
+
+# ?Hay asociacion entre tipo de IES y estrato?
+# Prueba chi-cuadrado (adelanto, veremos en sesiones futuras)
+chisq.test(tabla_cruzada)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Covarianza y correlación}
+% ============================================================================
+
+\begin{frame}{Covarianza}
+\begin{block}{Definición}
+La \textbf{covarianza} mide la variación conjunta de dos variables. Indica si tienden a variar juntas en la misma dirección o en direcciones opuestas.
+\end{block}
+
+\textbf{Covarianza muestral}:
+\[
+s_{xy} = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})
+\]
+
+\textbf{Interpretación}:
+\begin{itemize}
+\item $s_{xy} > 0$: relación positiva (cuando x aumenta, y tiende a aumentar)
+\item $s_{xy} < 0$: relación negativa (cuando x aumenta, y tiende a disminuir)
+\item $s_{xy} \approx 0$: no hay relación lineal
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Limitación}
+La magnitud de $s_{xy}$ depende de las unidades de x e y. No se puede comparar entre pares de variables diferentes. \alert{Solución: usar correlación}.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Correlación de Pearson}
+\begin{block}{Definición}
+El \textbf{coeficiente de correlación de Pearson} (r) es la covarianza estandarizada. Mide la fuerza y dirección de la relación \alert{lineal} entre dos variables.
+\[
+r = \frac{s_{xy}}{s_x \cdot s_y} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i-\bar{x})^2 \sum(y_i-\bar{y})^2}}
+\]
+\end{block}
+
+\textbf{Propiedades}:
+\begin{itemize}
+\item Rango: $-1 \leq r \leq 1$
+\item $r = 1$: relación lineal positiva perfecta
+\item $r = -1$: relación lineal negativa perfecta
+\item $r = 0$: no hay relación lineal
+\item Sin unidades (adimensional)
+\item Simétrico: $r_{xy} = r_{yx}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretación de la correlación}
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Valor de $|r|$} & \textbf{Interpretación} \\
+\midrule
+$0.0 - 0.3$ & Débil o nula \\
+$0.3 - 0.5$ & Moderada débil \\
+$0.5 - 0.7$ & Moderada \\
+$0.7 - 0.9$ & Fuerte \\
+$0.9 - 1.0$ & Muy fuerte \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{1em}
+\begin{alertblock}{Advertencias importantes}
+\begin{enumerate}
+\item \alert{La correlación mide sólo relaciones LINEALES}. Puede haber relaciones no lineales fuertes con $r \approx 0$.
+\item \alert{Correlación NO implica causalidad}. Puede deberse a:
+  \begin{itemize}
+  \item Variables confusoras (tercera variable)
+  \item Causalidad inversa (y causa x en lugar de x causa y)
+  \item Coincidencia
+  \end{itemize}
+\item Outliers pueden inflar o deflacionar $r$ artificialmente
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Correlación en R}
+\begin{lstlisting}
+# Correlacion entre dos variables
+cor(icfes$PUNT_INGLES_S11, icfes$MOD_INGLES_PUNT,
+    use = "complete.obs")
+# [1] 0.682
+
+# use = "complete.obs" elimina pares con NA
+
+# Matriz de correlacion de multiples variables
+variables_interes <- icfes %>%
+  select(MOD_INGLES_PUNT, MOD_LECTURA_CRITICA_PUNT,
+         MOD_RAZONA_CUANTITAT_PUNT, MOD_COMPETEN_CIUDADA_PUNT,
+         MOD_COMUNICACION_ESCRITA_PUNT)
+
+matriz_cor <- cor(variables_interes, use = "complete.obs")
+matriz_cor
+
+# Visualizar matriz de correlacion
+library(corrplot)
+corrplot(matriz_cor, method = "color", type = "upper",
+         addCoef.col = "black", tl.col = "black", tl.srt = 45,
+         diag = FALSE)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Correlación de Spearman}
+\begin{block}{Definición}
+La \textbf{correlación de Spearman} ($\rho$, rho) es la correlación de Pearson aplicada a los \alert{rangos} de los datos, no a los valores originales.
+\end{block}
+
+\textbf{Cuándo usar Spearman}:
+\begin{itemize}
+\item Relación monotónica pero no necesariamente lineal
+\item Datos ordinales
+\item Presencia de outliers (es más robusta)
+\item Distribuciones muy sesgadas
+\end{itemize}
+
+\textbf{Interpretación}: igual que Pearson ($-1$ a $1$), pero mide asociación monotónica en lugar de lineal.
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Relación entre estrato (ordinal: 1, 2, ..., 6) y puntaje de inglés:\\
+Spearman es más apropiado que Pearson porque estrato es ordinal y la relación puede no ser lineal.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Correlación de Spearman en R}
+\begin{lstlisting}
+# Correlacion de Spearman
+cor(icfes$FAMI_ESTRATOVIVIENDA, icfes$MOD_INGLES_PUNT,
+    method = "spearman", use = "complete.obs")
+# [1] 0.428
+
+# Comparar Pearson vs Spearman
+cat("Pearson:", cor(icfes$FAMI_ESTRATOVIVIENDA,
+                    icfes$MOD_INGLES_PUNT,
+                    use = "complete.obs"), "\n")
+cat("Spearman:", cor(icfes$FAMI_ESTRATOVIVIENDA,
+                     icfes$MOD_INGLES_PUNT,
+                     method = "spearman",
+                     use = "complete.obs"), "\n")
+
+# Matriz de correlacion de Spearman
+matriz_cor_spearman <- cor(variables_interes,
+                            method = "spearman",
+                            use = "complete.obs")
+
+corrplot(matriz_cor_spearman, method = "circle", type = "upper",
+         addCoef.col = "black")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: matriz de correlación de módulos Saber Pro}
+\begin{lstlisting}
+# Seleccionar los 5 modulos genericos
+modulos <- icfes %>%
+  select(
+    Ingles = MOD_INGLES_PUNT,
+    Lectura = MOD_LECTURA_CRITICA_PUNT,
+    Cuantitativo = MOD_RAZONA_CUANTITAT_PUNT,
+    Ciudadanas = MOD_COMPETEN_CIUDADA_PUNT,
+    Escritura = MOD_COMUNICACION_ESCRITA_PUNT
+  )
+
+# Matriz de correlacion
+cor_modulos <- cor(modulos, use = "complete.obs")
+round(cor_modulos, 3)
+
+# Visualizacion avanzada
+library(GGally)
+ggpairs(modulos, title = "Matriz de correlacion - Modulos Saber Pro")
+
+# ?Cuales modulos estan mas correlacionados?
+# ?Que implica esto para la evaluacion de competencias?
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Paradoja de Simpson}
+% ============================================================================
+
+\begin{frame}{Paradoja de Simpson}
+\begin{block}{Definición}
+La \textbf{Paradoja de Simpson} ocurre cuando una tendencia que aparece en varios grupos \alert{se invierte} cuando los grupos se combinan.
+\end{block}
+
+\textbf{Implicaciones}:
+\begin{itemize}
+\item Una relación puede cambiar de dirección al agregar o desagregar datos
+\item Controlando por una tercera variable (confusora), la relación puede invertirse
+\item Muestra la importancia de identificar variables confusoras
+\item Fundamental para el diseño de experimentos y análisis causal
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Lección clave}
+\alert{Siempre explorar subgrupos antes de generalizar}. Lo que es verdad para el agregado puede no ser verdad para los componentes (y viceversa).
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Ejemplo clásico: admisiones Berkeley 1973}
+\textbf{Contexto}: demanda por discriminación de género en admisiones de posgrado.
+
+\vspace{0.5em}
+\textbf{Datos agregados}:
+\begin{table}
+\centering
+\begin{tabular}{lcc}
+\toprule
+& Admitidos & Tasa de admisión \\
+\midrule
+Hombres & 1198 / 2691 & 44\% \\
+Mujeres & 557 / 1835 & 30\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Conclusión agregada: parece haber sesgo contra mujeres (44\% vs 30\%).
+
+\vspace{0.5em}
+\textbf{Datos desagregados por departamento}:
+\begin{itemize}
+\item En casi todos los departamentos, las mujeres tenían tasas de admisión \alert{iguales o mayores}
+\item Pero las mujeres aplicaban más a departamentos muy competitivos (baja tasa de admisión)
+\item Los hombres aplicaban más a departamentos menos competitivos (alta tasa de admisión)
+\end{itemize}
+
+\alert{Variable confusora}: competitividad del departamento
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo con datos ICFES (1/2)}
+\begin{lstlisting}
+# Ejemplo simulado: relacion entre estrato y puntaje
+# agregada vs desagregada por tipo de IES
+
+# Correlacion agregada (todos los estudiantes juntos)
+cor_agregada <- cor(icfes$FAMI_ESTRATOVIVIENDA,
+                    icfes$MOD_INGLES_PUNT,
+                    use = "complete.obs")
+
+# Correlacion por tipo de IES
+cor_desagregada <- icfes %>%
+  group_by(INST_CARACTER_ACADEMICO) %>%
+  summarise(
+    n = n(),
+    cor = cor(FAMI_ESTRATOVIVIENDA, MOD_INGLES_PUNT,
+              use = "complete.obs")
+  )
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo con datos ICFES (2/2)}
+\begin{lstlisting}
+# Scatter plot mostrando la paradoja
+ggplot(icfes, aes(x = FAMI_ESTRATOVIVIENDA, y = MOD_INGLES_PUNT,
+                  color = INST_CARACTER_ACADEMICO)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE) +  # Lineas por grupo
+  geom_smooth(aes(group = 1), method = "lm", color = "black",
+              linetype = "dashed", se = FALSE) +  # Linea agregada
+  labs(title = "Paradoja de Simpson: estrato vs puntaje") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Por qué la regresión múltiple es necesaria}
+\begin{block}{Problema fundamental}
+Las correlaciones bivariadas (entre dos variables) pueden ser engañosas porque:
+\begin{itemize}
+\item No controlan por variables confusoras
+\item No pueden separar efectos de múltiples factores simultáneos
+\item Pueden reflejar asociaciones espurias (falsas)
+\end{itemize}
+\end{block}
+
+\textbf{Solución: Regresión múltiple}
+\begin{itemize}
+\item Permite estimar el efecto de una variable \alert{manteniendo otras constantes}
+\item Controla por variables confusoras
+\item Permite cuantificar el efecto independiente de cada predictor
+\item Ejemplo: efecto de Saber 11 en Saber Pro, \alert{controlando por} tipo de IES, estrato, género, etc.
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Adelanto}
+En sesiones 5-6 estudiaremos regresión lineal simple y múltiple, la herramienta más importante de la estadística para negocios.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Pipeline completo de EDA}
+% ============================================================================
+
+\begin{frame}{Flujo de trabajo EDA}
+\begin{block}{Análisis Exploratorio de Datos (EDA)}
+Proceso iterativo para entender la estructura, patrones y anomalías en los datos \alert{antes} de modelar.
+\end{block}
+
+\textbf{Pipeline típico}:
+\begin{enumerate}
+\item \textbf{Cargar}: importar datos, verificar dimensiones
+\item \textbf{Limpiar}: identificar y tratar valores faltantes, duplicados, errores
+\item \textbf{Transformar}: crear variables derivadas, recodificar, filtrar
+\item \textbf{Resumir}: estadísticas descriptivas (media, mediana, sd, etc.)
+\item \textbf{Visualizar}: histogramas, box plots, scatter plots, correlaciones
+\item \textbf{Segmentar}: análisis por subgrupos (tipo IES, estrato, región)
+\item \textbf{Identificar anomalías}: outliers, valores extremos, inconsistencias
+\item \textbf{Documentar}: hallazgos clave, preguntas para investigar
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo de ICFES NI: cargar y limpiar}
+\small
+\begin{lstlisting}
+library(tidyverse)
+library(moments)
+library(corrplot)
+
+# 1. CARGAR
+icfes <- read_csv("datos/saber_pro_ni_2024.csv")
+dim(icfes)  # dimension
+glimpse(icfes)  # estructura
+
+# 2. LIMPIAR
+# Valores faltantes
+colSums(is.na(icfes))
+# Eliminar filas con NA en variable clave
+icfes_clean <- icfes %>%
+  filter(!is.na(MOD_INGLES_PUNT))
+
+# Duplicados
+icfes_clean <- icfes_clean %>% distinct()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo de ICFES NI: transformar}
+\begin{lstlisting}
+# 3. TRANSFORMAR
+icfes_clean <- icfes_clean %>%
+  mutate(
+    # Categoria de desempeno en ingles
+    nivel_ingles = cut(MOD_INGLES_PUNT,
+                       breaks = c(0, 140, 160, 180, 200),
+                       labels = c("Bajo", "Medio", "Alto", "Superior")),
+    # Promedio de modulos genericos
+    promedio_modulos = (MOD_INGLES_PUNT + MOD_LECTURA_CRITICA_PUNT +
+                        MOD_RAZONA_CUANTITAT_PUNT) / 3
+  )
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo: resumir}
+\begin{lstlisting}
+# 4. RESUMIR
+summary(icfes_clean$MOD_INGLES_PUNT)
+sd(icfes_clean$MOD_INGLES_PUNT)
+skewness(icfes_clean$MOD_INGLES_PUNT)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo: visualizar (histograma y box plot)}
+\begin{lstlisting}
+# 5. VISUALIZAR
+# Histograma
+ggplot(icfes_clean, aes(x = MOD_INGLES_PUNT)) +
+  geom_histogram(bins = 30, fill = "steelblue") +
+  theme_minimal()
+
+# Box plot por tipo IES
+ggplot(icfes_clean, aes(x = INST_CARACTER_ACADEMICO,
+                        y = MOD_INGLES_PUNT)) +
+  geom_boxplot() + theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo: visualizar (scatter y correlaciones)}
+\begin{lstlisting}
+# Scatter plot: Saber 11 vs Saber Pro
+ggplot(icfes_clean, aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+
+# Matriz de correlacion
+cor_matrix <- cor(icfes_clean %>%
+  select(starts_with("MOD_")), use = "complete.obs")
+corrplot(cor_matrix, method = "color")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo: segmentar}
+\begin{lstlisting}
+# 6. SEGMENTAR
+# Por tipo de IES
+icfes_clean %>%
+  group_by(INST_CARACTER_ACADEMICO) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT),
+    mediana = median(MOD_INGLES_PUNT),
+    sd = sd(MOD_INGLES_PUNT),
+    asimetria = skewness(MOD_INGLES_PUNT)
+  )
+
+# Por estrato
+icfes_clean %>%
+  filter(!is.na(FAMI_ESTRATOVIVIENDA)) %>%
+  group_by(FAMI_ESTRATOVIVIENDA) %>%
+  summarise(across(MOD_INGLES_PUNT,
+                   list(media = mean, mediana = median, sd = sd)))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EDA completo: identificar anomalías}
+\begin{lstlisting}
+# 7. IDENTIFICAR ANOMALIAS
+# Outliers (metodo IQR)
+Q1 <- quantile(icfes_clean$MOD_INGLES_PUNT, 0.25)
+Q3 <- quantile(icfes_clean$MOD_INGLES_PUNT, 0.75)
+IQR_val <- Q3 - Q1
+outliers <- icfes_clean %>%
+  filter(MOD_INGLES_PUNT < Q1 - 1.5*IQR_val |
+         MOD_INGLES_PUNT > Q3 + 1.5*IQR_val)
+nrow(outliers)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Checklist EDA}
+\begin{alertblock}{Lista de verificación antes de modelar}
+\begin{itemize}
+\item[$\square$] ¿Entiendo qué mide cada variable?
+\item[$\square$] ¿Cuántos valores faltantes hay? ¿Por qué faltan?
+\item[$\square$] ¿Hay duplicados?
+\item[$\square$] ¿Hay outliers? ¿Son errores o datos reales?
+\item[$\square$] ¿Cuál es la distribución de cada variable (forma, centro, dispersión)?
+\item[$\square$] ¿Hay relaciones entre variables? ¿Cuáles son las más fuertes?
+\item[$\square$] ¿Hay diferencias importantes entre subgrupos?
+\item[$\square$] ¿Hay variables confusoras que deba controlar?
+\item[$\square$] ¿Los datos son representativos de la población de interés?
+\item[$\square$] ¿Qué preguntas sustantivas puedo responder con estos datos?
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.5em}
+\alert{Documentar hallazgos en un reporte o Rmarkdown!}
+\end{frame}
+
+% ============================================================================
+\section{Resumen}
+% ============================================================================
+
+\begin{frame}{Resumen de la sesión}
+\textbf{Conceptos clave cubiertos}:
+
+\begin{enumerate}
+\item \textbf{Distribuciones de frecuencia}: absolutas, relativas, acumuladas
+\item \textbf{Visualización univariada}: histograma, density plot, box plot, barras
+\item \textbf{Visualización bivariada}: scatter plot, heatmap, tablas cruzadas
+\item \textbf{Covarianza y correlación}: Pearson (lineal), Spearman (monotónica)
+\item \textbf{Paradoja de Simpson}: por qué desagregar es crucial
+\item \textbf{Pipeline EDA}: cargar → limpiar → explorar → visualizar → reportar
+\end{enumerate}
+
+\vspace{1em}
+\begin{alertblock}{Mensajes clave}
+\begin{itemize}
+\item \alert{Visualizar siempre antes de resumir numéricamente}
+\item \alert{Correlación $\neq$ causalidad}
+\item \alert{Explorar subgrupos antes de agregar}
+\item \alert{El EDA es iterativo, no lineal}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Próxima sesión: Probabilidad, Normal y Muestreo}
+\textbf{Vie 21 ago 2026}
+
+\textbf{Temas a cubrir}:
+\begin{itemize}
+\item Variables aleatorias y distribuciones de probabilidad
+\item Distribución normal: propiedades, cálculo de probabilidades, cuantiles
+\item Distribuciones t, chi-cuadrado y F
+\item Muestreo y distribución muestral de $\bar{X}$
+\item \alert{Teorema Central del Límite} (fundamento de la inferencia)
+\item Propiedades de estimadores
+\end{itemize}
+
+\vspace{1em}
+\textbf{Preparación}:
+\begin{itemize}
+\item Repasar conceptos de probabilidad básica (si es necesario)
+\item Instalar paquete \paquete{moments} en R
+\item Familiarizarse con funciones \code{dnorm()}, \code{pnorm()}, \code{qnorm()}
+\end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,111 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, frame=single, breaklines=true, showstringspaces=false}
+
+\setlength{\parindent}{0pt}
+
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Problem Set 4}\\[3pt]
+{\large Intervalos de Confianza}\\[6pt]
+Asignado: Septiembre 11 (Sesi\'on 4) \quad$|$\quad Entrega: Septiembre 18 (Sesi\'on 5)
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+\vspace{2pt}
+{\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
+\vspace{6pt}
+
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
+microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+El c\'odigo R debe incluirse.
+
+\vspace{10pt}
+
+\section*{Enunciado}
+
+Utilizando la variable \texttt{MOD\_INGLES\_PUNT} (puntaje de ingl\'es en Saber Pro)
+para estudiantes de Negocios Internacionales (NI), construya intervalos de confianza
+y analice la precisi\'on de la estimaci\'on.
+
+\begin{enumerate}[label=\alph*)]
+  \item \textbf{IC para la media global:} calcule un intervalo de confianza al
+        95\% para la media poblacional de \texttt{MOD\_INGLES\_PUNT} usando la
+        distribuci\'on $t$ de Student. Use \texttt{t.test()}.
+        \begin{itemize}
+          \item Reporte el intervalo $[\,\underline{x},\, \overline{x}\,]$.
+          \item Interprete el resultado en contexto.
+          \item ¿Cu\'al es el margen de error?
+        \end{itemize}
+
+  \item \textbf{IC por departamento:} calcule intervalos de confianza al 95\%
+        para la media de \texttt{MOD\_INGLES\_PUNT} en cada uno de los 33 departamentos
+        de Colombia (variable \texttt{ESTU\_DEPTO\_RESIDE}).
+        \begin{itemize}
+          \item Presente una tabla con: departamento, media, l\'imite inferior,
+                l\'imite superior y tama\~no de muestra $n$.
+          \item ¿Qu\'e departamento tiene el IC m\'as amplio? ¿Por qu\'e?
+          \item ¿Qu\'e departamento tiene el IC m\'as estrecho? ¿Por qu\'e?
+        \end{itemize}
+
+  \item \textbf{Forest plot:} grafique un \textit{forest plot} con los 33 intervalos
+        de confianza departamentales. El gr\'afico debe incluir:
+        \begin{itemize}
+          \item Puntos para las medias de cada departamento.
+          \item Barras horizontales para los intervalos de confianza.
+          \item Una l\'inea vertical de referencia en la media nacional.
+          \item Etiquetas de departamento en el eje $y$.
+        \end{itemize}
+        ¿Qu\'e departamentos se distinguen significativamente de la media nacional?
+
+  \item \textbf{IC para una proporci\'on:} calcule un intervalo de confianza al
+        95\% para la proporci\'on de estudiantes de NI que superan el nivel B1 en
+        ingl\'es (es decir, \texttt{MOD\_INGLES\_DESEM} $\in \{\text{B1, B+}\}$).
+        Use \texttt{prop.test()}.
+        \begin{itemize}
+          \item Reporte el intervalo $[\,\underline{p},\, \overline{p}\,]$.
+          \item Interprete el resultado. ¿Qu\'e porcentaje de estudiantes NI alcanza
+                B1 o superior?
+        \end{itemize}
+
+  \item \textbf{Tama\~no de muestra \'optimo:} calcule el tama\~no de muestra $n$
+        necesario para estimar la media de \texttt{MOD\_INGLES\_PUNT} con un margen
+        de error de $\pm 2$ puntos al 95\% de confianza. Use la f\'ormula:
+        \[
+          n = \left( \frac{z_{\alpha/2} \cdot \sigma}{E} \right)^2
+        \]
+        donde $z_{0.025} = 1.96$ y $\sigma$ es la desviaci\'on est\'andar muestral.
+        ¿Cu\'antos estudiantes se necesitar\'ian?
+
+  \item \textbf{Conclusiones:} resuma en un p\'arrafo los principales hallazgos
+        sobre la precisi\'on de las estimaciones y las diferencias departamentales.
+\end{enumerate}
+
+\vspace{10pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Cada entrega completa suma $+0.0625$ a la nota final.}
+\end{center}
+
+\end{document}

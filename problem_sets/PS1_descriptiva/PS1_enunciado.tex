@@ -1,0 +1,93 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, frame=single, breaklines=true, showstringspaces=false}
+
+\setlength{\parindent}{0pt}
+
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Problem Set 1}\\[3pt]
+{\large Estad\'istica Descriptiva}\\[6pt]
+Asignado: Julio 31 (Sesi\'on 1) \quad$|$\quad Entrega: Agosto 14 (Sesi\'on 2)
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+\vspace{2pt}
+{\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
+\vspace{6pt}
+
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
+microdatos ICFES del programa de Negocios Internacionales (NI). La entrega es
+digital al inicio de la clase indicada. El c\'odigo R debe incluirse.
+
+\vspace{10pt}
+
+\section*{Enunciado}
+
+Realice un an\'alisis descriptivo completo de la variable \texttt{MOD\_INGLES\_PUNT}
+(puntaje de ingl\'es en Saber Pro) para estudiantes de Negocios Internacionales (NI).
+Su an\'alisis debe incluir:
+
+\begin{enumerate}[label=\alph*)]
+  \item \textbf{Medidas de tendencia central:} calcule la media, mediana y moda de
+        \texttt{MOD\_INGLES\_PUNT} para el conjunto completo de datos de NI.
+
+  \item \textbf{Medidas de dispersi\'on:} calcule la desviaci\'on est\'andar, varianza,
+        rango y rango intercuart\'ilico (IQR).
+
+  \item \textbf{Forma de la distribuci\'on:} calcule e interprete los coeficientes de
+        asimetr\'ia y curtosis. ¿La distribuci\'on es sim\'etrica? ¿Es leptoc\'urtica
+        o platic\'urtica?
+
+  \item \textbf{Cuartiles:} presente la tabla de cuartiles (Q1, Q2, Q3) y percentiles
+        relevantes (P10, P90).
+
+  \item \textbf{Desagregaci\'on:} repita los c\'alculos anteriores desagregando por:
+        \begin{itemize}
+          \item Departamento (\texttt{ESTU\_DEPTO\_RESIDE})
+          \item Tipo de IES: p\'ublica vs.\ privada (\texttt{INST\_ORIGEN})
+          \item Estrato socioecon\'omico (\texttt{FAMI\_ESTRATOVIVIENDA})
+        \end{itemize}
+
+  \item \textbf{Visualizaciones:} produzca un m\'inimo de 5 gr\'aficos en R
+        (\texttt{ggplot2}) que complementen su an\'alisis. Sugerencias:
+        \begin{itemize}
+          \item Histograma de \texttt{MOD\_INGLES\_PUNT}
+          \item Box plot por tipo de IES
+          \item Box plot por estrato
+          \item Gr\'afico de barras de media por departamento
+          \item Densidad (KDE) comparando p\'ublica vs.\ privada
+        \end{itemize}
+
+  \item \textbf{Conclusiones:} en un p\'arrafo breve, resuma los hallazgos
+        principales de su an\'alisis descriptivo.
+\end{enumerate}
+
+\vspace{10pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Cada entrega completa suma $+0.0625$ a la nota final.}
+\end{center}
+
+\end{document}

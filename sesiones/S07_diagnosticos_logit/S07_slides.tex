@@ -1,0 +1,1014 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 7: Pruebas para Dos Poblaciones, ANOVA y No Paramétricas}
+\subtitle{Comparando grupos: de la prueba t a Kruskal-Wallis}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Viernes 2 de octubre de 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Prueba t Pareada (Muestras Dependientes)}
+% ============================================================================
+
+\begin{frame}{Muestras Independientes vs Dependientes}
+\textbf{Hasta ahora}: Prueba $t$ para dos muestras \alert{independientes}
+\begin{itemize}
+  \item Grupos completamente distintos (ej. públicas vs privadas)
+  \item Sin relación entre observaciones de un grupo y otro
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ahora}: Muestras \alert{dependientes (pareadas)}
+\begin{itemize}
+  \item Mismos sujetos medidos dos veces (antes/después)
+  \item Sujetos emparejados naturalmente (hermanos, pares matched)
+  \item Cada observación en el grupo 1 tiene una contraparte específica en el grupo 2
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplos}:
+\begin{itemize}
+  \item Puntaje Saber 11 vs Saber Pro del \alert{mismo} estudiante
+  \item Rendimiento antes vs después de una intervención
+  \item Calificación de dos evaluadores sobre el \alert{mismo} trabajo
+\end{itemize}
+\end{frame}
+
+\begin{frame}{¿Cuándo Usar Prueba t Pareada?}
+\textbf{Criterios}:
+\begin{enumerate}
+  \item Dos mediciones del \alert{mismo} sujeto/unidad
+  \item O pares naturales (matched pairs)
+  \item Las diferencias individuales importan
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Ventaja}:
+\begin{itemize}
+  \item Controla la variabilidad entre sujetos
+  \item Mayor \alert{potencia} que la prueba de dos muestras independientes
+  \item Reduce el error tipo II
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo ICFES}:
+\begin{itemize}
+  \item Comparar inglés Saber 11 vs Saber Pro del mismo estudiante
+  \item Problema: los datos ICFES actuales NO tienen esta vinculación (cada fila = un estudiante en un momento)
+  \item Solución: usar datos simulados o buscar tabla de cruce
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hipótesis y Estadístico de Prueba}
+\textbf{Enfoque}: Trabajar con las \alert{diferencias} $d_i = x_{1i} - x_{2i}$
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu_d = 0 \quad \text{vs} \quad H_1: \mu_d \neq 0
+\]
+donde $\mu_d$ = media poblacional de las diferencias.
+
+\vspace{0.3cm}
+\begin{block}{Estadístico de prueba}
+\[
+t = \frac{\bar{d}}{s_d / \sqrt{n}}
+\]
+donde:
+\begin{itemize}
+  \item $\bar{d} = \frac{1}{n} \sum_{i=1}^n d_i$ = media de las diferencias
+  \item $s_d$ = desviación estándar de las diferencias
+  \item $n$ = número de pares
+  \item $t \sim t(n-1)$ si $H_0$ es verdadera
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Saber 11 vs Saber Pro (Simulado) - Parte 1}
+\begin{lstlisting}
+# Simular datos pareados (en la practica, vienen de una tabla de cruce)
+set.seed(123)
+n <- 80
+saber11 <- rnorm(n, mean = 155, sd = 18)
+saber_pro <- saber11 + rnorm(n, mean = 8, sd = 5)
+# Saber Pro suele ser ligeramente mayor
+
+# Calcular diferencias
+diferencias <- saber_pro - saber11
+
+# Descriptivos
+cat("Media Saber 11:", round(mean(saber11), 2))
+cat("\nMedia Saber Pro:", round(mean(saber_pro), 2))
+cat("\nMedia de diferencias:", round(mean(diferencias), 2))
+cat("\nDE de diferencias:", round(sd(diferencias), 2))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Saber 11 vs Saber Pro (Simulado) - Parte 2}
+\begin{lstlisting}
+# Visualizar diferencias
+hist(diferencias, breaks = 15, col = "steelblue",
+     main = "Distribucion de las Diferencias",
+     xlab = "Saber Pro - Saber 11")
+abline(v = 0, col = "red", lwd = 2, lty = 2)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Realizar la Prueba t Pareada}
+\begin{lstlisting}
+# Metodo 1: t.test con paired = TRUE
+resultado <- t.test(saber_pro, saber11, paired = TRUE)
+
+print(resultado)
+
+cat("\nEstadistico t:", resultado$statistic)
+cat("\np-valor:", resultado$p.value)
+cat("\nIC para mu_d:", resultado$conf.int)
+
+# Metodo 2: t.test sobre las diferencias directamente
+resultado2 <- t.test(diferencias, mu = 0)
+# Es equivalente al metodo 1
+
+# Decision
+if (resultado$p.value < 0.05) {
+  cat("\nConcluimos que hay diferencia significativa")
+  cat("\nSaber Pro difiere de Saber 11")
+} else {
+  cat("\nNo hay evidencia de diferencia")
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización de Datos Pareados}
+\begin{lstlisting}
+library(ggplot2)
+
+# Crear data frame
+datos_pareados <- data.frame(
+  id = rep(1:n, 2),
+  examen = rep(c("Saber 11", "Saber Pro"), each = n),
+  puntaje = c(saber11, saber_pro)
+)
+
+# Grafico de lineas conectando pares
+ggplot(datos_pareados, aes(x = examen, y = puntaje, group = id)) +
+  geom_line(alpha = 0.3, color = "gray50") +
+  geom_point(alpha = 0.5) +
+  stat_summary(aes(group = 1), fun = mean, geom = "line",
+               color = "red", size = 1.5) +
+  stat_summary(fun = mean, geom = "point",
+               color = "red", size = 4) +
+  labs(title = "Comparacion Pareada: Saber 11 vs Saber Pro",
+       y = "Puntaje de Ingles") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{ANOVA de Una Vía}
+% ============================================================================
+
+\begin{frame}{Motivación: Comparar Más de Dos Grupos}
+\textbf{Problema}: Queremos comparar inglés entre 5 regiones de Colombia.
+
+\vspace{0.3cm}
+\textbf{Opción incorrecta}: Hacer múltiples pruebas $t$
+\begin{itemize}
+  \item Comparar Caribe vs Andina, Caribe vs Pacífico, ..., etc.
+  \item Con $k = 5$ grupos, tendríamos $\binom{5}{2} = 10$ comparaciones
+  \item Problema: \alert{inflación del error tipo I}
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Inflación del error tipo I}
+Si hacemos $m$ pruebas independientes al nivel $\alpha$:
+\[
+P(\text{al menos un error tipo I}) = 1 - (1-\alpha)^m
+\]
+Ejemplo: 10 pruebas con $\alpha = 0.05$:
+\[
+P(\text{al menos un error}) = 1 - 0.95^{10} = 0.40 \quad (40\%!)
+\]
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Solución}: ANOVA (Analysis of Variance)
+\end{frame}
+
+\begin{frame}{¿Qué es ANOVA?}
+\begin{definition}[ANOVA de una vía]
+Una prueba que compara las medias de \alert{tres o más} grupos simultáneamente, controlando el error tipo I global.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu_1 = \mu_2 = \cdots = \mu_k \quad \text{vs} \quad H_1: \text{al menos un par difiere}
+\]
+
+\vspace{0.3cm}
+\textbf{Importante}: $H_1$ NO dice \emph{cuáles} grupos difieren, solo que \alert{al menos uno} es distinto.
+
+\vspace{0.3cm}
+\textbf{Nombre}: ``Analysis of Variance'' porque comparamos variabilidad \alert{entre} grupos vs variabilidad \alert{dentro} de grupos.
+\end{frame}
+
+\begin{frame}{Lógica de ANOVA}
+\textbf{Idea central}:
+\begin{itemize}
+  \item Si $H_0$ es verdadera (todas las medias son iguales), la variabilidad entre grupos debería ser similar a la variabilidad dentro de grupos (solo ruido aleatorio)
+  \item Si $H_0$ es falsa (medias diferentes), la variabilidad entre grupos será \alert{mayor} que la variabilidad dentro de grupos
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Razón F}
+\[
+F = \frac{\text{Variabilidad entre grupos}}{\text{Variabilidad dentro de grupos}} = \frac{\text{MSB}}{\text{MSW}}
+\]
+\begin{itemize}
+  \item Si $F$ es grande $\Rightarrow$ evidencia contra $H_0$
+  \item Si $H_0$ es verdadera, $F \sim F(k-1, N-k)$ (distribución $F$)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Partición de la Variabilidad Total}
+\textbf{Suma de cuadrados total (SST)}:
+\[
+\text{SST} = \sum_{i=1}^k \sum_{j=1}^{n_i} (x_{ij} - \bar{x})^2
+\]
+Mide la variabilidad total de todos los datos.
+
+\vspace{0.3cm}
+\textbf{Descomposición}:
+\[
+\text{SST} = \text{SSB} + \text{SSW}
+\]
+\begin{itemize}
+  \item \textbf{SSB (between)}: $\sum_{i=1}^k n_i (\bar{x}_i - \bar{x})^2$ = variabilidad entre grupos
+  \item \textbf{SSW (within)}: $\sum_{i=1}^k \sum_{j=1}^{n_i} (x_{ij} - \bar{x}_i)^2$ = variabilidad dentro de grupos
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Cuadrados medios}:
+\[
+\text{MSB} = \frac{\text{SSB}}{k-1}, \quad \text{MSW} = \frac{\text{SSW}}{N-k}
+\]
+\end{frame}
+
+\begin{frame}{Tabla ANOVA}
+\begin{table}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Fuente} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{F} \\
+\midrule
+Entre grupos & SSB & $k-1$ & $\frac{\text{SSB}}{k-1}$ & $\frac{\text{MSB}}{\text{MSW}}$ \\[0.2cm]
+Dentro grupos & SSW & $N-k$ & $\frac{\text{SSW}}{N-k}$ & \\[0.2cm]
+Total & SST & $N-1$ & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Notación}:
+\begin{itemize}
+  \item $k$ = número de grupos
+  \item $N = \sum_{i=1}^k n_i$ = tamaño total de la muestra
+  \item $n_i$ = tamaño del grupo $i$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{p-valor}: $P(F_{k-1, N-k} > F_{\text{obs}})$
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Inglés por Macro-Región - Parte 1}
+\small
+\begin{lstlisting}
+# Crear variable de macro-region (simplificacion)
+icfes_ni$MACRO_REGION <- ifelse(
+  icfes_ni$ESTU_DEPTO_RESIDE %in%
+    c("Atlantico", "Bolivar", "Cesar", "Cordoba", "La Guajira",
+      "Magdalena", "Sucre", "San Andres"),
+  "Caribe",
+  ifelse(
+    icfes_ni$ESTU_DEPTO_RESIDE %in%
+      c("Antioquia", "Bogota", "Boyaca", "Caldas", "Cundinamarca",
+        "Huila", "Norte Santander", "Quindio", "Risaralda",
+        "Santander", "Tolima"),
+    "Andina",
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Inglés por Macro-Región - Parte 2}
+\small
+\begin{lstlisting}
+# Continuacion: macro-region
+    ifelse(
+      icfes_ni$ESTU_DEPTO_RESIDE %in%
+        c("Choco", "Cauca", "Narino", "Valle"),
+      "Pacifica",
+      ifelse(
+        icfes_ni$ESTU_DEPTO_RESIDE %in%
+          c("Amazonas", "Caqueta", "Guainia", "Guaviare",
+            "Meta", "Putumayo", "Vaupes", "Vichada"),
+        "Orinoquia-Amazonia", "Otras"
+      )
+    )
+  )
+)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Realizar ANOVA en R}
+\begin{lstlisting}
+# Estadisticas descriptivas por region
+library(dplyr)
+desc_regiones <- icfes_ni %>%
+  group_by(MACRO_REGION) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT, na.rm = TRUE),
+    sd = sd(MOD_INGLES_PUNT, na.rm = TRUE)
+  )
+print(desc_regiones)
+
+# ANOVA
+modelo_anova <- aov(MOD_INGLES_PUNT ~ MACRO_REGION, data = icfes_ni)
+
+# Ver tabla ANOVA
+summary(modelo_anova)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Interpretar Output de ANOVA}
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+                  Df Sum Sq Mean Sq F value   Pr(>F)
+MACRO_REGION       4  12458  3114.5   9.876 1.24e-07 ***
+Residuals        495 156123   315.4
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item $F = 9.876$ con gl = $(4, 495)$
+  \item p-valor $< 0.001$ $\Rightarrow$ \alert{Rechazamos $H_0$}
+  \item Conclusión: Hay evidencia de que al menos una macro-región tiene media diferente de las demás
+  \item \textbf{Pregunta pendiente}: ¿Cuáles regiones difieren? (Tukey HSD)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supuestos de ANOVA}
+\textbf{Para que ANOVA sea válida, se requiere}:
+
+\vspace{0.3cm}
+\begin{enumerate}
+  \item \textbf{Normalidad}: Los residuos deben seguir una distribución normal
+  \begin{itemize}
+    \item Verificar con QQ-plot o Shapiro-Wilk
+    \item Robusta si $n$ es grande (TLC)
+  \end{itemize}
+
+  \item \textbf{Homocedasticidad}: Las varianzas de los grupos deben ser iguales
+  \begin{itemize}
+    \item Verificar con prueba de Levene o gráfico de residuos
+    \item Regla empírica: $\max(s_i) / \min(s_i) < 2$
+  \end{itemize}
+
+  \item \textbf{Independencia}: Las observaciones deben ser independientes
+  \begin{itemize}
+    \item Garantizada por diseño de muestreo
+  \end{itemize}
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Si los supuestos no se cumplen}: Considerar transformación de datos o prueba no paramétrica (Kruskal-Wallis).
+\end{frame}
+
+\begin{frame}[fragile]{Verificar Supuestos - Parte 1}
+\begin{lstlisting}
+# 1. Grafico QQ de residuos
+qqnorm(residuals(modelo_anova))
+qqline(residuals(modelo_anova), col = "red")
+
+# 2. Prueba de Shapiro-Wilk (si n no es muy grande)
+shapiro.test(residuals(modelo_anova)[1:5000])
+# Nota: Shapiro-Wilk tiene limite de n
+
+# 3. Prueba de Levene para homocedasticidad
+library(car)
+leveneTest(MOD_INGLES_PUNT ~ MACRO_REGION, data = icfes_ni)
+
+# 4. Grafico de residuos vs valores ajustados
+plot(modelo_anova, which = 1)
+# Debe verse sin patron sistematico
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Verificar Supuestos - Parte 2}
+\begin{lstlisting}
+# 5. Boxplot por grupo (visualizar homogeneidad)
+boxplot(MOD_INGLES_PUNT ~ MACRO_REGION, data = icfes_ni,
+        col = "lightblue", ylab = "Puntaje Ingles",
+        main = "Distribucion por Macro-Region")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Comparaciones Múltiples: Tukey HSD}
+% ============================================================================
+
+\begin{frame}{El Problema de las Comparaciones Múltiples}
+\textbf{Situación}: ANOVA nos dice que HAY diferencias, pero no DÓNDE.
+
+\vspace{0.3cm}
+\textbf{¿Podemos hacer pruebas $t$ entre todos los pares?}
+\begin{itemize}
+  \item Con $k = 5$ grupos: $\binom{5}{2} = 10$ comparaciones
+  \item Inflación del error tipo I (como vimos antes)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Solución}: Métodos de comparaciones múltiples que controlan la \alert{tasa de error familiar} (FWER: Family-Wise Error Rate).
+
+\vspace{0.3cm}
+\textbf{Métodos comunes}:
+\begin{itemize}
+  \item \textbf{Tukey HSD} (Honestly Significant Difference): compara todos los pares
+  \item \textbf{Bonferroni}: ajusta $\alpha$ dividiéndolo por el número de comparaciones
+  \item \textbf{Scheffé}: más conservador, útil para comparaciones complejas
+  \item \textbf{Dunnett}: compara todos vs un control
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Recomendación}: Tukey HSD es el más usado para comparaciones post-hoc.
+\end{frame}
+
+\begin{frame}{Tukey HSD: Honestly Significant Difference}
+\textbf{Idea}: Ajustar el valor crítico para tener en cuenta las múltiples comparaciones.
+
+\vspace{0.3cm}
+\begin{block}{Intervalo de confianza simultáneo al $(1-\alpha)$}
+Para cada par $(i, j)$:
+\[
+(\bar{x}_i - \bar{x}_j) \pm q_{\alpha, k, N-k} \cdot \sqrt{\frac{\text{MSW}}{2} \left(\frac{1}{n_i} + \frac{1}{n_j}\right)}
+\]
+donde $q_{\alpha, k, N-k}$ es el valor crítico de la distribución \alert{studentized range}.
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item Si el IC NO incluye 0, los grupos $i$ y $j$ difieren significativamente
+  \item Controla FWER al nivel $\alpha$ para \alert{todas} las comparaciones simultáneamente
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Realizar Tukey HSD en R}
+\begin{lstlisting}
+# Prueba de Tukey HSD
+tukey_resultado <- TukeyHSD(modelo_anova, conf.level = 0.95)
+
+print(tukey_resultado)
+
+# Visualizar resultados
+plot(tukey_resultado, las = 1, cex.axis = 0.7)
+abline(v = 0, col = "red", lty = 2)
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Output}: Tabla con todas las comparaciones pareadas
+\begin{itemize}
+  \item \textbf{diff}: Diferencia de medias entre los grupos
+  \item \textbf{lwr, upr}: Límites del IC ajustado
+  \item \textbf{p adj}: p-valor ajustado
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Interpretar Resultados de Tukey}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = MOD_INGLES_PUNT ~ MACRO_REGION, data = icfes_ni)
+
+$MACRO_REGION
+                             diff       lwr       upr     p adj
+Caribe-Andina            -8.35421 -14.2893  -2.41915  0.001823
+Orinoquia-Andina         -5.12334 -18.6574   8.41069  0.852164
+Pacifica-Andina          -6.78912 -13.5628  -0.01545  0.049231
+Pacifica-Caribe           1.56509  -5.9721   9.10230  0.980561
+Orinoquia-Caribe          3.23087 -10.5362  17.00796  0.960027
+Pacifica-Orinoquia       -1.66578 -15.9483  12.61671  0.995643
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item Caribe vs Andina: p-adj $= 0.0018 < 0.05$ $\Rightarrow$ \alert{Diferencia significativa} (Caribe 8.4 puntos menor)
+  \item Pacífica vs Andina: p-adj $= 0.049 < 0.05$ $\Rightarrow$ \alert{Diferencia significativa} (Pacífica 6.8 puntos menor)
+  \item Otras comparaciones: No significativas
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización de Resultados Tukey}
+\begin{lstlisting}
+library(ggplot2)
+library(broom)
+
+# Extraer resultados de Tukey en formato tidy
+tukey_df <- tidy(tukey_resultado)
+
+# Grafico de forest plot
+ggplot(tukey_df, aes(x = estimate, y = comparison)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                 height = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed",
+             color = "red", size = 1) +
+  labs(x = "Diferencia de medias (IC 95% ajustado)",
+       y = "Comparacion",
+       title = "Tukey HSD: Comparaciones Multiples",
+       subtitle = "Diferencias significativas si IC no incluye 0") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Curva de Potencia para ANOVA}
+% ============================================================================
+
+\begin{frame}{Tamaño del Efecto en ANOVA: $f$ de Cohen}
+\begin{definition}[f de Cohen]
+\[
+f = \sqrt{\frac{\sum_{i=1}^k \pi_i (\mu_i - \mu)^2}{\sigma^2}}
+\]
+donde $\pi_i = n_i / N$ (proporción del grupo $i$), $\mu = \sum \pi_i \mu_i$ (media global).
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Interpretación (Cohen, 1988)}:
+\begin{itemize}
+  \item $f \approx 0.10$: efecto \alert{pequeño}
+  \item $f \approx 0.25$: efecto \alert{mediano}
+  \item $f \approx 0.40$: efecto \alert{grande}
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Nota}: $f$ mide cuánto varían las medias de los grupos en relación a la variabilidad dentro de los grupos.
+\end{frame}
+
+\begin{frame}[fragile]{Calcular Potencia para ANOVA}
+\begin{lstlisting}
+library(pwr)
+
+# Potencia para ANOVA de una via
+# Parametros:
+# k = numero de grupos
+# n = tamano de muestra POR GRUPO
+# f = f de Cohen
+# sig.level = alpha
+
+# Ejemplo: 5 grupos, n = 100 por grupo, f = 0.25, alpha = 0.05
+potencia_anova <- pwr.anova.test(k = 5, n = 100, f = 0.25,
+                                 sig.level = 0.05)
+
+print(potencia_anova)
+cat("\nPotencia:", round(potencia_anova$power, 3))
+
+# Calcular n requerido para potencia 0.80
+n_requerido <- pwr.anova.test(k = 5, f = 0.25, sig.level = 0.05,
+                              power = 0.80)
+
+cat("\nn requerido por grupo:", ceiling(n_requerido$n))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Explorar Diferentes Escenarios}
+\begin{lstlisting}
+# Tabla de n requerido para diferentes efectos
+efectos <- c(0.10, 0.25, 0.40)
+k_grupos <- c(3, 5, 10)
+
+resultados <- expand.grid(f = efectos, k = k_grupos)
+resultados$n_por_grupo <- sapply(1:nrow(resultados), function(i) {
+  ceiling(pwr.anova.test(k = resultados$k[i],
+                         f = resultados$f[i],
+                         sig.level = 0.05,
+                         power = 0.80)$n)
+})
+
+# Tabla pivotada
+library(tidyr)
+tabla_n <- resultados %>%
+  pivot_wider(names_from = k, values_from = n_por_grupo,
+              names_prefix = "k=")
+
+print(tabla_n)
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Observación}: Efectos pequeños requieren muestras MUCHO más grandes.
+\end{frame}
+
+% ============================================================================
+\section{Pruebas No Paramétricas}
+% ============================================================================
+
+\begin{frame}{¿Cuándo Usar Pruebas No Paramétricas?}
+\textbf{Situaciones}:
+\begin{enumerate}
+  \item \textbf{Datos ordinales} (ej. escala Likert: 1=malo, 2=regular, ..., 5=excelente)
+  \item \textbf{Distribuciones muy sesgadas} o con outliers extremos
+  \item \textbf{Muestras pequeñas} donde no se puede verificar normalidad
+  \item \textbf{Violación de supuestos} de las pruebas paramétricas
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Ventajas}:
+\begin{itemize}
+  \item Menos supuestos (no requieren normalidad)
+  \item Robustas a outliers
+  \item Válidas para datos ordinales
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Desventajas}:
+\begin{itemize}
+  \item \alert{Menos potentes} que las paramétricas si los supuestos se cumplen
+  \item Interpretación menos directa (trabajan con rangos, no con medias)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pruebas No Paramétricas Comunes}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Situación} & \textbf{Paramétrica} & \textbf{No paramétrica} \\
+\midrule
+1 muestra & Prueba $t$ & Wilcoxon signed-rank \\[0.2cm]
+2 muestras independientes & Prueba $t$ & Mann-Whitney-Wilcoxon \\[0.2cm]
+2 muestras pareadas & Prueba $t$ pareada & Wilcoxon signed-rank \\[0.2cm]
+$k$ muestras independientes & ANOVA & Kruskal-Wallis \\[0.2cm]
+$k$ muestras pareadas & ANOVA repetidas & Friedman \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Principio}: Las pruebas no paramétricas trabajan con \alert{rangos} en lugar de valores originales.
+\end{frame}
+
+\begin{frame}{Mann-Whitney-Wilcoxon (U de Mann-Whitney)}
+\textbf{Uso}: Alternativa a la prueba $t$ de dos muestras independientes.
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \text{Las dos distribuciones son idénticas}
+\]
+\[
+H_1: \text{Las distribuciones difieren en localización}
+\]
+
+\vspace{0.3cm}
+\textbf{Método}:
+\begin{enumerate}
+  \item Combinar todas las observaciones y asignar rangos
+  \item Calcular la suma de rangos para cada grupo
+  \item Comparar con la distribución nula
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Interpretación}: Si rechazamos $H_0$, concluimos que un grupo tiende a tener valores \alert{mayores} (o menores) que el otro, pero NO necesariamente medias diferentes.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Mann-Whitney en R}
+\begin{lstlisting}
+# Comparar ingles entre genero (si la distribucion no es normal)
+
+# Dividir por genero
+hombres <- icfes_ni %>%
+  filter(ESTU_GENERO == "M") %>%
+  pull(MOD_INGLES_PUNT)
+
+mujeres <- icfes_ni %>%
+  filter(ESTU_GENERO == "F") %>%
+  pull(MOD_INGLES_PUNT)
+
+# Prueba de Mann-Whitney
+resultado_mw <- wilcox.test(hombres, mujeres,
+                            alternative = "two.sided")
+
+print(resultado_mw)
+
+cat("\nEstadistico W:", resultado_mw$statistic)
+cat("\np-valor:", resultado_mw$p.value)
+
+# Decision
+if (resultado_mw$p.value < 0.05) {
+  cat("\nHay diferencia significativa entre generos")
+} else {
+  cat("\nNo hay diferencia significativa")
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparar Paramétrica vs No Paramétrica}
+\begin{lstlisting}
+# Prueba t
+resultado_t <- t.test(hombres, mujeres)
+cat("Prueba t:")
+cat("\n  t =", resultado_t$statistic)
+cat("\n  p-valor =", resultado_t$p.value)
+
+# Mann-Whitney
+resultado_mw <- wilcox.test(hombres, mujeres)
+cat("\n\nMann-Whitney:")
+cat("\n  W =", resultado_mw$statistic)
+cat("\n  p-valor =", resultado_mw$p.value)
+
+# Comparar conclusiones
+cat("\n\nAmbas pruebas coinciden?",
+    (resultado_t$p.value < 0.05) == (resultado_mw$p.value < 0.05))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: Si los datos son aproximadamente normales, ambas pruebas deberían dar resultados similares. Si difieren mucho, investigar outliers o asimetría.
+\end{frame}
+
+\begin{frame}{Kruskal-Wallis: Alternativa No Paramétrica a ANOVA}
+\textbf{Uso}: Comparar $k \geq 3$ grupos cuando los supuestos de ANOVA no se cumplen.
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \text{Las } k \text{ distribuciones son idénticas}
+\]
+\[
+H_1: \text{Al menos una distribución difiere en localización}
+\]
+
+\vspace{0.3cm}
+\textbf{Método}:
+\begin{enumerate}
+  \item Asignar rangos a todas las observaciones (ignorando grupos)
+  \item Calcular la suma de rangos para cada grupo
+  \item Estadístico $H$ (similar a $\chi^2$):
+\end{enumerate}
+\[
+H = \frac{12}{N(N+1)} \sum_{i=1}^k \frac{R_i^2}{n_i} - 3(N+1)
+\]
+donde $R_i$ = suma de rangos del grupo $i$.
+
+\vspace{0.3cm}
+Si $H_0$ es verdadera, $H \sim \chi^2(k-1)$ aproximadamente.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Kruskal-Wallis en R}
+\begin{lstlisting}
+# Comparar ingles entre macro-regiones (alternativa no parametrica)
+
+resultado_kw <- kruskal.test(MOD_INGLES_PUNT ~ MACRO_REGION,
+                             data = icfes_ni)
+
+print(resultado_kw)
+
+cat("\nEstadistico H (chi-cuadrado):", resultado_kw$statistic)
+cat("\ngl:", resultado_kw$parameter)
+cat("\np-valor:", resultado_kw$p.value)
+
+# Decision
+if (resultado_kw$p.value < 0.05) {
+  cat("\nHay diferencia significativa entre regiones")
+  cat("\n(al menos una difiere)")
+} else {
+  cat("\nNo hay diferencia significativa")
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparaciones Post-hoc para Kruskal-Wallis}
+\begin{lstlisting}
+# Kruskal-Wallis no incluye comparaciones multiples automaticas
+# Opcion 1: Usar Dunn test (paquete dunn.test)
+library(dunn.test)
+
+dunn_resultado <- dunn.test(icfes_ni$MOD_INGLES_PUNT,
+                            icfes_ni$MACRO_REGION,
+                            method = "bonferroni")
+# method: "bonferroni", "holm", "hochberg", "bh", etc.
+
+# Opcion 2: Pairwise Wilcoxon con ajuste
+pairwise_resultado <- pairwise.wilcox.test(
+  icfes_ni$MOD_INGLES_PUNT,
+  icfes_ni$MACRO_REGION,
+  p.adjust.method = "bonferroni"
+)
+
+print(pairwise_resultado)
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: El ajuste de Bonferroni es conservador pero simple. Otras opciones: Holm, Hochberg, Benjamini-Hochberg (FDR).
+\end{frame}
+
+\begin{frame}{¿Cuándo Usar Paramétrica vs No Paramétrica?}
+\textbf{Guía de decisión}:
+
+\vspace{0.3cm}
+\begin{enumerate}
+  \item \textbf{Verificar supuestos}:
+  \begin{itemize}
+    \item QQ-plot, Shapiro-Wilk para normalidad
+    \item Levene para homocedasticidad
+    \item Tamaño de muestra
+  \end{itemize}
+
+  \item \textbf{Si los supuestos se cumplen}: Usar prueba paramétrica
+  \begin{itemize}
+    \item Mayor potencia
+    \item Interpretación más directa (medias)
+  \end{itemize}
+
+  \item \textbf{Si los supuestos NO se cumplen}:
+  \begin{itemize}
+    \item Intentar transformación (log, raíz cuadrada)
+    \item Si persiste, usar prueba no paramétrica
+  \end{itemize}
+
+  \item \textbf{Si los datos son ordinales}: Siempre usar no paramétrica
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Consejo}: Con muestras grandes ($n \geq 30$ por grupo), la prueba $t$ y ANOVA son \alert{robustas} a desviaciones moderadas de la normalidad (TLC).
+\end{frame}
+
+% ============================================================================
+\section{Resumen de la Unidad 3 (hasta ahora)}
+% ============================================================================
+
+\begin{frame}{Tabla Resumen: ¿Qué Prueba Usar?}
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{2.5cm}p{2cm}p{2.5cm}p{2.5cm}}
+\toprule
+\textbf{Situación} & \textbf{Datos} & \textbf{Paramétrica} & \textbf{No paramétrica} \\
+\midrule
+1 muestra & Cuantitativos & Prueba $t$ (1 muestra) & Wilcoxon signed-rank \\[0.2cm]
+2 muestras independientes & Cuantitativos & Prueba $t$ (2 muestras) & Mann-Whitney-Wilcoxon \\[0.2cm]
+2 muestras pareadas & Cuantitativos & Prueba $t$ pareada & Wilcoxon signed-rank \\[0.2cm]
+$k$ muestras independientes & Cuantitativos & ANOVA + Tukey HSD & Kruskal-Wallis + Dunn \\[0.2cm]
+2 proporciones & Categóricos & Prueba $z$ para 2 prop. & (Próxima sesión: $\chi^2$) \\[0.2cm]
+$k$ proporciones & Categóricos & (Próxima sesión: $\chi^2$) & (Próxima sesión: $\chi^2$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\small
+\textbf{Próxima sesión (después del parcial)}: Pruebas $\chi^2$ para independencia y bondad de ajuste.
+\end{frame}
+
+\begin{frame}{Flujo de Decisión}
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.2cm and 1.5cm,
+  decision/.style={diamond, draw, fill=blue!20, text width=2.5cm, align=center, inner sep=1pt, minimum height=0.8cm},
+  block/.style={rectangle, draw, fill=green!20, text width=3cm, align=center, rounded corners, minimum height=0.7cm},
+  line/.style={draw, -{Latex[length=2mm]}}
+]
+
+  \node [block] (inicio) {?`Cu\'antos grupos?};
+
+  \node [decision, below=1cm of inicio] (grupos) {1, 2, o $>$2?};
+
+  \node [block, below left=1.2cm and 2.5cm of grupos] (un_grupo) {1 grupo:\\ Prueba $t$ (1 muestra)};
+
+  \node [decision, below=1.8cm of grupos] (dos_grupos) {?`Independientes?};
+  \node [block, below left=1cm and 1.5cm of dos_grupos] (t_dos) {Prueba $t$\\ (2 muestras)};
+  \node [block, below right=1cm and 1.5cm of dos_grupos] (t_pareada) {Prueba $t$\\ pareada};
+
+  \node [block, below right=1.2cm and 2.5cm of grupos] (anova) {$>$2 grupos:\\ ANOVA};
+
+  \path [line] (inicio) -- (grupos);
+  \path [line] (grupos) -- node[left, sloped] {\tiny 1} (un_grupo);
+  \path [line] (grupos) -- node[above] {\tiny 2} (dos_grupos);
+  \path [line] (grupos) -- node[right, sloped] {\tiny $>$2} (anova);
+  \path [line] (dos_grupos) -- node[above] {\tiny S\'i} (t_dos);
+  \path [line] (dos_grupos) -- node[above] {\tiny No} (t_pareada);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\small
+Si los supuestos no se cumplen, cambiar a la prueba no paramétrica correspondiente.
+\end{frame}
+
+% ============================================================================
+\section{Conclusiones}
+% ============================================================================
+
+\begin{frame}{Resumen de la Sesión}
+\textbf{Hoy aprendimos}:
+\begin{enumerate}
+  \item \textbf{Prueba $t$ pareada}: Para muestras dependientes
+  \begin{itemize}
+    \item Trabajar con las diferencias: $t = \frac{\bar{d}}{s_d/\sqrt{n}}$
+  \end{itemize}
+
+  \item \textbf{ANOVA de una vía}: Comparar $\geq 3$ grupos
+  \begin{itemize}
+    \item $F = \text{MSB}/\text{MSW}$
+    \item Supuestos: normalidad, homocedasticidad, independencia
+  \end{itemize}
+
+  \item \textbf{Tukey HSD}: Comparaciones múltiples post-hoc
+  \begin{itemize}
+    \item Controla FWER al nivel $\alpha$
+  \end{itemize}
+
+  \item \textbf{Potencia en ANOVA}: $f$ de Cohen, tamaño de muestra
+
+  \item \textbf{Pruebas no paramétricas}:
+  \begin{itemize}
+    \item Mann-Whitney (alternativa a $t$ de 2 muestras)
+    \item Kruskal-Wallis (alternativa a ANOVA)
+  \end{itemize}
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Próxima sesión}: ¡Parcial! (cubre Sesiones 1-7)
+\end{frame}
+
+\begin{frame}{Preparación para el Parcial}
+\textbf{Temas a repasar}:
+\begin{enumerate}
+  \item \textbf{Sesiones 1-3}: Estadística descriptiva, visualización, muestreo, correlación
+  \item \textbf{Sesiones 4-5}: Estimación puntual, IC (medias, varianzas, proporciones), tamaño de muestra
+  \item \textbf{Sesión 6}: Pruebas de hipótesis, p-valor, errores tipo I/II, potencia, d de Cohen
+  \item \textbf{Sesión 7 (hoy)}: Prueba $t$ pareada, ANOVA, Tukey, no paramétricas
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Habilidades clave}:
+\begin{itemize}
+  \item Interpretar output de R (\code{t.test()}, \code{aov()}, \code{summary()})
+  \item Verificar supuestos (normalidad, homocedasticidad)
+  \item Elegir la prueba adecuada según la situación
+  \item Reportar resultados completos (estadístico, gl, p-valor, IC, tamaño del efecto)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Recurso}: Repasar ejercicios de las sesiones anteriores con datos ICFES.
+\end{frame}
+
+\begin{frame}{Ejercicios para Practicar}
+\textbf{Con los datos de ICFES}:
+\begin{enumerate}
+  \item Comparar \variable{MOD\_RAZONA\_CUANTITAT} antes/después de una intervención (simular datos pareados)
+  \item Realizar ANOVA comparando inglés entre 5 departamentos (elegir 5 con $n$ grande)
+  \item Aplicar Tukey HSD y reportar qué departamentos difieren
+  \item Verificar supuestos de ANOVA (QQ-plot, Levene)
+  \item Comparar inglés entre 3 niveles socioeconómicos usando Kruskal-Wallis
+  \item Calcular potencia de ANOVA con $k=5$, $n=100$, $f=0.30$
+  \item \textbf{Desafío}: Crear un reporte completo de análisis comparativo (descriptivos + visualización + prueba + interpretación)
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Lectura}: Anderson et al., Capítulos 10-11 (Comparación de Medias, ANOVA)
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Large
+¡Gracias por su atención!
+
+\vspace{0.5cm}
+\normalsize
+Preguntas y discusión
+
+\vspace{1cm}
+\large
+¡Mucho éxito en el parcial!
+\end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1220 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 13: Repaso Final}
+\subtitle{Preparación para el examen final integrado}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Viernes 20 de noviembre de 2026}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Mapa del curso}
+% ============================================================================
+
+\begin{frame}{Las 4 unidades del curso}
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.5cm and 0.8cm,
+  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=3.5cm, minimum height=1.2cm, rounded corners, align=center, font=\small},
+  arrow/.style={->, thick, javeriana}
+]
+\node[box, fill=javerianalight!20] (u1) {\textbf{Unidad 1}\\Descriptiva +\\Probabilidad};
+\node[box, fill=javerianalight!20, right=of u1] (u2) {\textbf{Unidad 2}\\Intervalos de\\Confianza};
+\node[box, fill=javerianalight!20, below=of u1] (u3) {\textbf{Unidad 3}\\Pruebas de\\Hipótesis};
+\node[box, fill=javerianalight!20, right=of u3] (u4) {\textbf{Unidad 4}\\Regresión\\Lineal};
+
+\draw[arrow] (u1) -- (u2) node[midway, above, font=\tiny] {Cuantificar};
+\draw[arrow] (u2) -- (u4) node[midway, right, font=\tiny] {Modelar};
+\draw[arrow] (u1) -- (u3) node[midway, left, font=\tiny] {Decidir};
+\draw[arrow] (u3) -- (u4) node[midway, above, font=\tiny] {Explicar};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.4cm}
+\begin{block}{Cómo se conectan las unidades}
+\begin{itemize}
+\item \textbf{U1 (Descriptiva + Probabilidad)}: Fundamento — entender los datos y las distribuciones
+\item \textbf{U2 (IC)}: Cuantificar incertidumbre — ¿qué tan preciso es nuestro estimador?
+\item \textbf{U3 (Pruebas)}: Tomar decisiones con datos — ¿hay diferencia? ¿hay asociación?
+\item \textbf{U4 (Regresión)}: Modelar relaciones — ¿cómo se relaciona Y con X? ¿cuánto?
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\small
+\textcolor{javeriana}{Todo se integra}: en un análisis completo usamos las 4 unidades (como vimos en S12).
+\end{frame}
+
+\begin{frame}{Diagrama de conexiones conceptuales}
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1cm and 1.2cm,
+  concept/.style={ellipse, draw=javeriana, fill=javeriana!10, thick, minimum width=2cm, minimum height=0.7cm, font=\scriptsize, align=center},
+  arrow/.style={->, thick, javerianalight}
+]
+% Nivel 1: base
+\node[concept] (datos) {Datos};
+\node[concept, above right=0.8cm and 1cm of datos] (desc) {Descriptiva};
+\node[concept, above left=0.8cm and 1cm of datos] (prob) {Probabilidad};
+
+% Nivel 2: inferencia
+\node[concept, above=1.5cm of desc] (muestreo) {Muestreo};
+\node[concept, above right=0.8cm and 0.8cm of muestreo] (ic) {IC};
+\node[concept, above left=0.8cm and 0.8cm of muestreo] (pruebas) {Pruebas};
+
+% Nivel 3: modelado
+\node[concept, above=1.5cm of ic] (regresion) {Regresión};
+\node[concept, above=0.3cm of regresion] (diagnosticos) {Diagnósticos};
+
+% Nivel 4: conclusiones
+\node[concept, above=1cm of diagnosticos] (conclusiones) {Conclusiones};
+
+% Conexiones
+\draw[arrow] (datos) -- (desc);
+\draw[arrow] (datos) -- (prob);
+\draw[arrow] (desc) -- (muestreo);
+\draw[arrow] (prob) -- (muestreo);
+\draw[arrow] (muestreo) -- (ic);
+\draw[arrow] (muestreo) -- (pruebas);
+\draw[arrow] (ic) -- (regresion);
+\draw[arrow] (pruebas) -- (regresion);
+\draw[arrow] (regresion) -- (diagnosticos);
+\draw[arrow] (diagnosticos) -- (conclusiones);
+\draw[arrow, dashed, bend right=30] (diagnosticos.west) to (regresion.west);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Cronología de sesiones}
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{cllc}
+\toprule
+\textbf{Sesión} & \textbf{Tema} & \textbf{Unidad} & \textbf{Peso} \\
+\midrule
+S01 & Estadística descriptiva numérica & U1 & 10\% \\
+S02 & Estadística descriptiva gráfica & U1 & 5\% \\
+S03 & Muestreo y correlación & U1 & 10\% \\
+S04 & Estimadores y MLE & U1-U2 & 10\% \\
+\midrule
+S05 & OLS simple & U4 & 15\% \\
+S06 & OLS múltiple & U4 & 15\% \\
+S07 & Diagnósticos y logit & U4 & 5\% \\
+\midrule
+S08 & Intervalos de confianza & U2 & 10\% \\
+S09 & Bootstrap y tamaño de muestra & U2 & 5\% \\
+\midrule
+S10 & Errores tipo I/II y potencia & U3 & 10\% \\
+S11 & Pruebas paramétricas (t, ANOVA) & U3 & 15\% \\
+S12 & Integración y análisis aplicado & U1-U4 & 20\% \\
+\midrule
+S13 & Repaso final & — & — \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: El examen final es \textbf{acumulativo} — cubre las 4 unidades, con énfasis en U2-U4.
+\end{frame}
+
+% ============================================================================
+\section{Repaso U1: Conceptos clave}
+% ============================================================================
+
+\begin{frame}{U1: Estadística descriptiva}
+\begin{block}{Medidas de tendencia central}
+\begin{itemize}
+\item \textbf{Media}: $\bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i$ (sensible a valores extremos)
+\item \textbf{Mediana}: valor que divide los datos en 50\%-50\% (robusta)
+\item \textbf{Moda}: valor más frecuente
+\end{itemize}
+\end{block}
+
+\begin{block}{Medidas de dispersión}
+\begin{itemize}
+\item \textbf{Varianza}: $s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2$
+\item \textbf{Desviación estándar}: $s = \sqrt{s^2}$ (mismas unidades que $x$)
+\item \textbf{Rango intercuartílico}: $IQR = Q_3 - Q_1$ (robusto)
+\item \textbf{Coeficiente de variación}: $CV = \frac{s}{\bar{x}}$ (dispersión relativa)
+\end{itemize}
+\end{block}
+
+\begin{block}{Medidas de forma}
+\begin{itemize}
+\item \textbf{Asimetría}: $g_1 = \frac{\frac{1}{n}\sum(x_i - \bar{x})^3}{s^3}$ ($g_1 > 0$: sesgada a derecha; $g_1 < 0$: sesgada a izquierda)
+\item \textbf{Curtosis}: $g_2 = \frac{\frac{1}{n}\sum(x_i - \bar{x})^4}{s^4} - 3$ ($g_2 > 0$: colas pesadas; $g_2 < 0$: colas ligeras)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U1: Correlación}
+\begin{block}{Correlación de Pearson}
+Mide asociación \textbf{lineal} entre dos variables continuas.
+$$r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i - \bar{y})^2}}$$
+\begin{itemize}
+\item $-1 \leq r \leq 1$
+\item $r > 0$: relación positiva; $r < 0$: relación negativa
+\item $|r|$ cercano a 1: relación fuerte; cercano a 0: relación débil
+\item \textcolor{red}{Limitación}: solo detecta relaciones lineales
+\end{itemize}
+\end{block}
+
+\begin{block}{Correlación de Spearman}
+Mide asociación \textbf{monotónica} usando rangos.
+$$\rho = 1 - \frac{6\sum d_i^2}{n(n^2 - 1)}$$
+donde $d_i$ es la diferencia entre los rangos de $x_i$ y $y_i$.
+\begin{itemize}
+\item Robusta a valores extremos
+\item Detecta relaciones no lineales (pero monotónicas)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U1: Paradoja de Simpson}
+\begin{exampleblock}{Ejemplo clásico}
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\textbf{Tasa de éxito por tratamiento y género:}
+
+\vspace{0.2cm}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{Tratamiento A} & \textbf{Tratamiento B} & \textbf{Mejor} \\
+\midrule
+Hombres & 80/100 = 80\% & 90/120 = 75\% & A \\
+Mujeres & 20/40 = 50\% & 10/30 = 33\% & A \\
+\midrule
+\textbf{Total} & 100/140 = 71\% & 100/150 = 67\% & A \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+Pero si solo miramos el total:
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{Tratamiento A} & \textbf{Tratamiento B} \\
+\midrule
+Total & 100/140 = 71\% & 100/150 = 67\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+¡A es mejor en ambos grupos, pero B parece mejor en el agregado!
+\end{exampleblock}
+
+\textbf{Lección}: Siempre desagregar por variables confundidoras (género, estrato, región, etc.).
+\end{frame}
+
+\begin{frame}{U1: Distribuciones y TCL}
+\begin{block}{Distribución normal}
+$$X \sim N(\mu, \sigma^2) \quad \Rightarrow \quad f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
+\begin{itemize}
+\item Funciones en R: \code{dnorm(x, mean, sd)}, \code{pnorm(q, ...)}, \code{qnorm(p, ...)}, \code{rnorm(n, ...)}
+\item Regla 68-95-99.7: 68\% dentro de $\mu \pm \sigma$, 95\% dentro de $\mu \pm 2\sigma$, 99.7\% dentro de $\mu \pm 3\sigma$
+\end{itemize}
+\end{block}
+
+\begin{block}{Teorema Central del Límite (TCL)}
+Si $X_1, X_2, \ldots, X_n$ son iid con $E(X_i) = \mu$ y $\text{Var}(X_i) = \sigma^2$, entonces:
+$$\bar{X} \sim N\left(\mu, \frac{\sigma^2}{n}\right) \quad \text{cuando } n \to \infty$$
+O equivalentemente:
+$$\frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)$$
+\textbf{Implicación}: Podemos hacer inferencia sobre $\mu$ incluso si $X$ no es normal (con $n$ grande).
+\end{block}
+\end{frame}
+
+\begin{frame}{U1: Otras distribuciones}
+\begin{block}{Distribución $t$ de Student}
+$$t = \frac{\bar{X} - \mu}{s/\sqrt{n}} \sim t_{n-1}$$
+\begin{itemize}
+\item Se usa cuando $\sigma$ es desconocida (estimamos con $s$)
+\item Parámetro: grados de libertad $df = n - 1$
+\item Más dispersa que $N(0,1)$ para $n$ pequeño; converge a $N(0,1)$ cuando $n \to \infty$
+\item En R: \code{pt(q, df)}, \code{qt(p, df)}
+\end{itemize}
+\end{block}
+
+\begin{block}{Distribución $\chi^2$ (chi-cuadrado)}
+$$\frac{(n-1)s^2}{\sigma^2} \sim \chi^2_{n-1}$$
+\begin{itemize}
+\item Se usa para inferencia sobre varianzas
+\item También en pruebas de independencia y bondad de ajuste
+\item Parámetro: grados de libertad $df$
+\item En R: \code{pchisq(q, df)}, \code{qchisq(p, df)}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Repaso U2: Fórmulas de IC}
+% ============================================================================
+
+\begin{frame}{U2: IC para la media}
+\begin{block}{Caso 1: $\sigma$ conocida (raro en la práctica)}
+$$IC_{1-\alpha}: \quad \bar{x} \pm z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}$$
+\begin{itemize}
+\item Usar distribución normal estándar: $z_{0.025} = 1.96$ para 95\%
+\end{itemize}
+\end{block}
+
+\begin{block}{Caso 2: $\sigma$ desconocida (caso común)}
+$$IC_{1-\alpha}: \quad \bar{x} \pm t_{\alpha/2, n-1} \cdot \frac{s}{\sqrt{n}}$$
+\begin{itemize}
+\item Usar distribución $t$ con $df = n - 1$
+\item $t_{0.025, n-1}$ se obtiene con \code{qt(0.975, n-1)}
+\item Para $n$ grande ($n > 30$), $t_{n-1} \approx z$ (1.96 para 95\%)
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+$n = 50$, $\bar{x} = 154.3$, $s = 18.7$. IC 95\% para $\mu$:
+$$154.3 \pm t_{0.025, 49} \cdot \frac{18.7}{\sqrt{50}} = 154.3 \pm 2.01 \cdot 2.64 = 154.3 \pm 5.31 = [149.0, 159.6]$$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{U2: IC para la varianza}
+\begin{block}{IC para $\sigma^2$}
+$$IC_{1-\alpha}: \quad \left[\frac{(n-1)s^2}{\chi^2_{\alpha/2, n-1}}, \quad \frac{(n-1)s^2}{\chi^2_{1-\alpha/2, n-1}}\right]$$
+\begin{itemize}
+\item Basado en $\frac{(n-1)s^2}{\sigma^2} \sim \chi^2_{n-1}$
+\item Asimétrico (la distribución $\chi^2$ es asimétrica)
+\item Requiere normalidad de los datos (más sensible que el IC para $\mu$)
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+$n = 50$, $s^2 = 349.69$. IC 95\% para $\sigma^2$:
+\begin{itemize}
+\item $\chi^2_{0.025, 49} = 70.22$ (cuantil superior)
+\item $\chi^2_{0.975, 49} = 31.55$ (cuantil inferior)
+\item IC: $\left[\frac{49 \cdot 349.69}{70.22}, \frac{49 \cdot 349.69}{31.55}\right] = [244.0, 543.5]$
+\end{itemize}
+\end{exampleblock}
+
+\small
+\textbf{Nota}: El IC para $\sigma$ es $[\sqrt{244.0}, \sqrt{543.5}] = [15.6, 23.3]$.
+\end{frame}
+
+\begin{frame}{U2: IC para proporciones}
+\begin{block}{IC para $p$ (método de Wald)}
+$$IC_{1-\alpha}: \quad \hat{p} \pm z_{\alpha/2} \cdot \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
+donde $\hat{p} = \frac{x}{n}$ (proporción muestral).
+\begin{itemize}
+\item Requiere $n\hat{p} \geq 10$ y $n(1-\hat{p}) \geq 10$ (regla de pulgar)
+\item Si no se cumple, usar método exacto (Wilson, Clopper-Pearson)
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+$n = 200$, $x = 75$ estudiantes alcanzan B1. $\hat{p} = 75/200 = 0.375$. IC 95\%:
+$$0.375 \pm 1.96 \cdot \sqrt{\frac{0.375 \cdot 0.625}{200}} = 0.375 \pm 1.96 \cdot 0.0342 = 0.375 \pm 0.067 = [0.308, 0.442]$$
+Interpretación: Entre 30.8\% y 44.2\% de estudiantes alcanzan B1 (95\% de confianza).
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{U2: Tamaño de muestra}
+\begin{block}{Tamaño de muestra para estimar $\mu$ con margen de error $E$}
+$$n = \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2$$
+\begin{itemize}
+\item Si $\sigma$ es desconocida, usar estimación piloto o $\sigma \approx \frac{\text{rango}}{4}$
+\item Ejemplo: ¿Cuántos estudiantes necesito para estimar $\mu$ con $E = 2$ puntos (95\% conf)?
+  $$n = \left(\frac{1.96 \cdot 18.7}{2}\right)^2 = (18.35)^2 = 337$$
+\end{itemize}
+\end{block}
+
+\begin{block}{Tamaño de muestra para estimar $p$ con margen de error $E$}
+$$n = \left(\frac{z_{\alpha/2}}{E}\right)^2 \cdot p(1-p)$$
+\begin{itemize}
+\item Si $p$ es desconocida, usar $p = 0.5$ (escenario conservador, maximiza $p(1-p)$)
+\item Ejemplo: ¿Cuántos estudiantes para estimar proporción con $E = 0.03$ (95\% conf)?
+  $$n = \left(\frac{1.96}{0.03}\right)^2 \cdot 0.5 \cdot 0.5 = (65.33)^2 \cdot 0.25 = 1067$$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U2: Tabla resumen de fórmulas de IC}
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lll}
+\toprule
+\textbf{Parámetro} & \textbf{Fórmula IC} & \textbf{Condiciones} \\
+\midrule
+$\mu$ ($\sigma$ conocida) & $\bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}$ & $n$ grande o $X \sim N$ \\
+$\mu$ ($\sigma$ desconocida) & $\bar{x} \pm t_{\alpha/2, n-1} \frac{s}{\sqrt{n}}$ & $n$ grande o $X \sim N$ \\
+$\sigma^2$ & $\left[\frac{(n-1)s^2}{\chi^2_{\alpha/2, n-1}}, \frac{(n-1)s^2}{\chi^2_{1-\alpha/2, n-1}}\right]$ & $X \sim N$ \\
+$p$ & $\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$ & $n\hat{p} \geq 10$, $n(1-\hat{p}) \geq 10$ \\
+$\mu_1 - \mu_2$ & $(\bar{x}_1 - \bar{x}_2) \pm t_{\alpha/2, df} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}$ & Welch, $df$ aprox. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{Recordar}:
+\begin{itemize}
+\item Para 95\%: $\alpha = 0.05$, $\alpha/2 = 0.025$, $z_{0.025} = 1.96$
+\item Para 90\%: $\alpha = 0.10$, $\alpha/2 = 0.05$, $z_{0.05} = 1.645$
+\item Para 99\%: $\alpha = 0.01$, $\alpha/2 = 0.005$, $z_{0.005} = 2.576$
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Repaso U3: Pruebas de hipótesis}
+% ============================================================================
+
+\begin{frame}{U3: Anatomía de una prueba de hipótesis}
+\begin{block}{Pasos}
+\begin{enumerate}
+\item \textbf{Plantear hipótesis}: $H_0$ (nula) vs $H_1$ (alternativa)
+\item \textbf{Elegir nivel de significancia}: $\alpha$ (típicamente 0.05)
+\item \textbf{Calcular estadístico de prueba}: $t$, $z$, $F$, $\chi^2$, etc.
+\item \textbf{Calcular p-valor}: probabilidad de observar un estadístico tan extremo (o más) si $H_0$ es cierta
+\item \textbf{Decisión}: si $p < \alpha$, rechazar $H_0$; si $p \geq \alpha$, no rechazar $H_0$
+\item \textbf{Conclusión}: interpretar en el contexto del problema
+\end{enumerate}
+\end{block}
+
+\begin{block}{Errores tipo I y II}
+\begin{itemize}
+\item \textbf{Error tipo I}: Rechazar $H_0$ cuando es verdadera (falso positivo). Probabilidad = $\alpha$.
+\item \textbf{Error tipo II}: No rechazar $H_0$ cuando es falsa (falso negativo). Probabilidad = $\beta$.
+\item \textbf{Potencia}: $1 - \beta$ = probabilidad de rechazar $H_0$ cuando es falsa (detectar el efecto).
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U3: Tabla de pruebas paramétricas}
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{llll}
+\toprule
+\textbf{Situación} & \textbf{Prueba} & \textbf{Estadístico} & \textbf{gl} \\
+\midrule
+1 muestra, $\mu$ & t de 1 muestra & $t = \frac{\bar{x} - \mu_0}{s/\sqrt{n}}$ & $n-1$ \\
+\midrule
+2 muestras indep. & t de 2 muestras & $t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$ & Welch \\
+\midrule
+2 muestras pareadas & t pareada & $t = \frac{\bar{d}}{s_d/\sqrt{n}}$ & $n-1$ \\
+\midrule
+$\geq 3$ grupos & ANOVA & $F = \frac{MS_{entre}}{MS_{dentro}}$ & $(k-1, n-k)$ \\
+\midrule
+Indep. (tabla) & $\chi^2$ indep. & $\chi^2 = \sum \frac{(O-E)^2}{E}$ & $(r-1)(c-1)$ \\
+\midrule
+Bondad de ajuste & $\chi^2$ bondad & $\chi^2 = \sum \frac{(O-E)^2}{E}$ & $k-1$ \\
+\midrule
+Correlación & t para $\rho$ & $t = r\sqrt{\frac{n-2}{1-r^2}}$ & $n-2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{U3: Prueba t de una muestra}
+\begin{block}{Hipótesis}
+$$H_0: \mu = \mu_0 \quad \text{vs} \quad H_1: \mu \neq \mu_0 \quad \text{(bilateral)}$$
+O $H_1: \mu > \mu_0$ (unilateral derecha) o $H_1: \mu < \mu_0$ (unilateral izquierda).
+\end{block}
+
+\begin{block}{Estadístico}
+$$t = \frac{\bar{x} - \mu_0}{s/\sqrt{n}} \sim t_{n-1}$$
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+$n = 50$, $\bar{x} = 154.3$, $s = 18.7$. Probar $H_0: \mu = 150$ vs $H_1: \mu \neq 150$ ($\alpha = 0.05$).
+$$t = \frac{154.3 - 150}{18.7/\sqrt{50}} = \frac{4.3}{2.64} = 1.63$$
+$p$-valor (bilateral) = $2 \cdot P(T_{49} > 1.63) = 2 \cdot 0.055 = 0.11 > 0.05$.\\
+\textbf{Conclusión}: No rechazamos $H_0$. No hay evidencia suficiente de que $\mu \neq 150$.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{U3: Prueba t de dos muestras (Welch)}
+\begin{block}{Hipótesis}
+$$H_0: \mu_1 = \mu_2 \quad \text{vs} \quad H_1: \mu_1 \neq \mu_2$$
+\end{block}
+
+\begin{block}{Estadístico (Welch, no asume varianzas iguales)}
+$$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$
+con grados de libertad aproximados (fórmula compleja, R lo calcula).
+\end{block}
+
+\begin{exampleblock}{Ejemplo en R}
+\begin{lstlisting}
+t.test(MOD_INGLES_PUNT ~ PRIVADA, data = ni_data,
+       var.equal = FALSE)  # Welch (por defecto)
+\end{lstlisting}
+Si $p < 0.05$, rechazamos $H_0$ $\Rightarrow$ hay diferencia significativa entre públicas y privadas.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{U3: ANOVA de un factor}
+\begin{block}{Hipótesis}
+$$H_0: \mu_1 = \mu_2 = \cdots = \mu_k \quad \text{vs} \quad H_1: \text{al menos un } \mu_i \text{ es diferente}$$
+\end{block}
+
+\begin{block}{Estadístico F}
+$$F = \frac{MS_{entre}}{MS_{dentro}} = \frac{SS_{entre}/(k-1)}{SS_{dentro}/(n-k)} \sim F_{k-1, n-k}$$
+donde:
+\begin{itemize}
+\item $SS_{entre} = \sum_{i=1}^{k} n_i (\bar{x}_i - \bar{x})^2$ (varianza entre grupos)
+\item $SS_{dentro} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (x_{ij} - \bar{x}_i)^2$ (varianza dentro de grupos)
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Post-hoc: Tukey HSD}
+Si ANOVA rechaza $H_0$, usar Tukey para identificar qué pares difieren.
+\begin{lstlisting}
+anova_modelo <- aov(MOD_INGLES_PUNT ~ REGION, data = ni_data)
+TukeyHSD(anova_modelo)
+\end{lstlisting}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{U3: Chi-cuadrado de independencia}
+\begin{block}{Hipótesis}
+$$H_0: \text{Las variables son independientes} \quad \text{vs} \quad H_1: \text{Las variables están asociadas}$$
+\end{block}
+
+\begin{block}{Estadístico}
+$$\chi^2 = \sum_{i=1}^{r}\sum_{j=1}^{c} \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \sim \chi^2_{(r-1)(c-1)}$$
+donde:
+\begin{itemize}
+\item $O_{ij}$ = frecuencia observada en celda $(i,j)$
+\item $E_{ij} = \frac{\text{total fila } i \cdot \text{total columna } j}{n}$ (frecuencia esperada bajo $H_0$)
+\item $r$ = número de filas, $c$ = número de columnas
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ejemplo en R}
+\begin{lstlisting}
+tabla <- table(ni_data$NIVEL_MCER, ni_data$PRIVADA)
+chisq.test(tabla)
+\end{lstlisting}
+Si $p < 0.05$, rechazamos $H_0$ $\Rightarrow$ hay asociación entre nivel MCER y tipo IES.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{U3: Pruebas no paramétricas}
+\begin{block}{¿Cuándo usar no paramétricas?}
+\begin{itemize}
+\item Datos \textbf{no} normales y $n$ pequeño (TCL no aplica)
+\item Datos ordinales (rangos)
+\item Presencia de valores extremos (outliers)
+\end{itemize}
+\end{block}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Paramétrica} & \textbf{No paramétrica} & \textbf{Uso} \\
+\midrule
+t de 1 muestra & Wilcoxon signed-rank & 1 muestra, mediana \\
+t de 2 muestras & Mann-Whitney (Wilcoxon) & 2 muestras indep. \\
+t pareada & Wilcoxon signed-rank pareada & 2 muestras pareadas \\
+ANOVA & Kruskal-Wallis & $\geq 3$ grupos \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplo: Mann-Whitney en R}
+\begin{lstlisting}
+wilcox.test(MOD_INGLES_PUNT ~ PRIVADA, data = ni_data)
+\end{lstlisting}
+Prueba si las medianas de los dos grupos son diferentes.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{U3: Potencia y tamaño del efecto}
+\begin{block}{d de Cohen (para t-test)}
+$$d = \frac{\bar{x}_1 - \bar{x}_2}{s_{pooled}}$$
+donde $s_{pooled} = \sqrt{\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2}}$.
+
+\textbf{Interpretación}:
+\begin{itemize}
+\item $|d| < 0.2$: efecto trivial
+\item $0.2 \leq |d| < 0.5$: efecto pequeño
+\item $0.5 \leq |d| < 0.8$: efecto mediano
+\item $|d| \geq 0.8$: efecto grande
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Potencia}
+Probabilidad de rechazar $H_0$ cuando es falsa. Depende de:
+\begin{itemize}
+\item Tamaño del efecto (mayor $d$ $\Rightarrow$ mayor potencia)
+\item Tamaño de muestra (mayor $n$ $\Rightarrow$ mayor potencia)
+\item Nivel $\alpha$ (mayor $\alpha$ $\Rightarrow$ mayor potencia, pero más error tipo I)
+\end{itemize}
+Objetivo: potencia $\geq 0.80$ (80\%).
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Repaso U4: Regresión}
+% ============================================================================
+
+\begin{frame}{U4: Modelo de regresión lineal simple}
+\begin{block}{Modelo}
+$$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$$
+donde:
+\begin{itemize}
+\item $Y_i$ = variable dependiente
+\item $X_i$ = variable independiente
+\item $\beta_0$ = intercepto
+\item $\beta_1$ = pendiente (efecto de $X$ sobre $Y$)
+\item $\varepsilon_i$ = error (ruido)
+\end{itemize}
+\end{block}
+
+\begin{block}{Estimadores OLS}
+$$\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^{n}(X_i - \bar{X})^2} = \frac{Cov(X, Y)}{Var(X)}$$
+$$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$$
+\end{block}
+
+\textbf{Interpretación}: $\hat{\beta}_1$ es el cambio en $Y$ asociado con un cambio unitario en $X$.
+\end{frame}
+
+\begin{frame}{U4: Modelo de regresión múltiple}
+\begin{block}{Modelo}
+$$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \varepsilon_i$$
+\end{block}
+
+\begin{block}{Interpretación de $\hat{\beta}_j$}
+$\hat{\beta}_j$ es el cambio en $Y$ asociado con un cambio unitario en $X_j$, \textbf{manteniendo constantes} las demás variables (ceteris paribus).
+\end{block}
+
+\begin{exampleblock}{Ejemplo}
+$$\widehat{\text{MOD\_INGLES}} = 45.2 + 2.1 \cdot \text{ESTRATO} + 5.4 \cdot \text{PRIVADA} + 0.88 \cdot \text{PUNT\_S11}$$
+\begin{itemize}
+\item $\hat{\beta}_{\text{ESTRATO}} = 2.1$: subir un estrato se asocia con 2.1 puntos más en inglés, \textit{controlando} por tipo IES y puntaje S11.
+\item $\hat{\beta}_{\text{PRIVADA}} = 5.4$: estudiar en privada se asocia con 5.4 puntos más, \textit{controlando} por estrato y puntaje S11.
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{U4: $R^2$ y $R^2$ ajustado}
+\begin{block}{$R^2$ (coeficiente de determinación)}
+$$R^2 = \frac{SS_{reg}}{SS_{total}} = 1 - \frac{SS_{res}}{SS_{total}}$$
+donde:
+\begin{itemize}
+\item $SS_{total} = \sum (Y_i - \bar{Y})^2$ (varianza total de $Y$)
+\item $SS_{reg} = \sum (\hat{Y}_i - \bar{Y})^2$ (varianza explicada por el modelo)
+\item $SS_{res} = \sum (Y_i - \hat{Y}_i)^2$ (varianza no explicada, residuos)
+\end{itemize}
+\textbf{Interpretación}: proporción de la varianza de $Y$ explicada por las $X$. Rango: $0 \leq R^2 \leq 1$.
+\end{block}
+
+\begin{block}{$R^2$ ajustado}
+$$R^2_{adj} = 1 - \frac{SS_{res}/(n-k-1)}{SS_{total}/(n-1)}$$
+\begin{itemize}
+\item Penaliza por número de variables $k$
+\item Usar para comparar modelos con distinto número de variables
+\item Puede disminuir al agregar variables irrelevantes (a diferencia de $R^2$)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U4: Pruebas t y F en regresión}
+\begin{block}{Prueba t para $\beta_j$}
+$$H_0: \beta_j = 0 \quad \text{vs} \quad H_1: \beta_j \neq 0$$
+$$t = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)} \sim t_{n-k-1}$$
+\begin{itemize}
+\item Si $p < 0.05$, rechazamos $H_0$ $\Rightarrow$ $X_j$ es significativa
+\item Aparece en la tabla de \code{summary(modelo)}
+\end{itemize}
+\end{block}
+
+\begin{block}{Prueba F global}
+$$H_0: \beta_1 = \beta_2 = \cdots = \beta_k = 0 \quad \text{vs} \quad H_1: \text{al menos un } \beta_j \neq 0$$
+$$F = \frac{SS_{reg}/k}{SS_{res}/(n-k-1)} = \frac{R^2/k}{(1-R^2)/(n-k-1)} \sim F_{k, n-k-1}$$
+\begin{itemize}
+\item Prueba si el modelo completo es útil
+\item Si $p < 0.05$, al menos una variable es significativa
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U4: Sesgo de variable omitida (OVB)}
+\begin{alertblock}{Problema}
+Si omitimos una variable $Z$ que:
+\begin{enumerate}
+\item Afecta a $Y$ (correlacionada con $Y$)
+\item Está correlacionada con $X$
+\end{enumerate}
+Entonces $\hat{\beta}_X$ estará \textbf{sesgado} (capturará parte del efecto de $Z$).
+\end{alertblock}
+
+\begin{exampleblock}{Ejemplo}
+Modelo simple: $\text{INGLES} = \beta_0 + \beta_1 \text{ESTRATO} + \varepsilon$\\
+$\Rightarrow$ $\hat{\beta}_1 = 7.2$
+
+Modelo múltiple: $\text{INGLES} = \beta_0 + \beta_1 \text{ESTRATO} + \beta_2 \text{PRIVADA} + \beta_3 \text{PUNT\_S11} + \varepsilon$\\
+$\Rightarrow$ $\hat{\beta}_1 = 2.1$
+
+El efecto del estrato se reduce porque en el modelo simple capturaba TAMBIÉN el efecto de PRIVADA y PUNT\_S11 (variables omitidas correlacionadas con ESTRATO).
+\end{exampleblock}
+
+\textbf{Solución}: incluir todas las variables relevantes (controlar por confundidores).
+\end{frame}
+
+\begin{frame}{U4: Multicolinealidad y VIF}
+\begin{block}{Multicolinealidad}
+Cuando dos o más variables independientes están altamente correlacionadas entre sí.
+
+\textbf{Consecuencias}:
+\begin{itemize}
+\item Errores estándar inflados (menor precisión)
+\item Coeficientes inestables (cambian mucho al agregar/quitar variables)
+\item Dificultad para identificar el efecto individual de cada variable
+\end{itemize}
+\end{block}
+
+\begin{block}{VIF (Variance Inflation Factor)}
+$$VIF_j = \frac{1}{1 - R_j^2}$$
+donde $R_j^2$ es el $R^2$ de la regresión de $X_j$ contra las demás $X$.
+
+\textbf{Regla de pulgar}:
+\begin{itemize}
+\item $VIF < 5$: no hay problema
+\item $5 \leq VIF < 10$: multicolinealidad moderada (cuidado)
+\item $VIF \geq 10$: multicolinealidad severa (eliminar variable o usar PCA)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{U4: Diagnósticos de regresión}
+\begin{block}{Checklist}
+\begin{enumerate}
+\item \textbf{Gráficos diagnósticos}: \code{plot(modelo)} (4 gráficos)
+  \begin{itemize}
+  \item Residuals vs Fitted: ¿linealidad? ¿homocedasticidad?
+  \item Q-Q: ¿normalidad?
+  \item Scale-Location: ¿homocedasticidad?
+  \item Residuals vs Leverage: ¿observaciones influyentes?
+  \end{itemize}
+
+\item \textbf{Breusch-Pagan}: heterocedasticidad
+  \begin{itemize}
+  \item Si $p < 0.05$, usar errores robustos (HC1)
+  \end{itemize}
+
+\item \textbf{Cook's distance}: observaciones influyentes
+  \begin{itemize}
+  \item Umbral: $D_i > 4/n$
+  \item Investigar y reportar sensibilidad
+  \end{itemize}
+
+\item \textbf{VIF}: multicolinealidad
+  \begin{itemize}
+  \item Si $VIF > 10$, considerar eliminar variable
+  \end{itemize}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{U4: Errores robustos}
+\begin{lstlisting}
+library(sandwich)
+library(lmtest)
+
+# Modelo OLS
+modelo <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
+             PUNT_INGLES_S11, data = ni_data)
+
+# Test de heterocedasticidad
+bptest(modelo)
+
+# Si hay heterocedasticidad, usar errores robustos
+coeftest(modelo, vcov = vcovHC(modelo, type = "HC1"))
+
+# IC robustos
+coefci(modelo, vcov = vcovHC(modelo, type = "HC1"))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Recordar}:
+\begin{itemize}
+\item Los coeficientes $\hat{\beta}$ NO cambian
+\item Solo cambian los errores estándar (y por tanto, los p-valores y los IC)
+\item Los errores robustos corrigen para heterocedasticidad
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Problemas tipo examen}
+% ============================================================================
+
+\begin{frame}[fragile]{Problema 1: Interpretar output de regresión}
+\begin{exampleblock}{Output de \code{summary(lm(...))}}
+\tiny
+\begin{verbatim}
+Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)
+(Intercept)          45.234      3.456   13.08  < 2e-16 ***
+ESTU_ESTRATO          2.134      0.421    5.07  4.3e-07 ***
+PRIVADA               5.432      1.234    4.40  1.1e-05 ***
+PUNT_INGLES_S11       0.876      0.034   25.76  < 2e-16 ***
+
+Residual standard error: 12.3 on 2830 degrees of freedom
+Multiple R-squared:  0.428,	Adjusted R-squared:  0.427
+F-statistic: 706.4 on 3 and 2830 DF,  p-value: < 2.2e-16
+\end{verbatim}
+\end{exampleblock}
+
+\textbf{Preguntas}:
+\begin{enumerate}
+\item Interpretar el coeficiente de PRIVADA.
+\item ¿Es ESTU\_ESTRATO significativo al 5\%? ¿Cómo lo sabes?
+\item ¿Qué proporción de la varianza en inglés explica el modelo?
+\item ¿El modelo completo es útil? ¿Cómo lo sabes?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Problema 1: Soluciones}
+\begin{enumerate}
+\item \textbf{Interpretar PRIVADA}:
+  \begin{itemize}
+  \item Estudiar en IES privada se asocia con 5.432 puntos más en inglés, controlando por estrato y puntaje en Saber 11.
+  \item IC 95\%: $5.432 \pm 1.96 \cdot 1.234 = 5.432 \pm 2.42 = [3.01, 7.85]$
+  \end{itemize}
+
+\item \textbf{¿ESTRATO significativo?}
+  \begin{itemize}
+  \item Sí, $p = 4.3 \times 10^{-7} < 0.05$ $\Rightarrow$ rechazamos $H_0: \beta_{\text{ESTRATO}} = 0$
+  \item También: $|t| = 5.07 > 1.96$ (aproximación)
+  \end{itemize}
+
+\item \textbf{Varianza explicada}:
+  \begin{itemize}
+  \item $R^2 = 0.428$ $\Rightarrow$ el modelo explica 42.8\% de la varianza en inglés
+  \item 57.2\% queda sin explicar (otros factores no incluidos)
+  \end{itemize}
+
+\item \textbf{Modelo útil}:
+  \begin{itemize}
+  \item Sí, $F(3, 2830) = 706.4$, $p < 0.001$ $\Rightarrow$ al menos una variable es significativa
+  \item De hecho, las tres lo son
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Problema 2: IC y prueba de hipótesis}
+\begin{exampleblock}{Datos}
+Una muestra de $n = 100$ estudiantes de NI tiene puntaje promedio de inglés $\bar{x} = 158.5$ con desviación estándar $s = 20.3$.
+\end{exampleblock}
+
+\textbf{Preguntas}:
+\begin{enumerate}
+\item Construir un IC 95\% para la media poblacional $\mu$.
+\item Probar $H_0: \mu = 155$ vs $H_1: \mu \neq 155$ al 5\% de significancia.
+\item ¿Cuál es la conclusión de la prueba? ¿Es consistente con el IC?
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Solución}:
+\begin{enumerate}
+\item $IC: 158.5 \pm t_{0.025, 99} \cdot \frac{20.3}{\sqrt{100}} = 158.5 \pm 1.984 \cdot 2.03 = 158.5 \pm 4.03 = [154.5, 162.5]$
+
+\item $t = \frac{158.5 - 155}{20.3/\sqrt{100}} = \frac{3.5}{2.03} = 1.72$, $p = 2 \cdot P(T_{99} > 1.72) \approx 0.088$
+
+\item No rechazamos $H_0$ ($p = 0.088 > 0.05$). Sí, consistente: 155 está dentro del IC $[154.5, 162.5]$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Problema 3: Chi-cuadrado de independencia}
+\begin{exampleblock}{Tabla de contingencia}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{A-} & \textbf{A1-A2} & \textbf{B1+} \\
+\midrule
+Pública & 120 & 350 & 80 \\
+Privada & 80 & 450 & 220 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{exampleblock}
+
+\textbf{Preguntas}:
+\begin{enumerate}
+\item Plantear las hipótesis para probar si hay asociación entre tipo de IES y nivel MCER.
+\item Calcular la frecuencia esperada para la celda (Pública, B1+) bajo $H_0$.
+\item Si el estadístico $\chi^2 = 45.6$ con $df = 2$, ¿cuál es la conclusión al 5\%?
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Solución}:
+\begin{enumerate}
+\item $H_0$: tipo IES y nivel MCER son independientes. $H_1$: están asociados.
+\item $E = \frac{550 \cdot 300}{1300} = 126.9$ (total fila pública = 550, total col B1+ = 300, total = 1300)
+\item $\chi^2_{0.05, 2} = 5.99$. Como $45.6 > 5.99$, rechazamos $H_0$ $\Rightarrow$ hay asociación.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Problema 4: OVB y multicolinealidad}
+\begin{exampleblock}{Dos modelos}
+\textbf{Modelo A}: $\text{INGLES} = 125.3 + 7.2 \cdot \text{ESTRATO}$, $R^2 = 0.13$
+
+\textbf{Modelo B}: $\text{INGLES} = 45.2 + 2.1 \cdot \text{ESTRATO} + 5.4 \cdot \text{PRIVADA} + 0.88 \cdot \text{PUNT\_S11}$, $R^2 = 0.43$
+\end{exampleblock}
+
+\textbf{Preguntas}:
+\begin{enumerate}
+\item ¿Por qué el coeficiente de ESTRATO cambió de 7.2 a 2.1?
+\item ¿Cuál modelo es mejor para estimar el efecto causal del estrato? ¿Por qué?
+\item Si en Modelo B el VIF de ESTRATO es 1.8 y el de PRIVADA es 12.5, ¿qué problema hay?
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Solución}:
+\begin{enumerate}
+\item Sesgo de variable omitida (OVB). En A, ESTRATO captura el efecto de PRIVADA y PUNT\_S11.
+\item Modelo B, porque controla por confundidores (PRIVADA y PUNT\_S11 correlacionados con ESTRATO).
+\item Multicolinealidad severa entre PRIVADA y otra variable (VIF = 12.5 > 10). Considerar eliminar PRIVADA o investigar cuál variable está correlacionada.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Problema 5: Ensayo corto}
+\begin{alertblock}{Pregunta abierta}
+Supón que eres asesor del Ministerio de Educación. Basándote en los resultados de los modelos de regresión vistos en clase (efecto de estrato, tipo IES, puntaje Saber 11), propón DOS políticas concretas para reducir la brecha en inglés entre estudiantes de estratos bajos y altos. Justifica tus recomendaciones con evidencia estadística.
+
+\vspace{0.3cm}
+\textbf{Extensión}: 1 página (máximo).
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Criterios de evaluación}:
+\begin{itemize}
+\item \textbf{Uso de evidencia}: ¿Cita coeficientes, IC, tamaños del efecto?
+\item \textbf{Coherencia}: ¿Las políticas abordan las brechas identificadas?
+\item \textbf{Viabilidad}: ¿Son políticas realistas?
+\item \textbf{Claridad}: ¿Escrito de manera clara y concisa?
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Estructura del examen final}
+% ============================================================================
+
+\begin{frame}{Estructura del examen final}
+\begin{block}{Información general}
+\begin{itemize}
+\item \textbf{Fecha}: Viernes 27 de noviembre de 2026
+\item \textbf{Horario}: 8:30 - 10:00 (90 minutos)
+\item \textbf{Formato}: Presencial, individual, cerrado (no internet, no apuntes)
+\item \textbf{Permitido}: Calculadora científica + hoja A4 de fórmulas (ambas caras, manuscrita o impresa)
+\end{itemize}
+\end{block}
+
+\begin{block}{Partes del examen}
+\begin{enumerate}
+\item \textbf{Conceptual} (30 puntos): Opción múltiple (10 preguntas) + Verdadero/Falso (10 afirmaciones)
+\item \textbf{Cálculo} (30 puntos): Problemas numéricos (IC, pruebas, regresión) — mostrar trabajo
+\item \textbf{Interpretación} (20 puntos): Analizar output de R (tablas de regresión, gráficos diagnósticos)
+\item \textbf{Ensayo} (20 puntos): Pregunta abierta (tipo problema 5) — aplicar estadística a decisiones
+\end{enumerate}
+\textbf{Total}: 100 puntos
+\end{block}
+\end{frame}
+
+\begin{frame}{Contenidos del examen (por unidad)}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{Unidad} & \textbf{Temas clave} & \textbf{Peso} \\
+\midrule
+U1 & Descriptiva, correlación, paradoja Simpson, TCL & 15\% \\
+U2 & IC para $\mu$, $\sigma^2$, $p$, tamaño de muestra & 25\% \\
+U3 & Pruebas t, ANOVA, $\chi^2$, potencia, tamaño efecto & 30\% \\
+U4 & Regresión OLS, $R^2$, diagnósticos, errores robustos & 30\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.4cm}
+\begin{alertblock}{Énfasis}
+El examen es \textbf{acumulativo}, pero con mayor peso en U2-U4 (inferencia y modelado). Se espera que integres conceptos de múltiples unidades (ej: usar TCL para justificar un IC, diagnosticar un modelo con Breusch-Pagan, interpretar coeficientes controlando por confundidores).
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Preparación para el examen}
+\begin{block}{Estrategias de estudio}
+\begin{enumerate}
+\item \textbf{Repasar slides y problem sets}: Enfócate en los ejercicios resueltos en clase y los PS.
+
+\item \textbf{Practicar cálculos a mano}: Calcula IC, pruebas t, $\chi^2$ con calculadora (sin R).
+
+\item \textbf{Crear hoja de fórmulas}: Resume las fórmulas clave (IC, estadísticos de prueba, $R^2$, VIF, etc.). Esto también es una forma de estudio.
+
+\item \textbf{Repasar interpretaciones}: Practica interpretar output de R (tablas de \code{summary()}, \code{confint()}, \code{bptest()}).
+
+\item \textbf{Estudiar en grupo}: Explica conceptos a tus compañeros (mejor forma de aprender).
+
+\item \textbf{Hacer simulacros}: Cronométrate resolviendo problemas tipo examen.
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+\begin{alertblock}{Recursos}
+\begin{itemize}
+\item Slides de todas las sesiones (Moodle)
+\item Problem Sets 1-8 con soluciones
+\item Grabaciones de las clases (Moodle)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Hoja de fórmulas: ¿qué incluir?}
+\small
+\textbf{Sugerencias}:
+\begin{multicols}{2}
+\begin{itemize}
+\item IC para $\mu$ (z y t)
+\item IC para $\sigma^2$ ($\chi^2$)
+\item IC para $p$
+\item Tamaño de muestra
+\item Estadístico t (1 muestra, 2 muestras, pareada)
+\item Estadístico F (ANOVA)
+\item $\chi^2$ de independencia
+\item $\chi^2$ de bondad de ajuste
+\item Correlación Pearson y Spearman
+\item OLS: $\hat{\beta}_0$, $\hat{\beta}_1$
+\item $R^2$ y $R^2_{adj}$
+\item Prueba t para $\beta_j$
+\item Prueba F global
+\item VIF
+\item d de Cohen
+\item Potencia
+\item Valores críticos comunes ($z_{0.025} = 1.96$, $t_{30, 0.025} \approx 2.04$, etc.)
+\end{itemize}
+\end{multicols}
+
+\vspace{0.3cm}
+\begin{alertblock}{Importante}
+La hoja de fórmulas NO sustituye el entendimiento. Úsala como apoyo, no como muleta.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Instrucciones del proyecto}
+% ============================================================================
+
+\begin{frame}{Proyecto final: presentación oral}
+\begin{block}{Logística}
+\begin{itemize}
+\item \textbf{Fecha}: Viernes 27 de noviembre, 7:00-8:20 (antes del examen)
+\item \textbf{Duración}: 10 minutos por grupo + 3 minutos de preguntas
+\item \textbf{Formato}: Presencial, con slides (PowerPoint, Beamer, etc.)
+\item \textbf{Grupos}: 3-4 estudiantes (ya definidos)
+\end{itemize}
+\end{block}
+
+\begin{block}{Contenido de la presentación}
+\begin{enumerate}
+\item \textbf{Pregunta de investigación} (1 min): ¿Qué se quiere responder?
+\item \textbf{Datos y método} (2 min): Fuente, limpieza, variables, modelo
+\item \textbf{Resultados} (5 min): EDA, IC, pruebas, regresión, diagnósticos (con visualizaciones)
+\item \textbf{Conclusiones} (2 min): Hallazgos clave, implicaciones, limitaciones
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Evaluación}: Claridad, rigor estadístico, visualizaciones, manejo de preguntas.
+\end{frame}
+
+\begin{frame}{Proyecto final: informe escrito}
+\begin{block}{Logística}
+\begin{itemize}
+\item \textbf{Entrega}: Viernes 27 de noviembre, 7:00 (al inicio de la presentación)
+\item \textbf{Formato}: PDF, máximo 15 páginas (sin contar anexos)
+\item \textbf{Incluir}: Código R (.R o .Rmd) + datos (si es posible)
+\end{itemize}
+\end{block}
+
+\begin{block}{Estructura del informe}
+\begin{enumerate}
+\item \textbf{Introducción} (1-2 págs): Contexto, pregunta, relevancia
+\item \textbf{Datos y método} (2-3 págs): Descripción de datos, limpieza, variables, modelo
+\item \textbf{Resultados} (6-8 págs): EDA, IC, pruebas, regresión, diagnósticos (con tablas y gráficos)
+\item \textbf{Conclusiones} (2-3 págs): Hallazgos, implicaciones, limitaciones, futuras investigaciones
+\item \textbf{Referencias} (si aplica)
+\item \textbf{Anexos} (código R, tablas adicionales)
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+\small
+\textbf{Evaluación}: Claridad, rigor estadístico, visualizaciones, interpretación, código reproducible.
+\end{frame}
+
+\begin{frame}{Rúbrica del proyecto (recordatorio)}
+\small
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Criterio} & \textbf{Informe} & \textbf{Presentación} \\
+\midrule
+Pregunta de investigación & 10\% & 10\% \\
+Limpieza de datos & 10\% & — \\
+EDA & 15\% & 20\% \\
+Inferencia (IC, pruebas) & 15\% & 15\% \\
+Modelo de regresión & 20\% & 25\% \\
+Diagnósticos & 15\% & 10\% \\
+Conclusiones & 10\% & 15\% \\
+Código reproducible & 5\% & — \\
+Claridad y visualizaciones & — & 15\% \\
+\midrule
+\textbf{Total} & \textbf{100\%} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{Nota final del proyecto}: 60\% informe + 40\% presentación.
+\end{frame}
+
+\begin{frame}{Consejos para el proyecto}
+\begin{alertblock}{Errores comunes a evitar}
+\begin{itemize}
+\item \textbf{No reportar diagnósticos}: Siempre verificar supuestos (Breusch-Pagan, Cook's D, etc.)
+\item \textbf{Gráficos sin etiquetas}: Todos los ejes, títulos, leyendas deben estar etiquetados
+\item \textbf{Interpretar sin controlar}: "El estrato causa X" sin controlar por confundidores
+\item \textbf{Solo reportar p-valores}: Reportar coeficientes, IC, tamaño del efecto ($R^2$, d de Cohen)
+\item \textbf{Código no reproducible}: Scripts desorganizados, sin comentarios, rutas absolutas
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Buenas prácticas}
+\begin{itemize}
+\item \textbf{Comenzar temprano}: No dejar todo para última hora
+\item \textbf{Dividir tareas}: Cada miembro del grupo responsable de una parte (EDA, modelo, etc.)
+\item \textbf{Iterar}: Compartir borradores, recibir retroalimentación, mejorar
+\item \textbf{Visualizar bien}: Forest plots, boxplots, scatterplots con líneas de regresión
+\item \textbf{Contextualizar}: Conectar resultados estadísticos con implicaciones para NI
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Cierre}
+% ============================================================================
+
+\begin{frame}{Recapitulación: lo que aprendimos}
+\begin{block}{Habilidades técnicas}
+\begin{itemize}
+\item Describir y visualizar datos (U1)
+\item Cuantificar incertidumbre con intervalos de confianza (U2)
+\item Tomar decisiones con pruebas de hipótesis (U3)
+\item Modelar relaciones con regresión lineal (U4)
+\item Diagnosticar y corregir problemas en modelos (U4)
+\item Programar en R para análisis reproducible
+\end{itemize}
+\end{block}
+
+\begin{block}{Habilidades conceptuales}
+\begin{itemize}
+\item Pensar críticamente sobre datos (¿de dónde vienen? ¿qué sesgos hay?)
+\item Distinguir correlación de causalidad
+\item Reconocer limitaciones de los métodos (supuestos, datos observacionales)
+\item Comunicar resultados a audiencias no técnicas
+\item Integrar múltiples técnicas en un análisis completo (pipeline estadístico)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Más allá del curso}
+\begin{block}{¿Cómo usar estadística en tu carrera?}
+\begin{itemize}
+\item \textbf{Negocios Internacionales}: Análisis de mercados, evaluación de políticas comerciales, estudios de competitividad
+\item \textbf{Consultoría}: Diagnósticos basados en datos, evaluación de impacto
+\item \textbf{Política pública}: Diseño y evaluación de programas sociales
+\item \textbf{Investigación académica}: Tesis, artículos, proyectos de grado
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos para seguir aprendiendo}
+\begin{itemize}
+\item \textbf{Libros}: "The Effect" (Huntington-Klein), "Causal Inference: The Mixtape" (Cunningham)
+\item \textbf{Cursos online}: Coursera (Data Science Specialization), edX (Statistics and R)
+\item \textbf{Comunidades}: R-Ladies, Stack Overflow, Cross Validated
+\item \textbf{Práctica}: Kaggle competitions, análisis de datos abiertos (DANE, Banco Mundial)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Reflexión final}
+\begin{center}
+\Large
+\textcolor{javeriana}{"La estadística no es solo matemáticas.\\Es una forma de pensar sobre el mundo\\con rigor, humildad y curiosidad."}
+
+\vspace{1cm}
+\normalsize
+Gracias por su esfuerzo, participación y compromiso a lo largo del semestre.\\
+Ha sido un placer acompañarlos en este viaje.
+
+\vspace{0.5cm}
+\textbf{¡Éxito en el examen y en el proyecto!}
+\end{center}
+\end{frame}
+
+\begin{frame}{Horarios de consulta antes del examen}
+\begin{alertblock}{Sesiones de repaso adicionales}
+\begin{itemize}
+\item \textbf{Lunes 24 de noviembre}: 14:00-16:00 (oficina 305)
+  \begin{itemize}
+  \item Repaso de U2 (IC) y U3 (pruebas)
+  \end{itemize}
+\item \textbf{Miércoles 26 de noviembre}: 14:00-16:00 (oficina 305)
+  \begin{itemize}
+  \item Repaso de U4 (regresión) y resolución de problemas tipo examen
+  \end{itemize}
+\item \textbf{Jueves 26 de noviembre}: 10:00-12:00 (por Zoom)
+  \begin{itemize}
+  \item Sesión de preguntas abiertas (cualquier tema)
+  \end{itemize}
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.3cm}
+\begin{block}{Contacto}
+\begin{itemize}
+\item Email: jaime.polanco@javeriana.edu.co
+\item Responderé emails hasta el jueves 26 a las 18:00
+\item No enviar preguntas el viernes (día del examen)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+\Huge ¡Gracias!
+
+\vspace{1cm}
+\Large Preguntas finales
+
+\vspace{1.5cm}
+\normalsize
+\textbf{Contacto:}\\
+jaime.polanco@javeriana.edu.co\\
+Horario de atención: Lun y Mié 14:00-16:00 (esta semana)
+
+\vspace{0.5cm}
+\textbf{Nos vemos el viernes 27 a las 7:00 para las presentaciones.}
+\end{center}
+\end{frame}
+
+\end{document}
