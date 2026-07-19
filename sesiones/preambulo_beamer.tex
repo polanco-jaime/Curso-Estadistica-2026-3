@@ -1,0 +1,92 @@
+% ============================================================================
+% Preambulo compartido para presentaciones Beamer
+% Estadistica 2026-II - Pontificia Universidad Javeriana
+% Incluir con: \input{../preambulo_beamer.tex} despues de \documentclass
+% ============================================================================
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, arrows.meta, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{multicol}
+
+% --- Tema Beamer (minimalista) ---
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{footline}{%
+  \hspace{1em}{\tiny\url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}}\hfill\usebeamerfont{footline}\insertframenumber/\inserttotalframenumber\hspace{1em}\vspace{0.5em}%
+}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% --- Colores institucionales (sutiles) ---
+\definecolor{javeriana}{RGB}{0, 62, 105}
+\definecolor{javerianalight}{RGB}{0, 105, 170}
+\definecolor{codigobg}{RGB}{245, 245, 245}
+\definecolor{codigofg}{RGB}{40, 40, 40}
+\definecolor{comentario}{RGB}{100, 100, 100}
+\definecolor{keyword}{RGB}{0, 100, 150}
+\definecolor{string}{RGB}{180, 60, 30}
+
+\setbeamercolor{title}{fg=javeriana}
+\setbeamercolor{frametitle}{fg=javeriana}
+\setbeamercolor{structure}{fg=javeriana}
+\setbeamercolor{block title}{fg=white, bg=javeriana!75}
+\setbeamercolor{block body}{bg=javeriana!5}
+\setbeamercolor{block title alerted}{fg=white, bg=red!70!black}
+\setbeamercolor{block body alerted}{bg=red!5}
+\setbeamercolor{block title example}{fg=white, bg=green!40!black}
+\setbeamercolor{block body example}{bg=green!5}
+\setbeamercolor{item}{fg=javeriana}
+
+\setbeamerfont{title}{series=\bfseries, size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries}
+
+% --- Configuracion de listings para R ---
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codigobg},
+  commentstyle=\color{comentario}\itshape,
+  keywordstyle=\color{keyword}\bfseries,
+  stringstyle=\color{string},
+  numbers=none,
+  frame=single,
+  rulecolor=\color{javeriana!30},
+  breaklines=true,
+  showstringspaces=false,
+  columns=flexible,
+  morekeywords={library, ggplot, aes, geom_histogram, geom_boxplot,
+    geom_point, geom_smooth, geom_density, geom_bar, geom_line,
+    geom_vline, geom_hline, geom_errorbar, labs, theme_minimal,
+    facet_wrap, scale_fill_manual, scale_color_manual,
+    summarise, group_by, filter, mutate, select, arrange,
+    read.csv, head, str, summary, mean, median, sd, var, cor,
+    lm, t.test, chisq.test, wilcox.test, kruskal.test, aov,
+    pnorm, qnorm, dnorm, rnorm, qt, pt, qchisq, pchisq, qf, pf,
+    confint, coeftest, vcovHC, bptest, vif, cooks.distance,
+    TukeyHSD, table, prop.table}
+}
+
+% --- Comandos personalizados ---
+\newcommand{\R}{\texttt{R}}
+\newcommand{\code}[1]{\texttt{\footnotesize #1}}
+\newcommand{\variable}[1]{\texttt{#1}}
+\newcommand{\paquete}[1]{\texttt{#1}}
+
+% --- Informacion del curso ---
+\institute{Pontificia Universidad Javeriana\\
+  Facultad de Ciencias Econ\'omicas y Administrativas}
+\date{2026-II}

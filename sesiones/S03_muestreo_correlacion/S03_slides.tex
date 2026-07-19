@@ -1,0 +1,1232 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 3: Probabilidad, Distribución Normal y Muestreo}
+\subtitle{De la probabilidad al Teorema Central del Límite}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Vie 21 ago 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Variables aleatorias}
+% ============================================================================
+
+\begin{frame}{Variable aleatoria}
+\begin{block}{Definición}
+Una \textbf{variable aleatoria} es una función que asigna un valor numérico a cada resultado de un experimento aleatorio.
+\end{block}
+
+\textbf{Notación}: usamos letras mayúsculas (X, Y, Z) para la variable aleatoria y minúsculas (x, y, z) para valores específicos.
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplos}
+\begin{itemize}
+\item X = puntaje de inglés en Saber Pro (valores entre 0 y 200)
+\item Y = número de estudiantes que aprueban un examen (valores 0, 1, 2, ..., n)
+\item Z = tiempo de estudio en horas (valores $\geq 0$)
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Tipos}:
+\begin{itemize}
+\item \textbf{Discreta}: toma valores separados, contables (ej: número de aprobados)
+\item \textbf{Continua}: puede tomar cualquier valor en un intervalo (ej: puntaje, altura, tiempo)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Función de probabilidad (variable discreta)}
+\textbf{Variable discreta}: Función de probabilidad (pmf)
+\[
+P(X = x)
+\]
+
+Propiedades:
+\begin{itemize}
+\item $0 \leq P(X=x) \leq 1$
+\item $\sum_{\text{todos } x} P(X=x) = 1$
+\end{itemize}
+
+\vspace{0.5em}
+Ejemplo: X = resultado de un dado
+\[
+P(X=k) = \frac{1}{6}, \quad k=1,2,3,4,5,6
+\]
+\end{frame}
+
+\begin{frame}{Función de densidad (variable continua)}
+\textbf{Variable continua}: Función de densidad (pdf)
+\[
+f(x)
+\]
+
+Propiedades:
+\begin{itemize}
+\item $f(x) \geq 0$
+\item $\int_{-\infty}^{\infty} f(x) dx = 1$
+\item $P(a \leq X \leq b) = \int_a^b f(x) dx$
+\end{itemize}
+
+\vspace{0.5em}
+\alert{Importante}: Para variables continuas,
+\[
+P(X = x) = 0
+\]
+Solo tiene sentido calcular $P(a \leq X \leq b)$
+\end{frame}
+
+\begin{frame}{Valor esperado y varianza}
+\begin{block}{Valor esperado (media poblacional)}
+El \textbf{valor esperado} de X, denotado $E(X)$ o $\mu$, es el promedio ponderado de todos los valores posibles.
+\end{block}
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Discreta}:
+\[
+E(X) = \mu = \sum_{\text{todos } x} x \cdot P(X=x)
+\]
+
+\column{0.48\textwidth}
+\textbf{Continua}:
+\[
+E(X) = \mu = \int_{-\infty}^{\infty} x \cdot f(x) dx
+\]
+\end{columns}
+
+\vspace{1em}
+\begin{block}{Varianza}
+La \textbf{varianza} de X, denotada $\text{Var}(X)$ o $\sigma^2$, mide la dispersión alrededor de $\mu$.
+\[
+\text{Var}(X) = \sigma^2 = E[(X - \mu)^2] = E(X^2) - [E(X)]^2
+\]
+\textbf{Desviación estándar}: $\sigma = \sqrt{\sigma^2}$
+\end{block}
+
+\vspace{0.5em}
+\alert{Nota}: $\mu$ y $\sigma$ son \textbf{parámetros poblacionales} (fijos, desconocidos). $\bar{x}$ y $s$ son \textbf{estadísticos muestrales} (variables, observables).
+\end{frame}
+
+\begin{frame}{Ejemplo: puntaje de inglés como variable aleatoria}
+\begin{block}{Contexto}
+Consideremos el puntaje de inglés en Saber Pro para estudiantes de NI como una variable aleatoria continua X.
+\end{block}
+
+\textbf{Interpretación probabilística}:
+\begin{itemize}
+\item X puede tomar valores entre 0 y 200
+\item X tiene una distribución de probabilidad con media $\mu$ y desviación estándar $\sigma$
+\item $P(X \leq 150)$ = proporción de estudiantes con puntaje $\leq$ 150
+\item $P(160 \leq X \leq 180)$ = proporción de estudiantes entre 160 y 180
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Relación con estadística descriptiva}:
+\begin{itemize}
+\item Si tenemos datos de \alert{toda la población} de estudiantes NI: $\mu$ y $\sigma$ se calculan directamente
+\item Si tenemos una \alert{muestra}: estimamos $\mu$ con $\bar{x}$ y $\sigma$ con $s$
+\end{itemize}
+
+\vspace{0.5em}
+\alert{Pregunta clave}: ¿Cuál es la distribución de X? ¿Es normal, sesgada, bimodal? Esto determina cómo calculamos probabilidades.
+\end{frame}
+
+% ============================================================================
+\section{Distribución normal}
+% ============================================================================
+
+\begin{frame}{La distribución normal}
+\begin{block}{Definición}
+La \textbf{distribución normal} (o gaussiana) es la distribución de probabilidad continua más importante en estadística.
+\end{block}
+
+\textbf{Función de densidad}:
+\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}, \quad -\infty < x < \infty
+\]
+
+\textbf{Notación}: $X \sim N(\mu, \sigma^2)$ (X sigue una distribución normal con media $\mu$ y varianza $\sigma^2$)
+
+\vspace{0.5em}
+\textbf{Parámetros}:
+\begin{itemize}
+\item $\mu$: media (centro de la distribución)
+\item $\sigma$: desviación estándar (dispersión)
+\item $\sigma^2$: varianza
+\end{itemize}
+
+\alert{Importante}: La normal está completamente determinada por $\mu$ y $\sigma$. Conociendo estos dos parámetros, podemos calcular cualquier probabilidad.
+\end{frame}
+
+\begin{frame}{Propiedades de la distribución normal}
+\begin{enumerate}
+\item \textbf{Forma de campana}: simétrica alrededor de $\mu$
+\item \textbf{Unimodal}: un solo pico en $x = \mu$
+\item \textbf{Media = Mediana = Moda} = $\mu$
+\item \textbf{Asíntota}: las colas se acercan al eje x pero nunca lo tocan
+\item \textbf{Área total} = 1 (integra a 1)
+\item \textbf{Puntos de inflexión}: en $\mu \pm \sigma$
+\item \textbf{Regla 68-95-99.7}:
+  \begin{itemize}
+  \item 68\% de los datos caen dentro de $\mu \pm 1\sigma$
+  \item 95\% caen dentro de $\mu \pm 2\sigma$
+  \item 99.7\% caen dentro de $\mu \pm 3\sigma$
+  \end{itemize}
+\end{enumerate}
+
+\vspace{0.5em}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\begin{axis}[
+  domain=-4:4, samples=100, axis lines=middle,
+  xlabel={$x$}, ylabel={$f(x)$}, ytick=\empty,
+  xtick={-3,-2,-1,0,1,2,3},
+  xticklabels={$\mu-3\sigma$,$\mu-2\sigma$,$\mu-\sigma$,$\mu$,$\mu+\sigma$,$\mu+2\sigma$,$\mu+3\sigma$},
+  height=4cm, width=12cm, enlargelimits=false, clip=false
+]
+\addplot[very thick, javeriana] {exp(-x^2/2)/sqrt(2*pi)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Distribución normal estándar}
+\begin{block}{Definición}
+La \textbf{distribución normal estándar} es una distribución normal con $\mu = 0$ y $\sigma = 1$.
+\[
+Z \sim N(0, 1)
+\]
+\end{block}
+
+\textbf{Función de densidad}:
+\[
+f(z) = \frac{1}{\sqrt{2\pi}} e^{-\frac{z^2}{2}}
+\]
+
+\textbf{Estandarización}: Cualquier variable normal $X \sim N(\mu, \sigma^2)$ se puede transformar a la normal estándar:
+\[
+Z = \frac{X - \mu}{\sigma} \sim N(0, 1)
+\]
+
+\vspace{0.5em}
+\begin{alertblock}{¿Por qué es útil?}
+\begin{itemize}
+\item Todas las probabilidades se pueden calcular usando una sola tabla (tabla Z)
+\item Permite comparar variables en diferentes escalas
+\item Simplifica cálculos teóricos
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Cálculo de probabilidades con la normal}
+\textbf{Tipos de probabilidades}:
+
+\begin{enumerate}
+\item $P(X \leq a)$: probabilidad de que X sea menor o igual a $a$
+  \begin{itemize}
+  \item Área bajo la curva a la izquierda de $a$
+  \end{itemize}
+\item $P(X \geq a)$: probabilidad de que X sea mayor o igual a $a$
+  \begin{itemize}
+  \item $P(X \geq a) = 1 - P(X \leq a)$
+  \end{itemize}
+\item $P(a \leq X \leq b)$: probabilidad de que X esté entre $a$ y $b$
+  \begin{itemize}
+  \item $P(a \leq X \leq b) = P(X \leq b) - P(X \leq a)$
+  \end{itemize}
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Procedimiento general}:
+\begin{enumerate}
+\item Identificar $\mu$ y $\sigma$ de la distribución
+\item Estandarizar: $z = (x - \mu)/\sigma$
+\item Buscar en tabla Z o usar software
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Ejemplo: probabilidades con puntaje de inglés}
+\begin{exampleblock}{Problema}
+Supongamos que $X$ = puntaje de inglés en Saber Pro para NI sigue una distribución $N(155, 20^2)$ (media 155, desviación estándar 20).
+\end{exampleblock}
+
+\textbf{a) ¿Qué proporción de estudiantes obtiene puntaje menor o igual a 150?}
+
+\[
+P(X \leq 150) = P\left(Z \leq \frac{150 - 155}{20}\right) = P(Z \leq -0.25)
+\]
+
+Usando tabla Z o R: $P(Z \leq -0.25) = 0.4013$
+
+\alert{Respuesta}: Aproximadamente 40\% de los estudiantes obtienen $\leq$ 150.
+
+\vspace{0.5em}
+\textbf{b) ¿Qué proporción supera 170?}
+
+\[
+P(X > 170) = 1 - P(X \leq 170) = 1 - P\left(Z \leq \frac{170-155}{20}\right) = 1 - P(Z \leq 0.75)
+\]
+
+$P(Z \leq 0.75) = 0.7734$, entonces $P(X > 170) = 1 - 0.7734 = 0.2266$
+
+\alert{Respuesta}: Aproximadamente 23\% superan 170.
+\end{frame}
+
+\begin{frame}{Ejemplo: probabilidad en un intervalo}
+\textbf{c) ¿Qué proporción obtiene entre 145 y 165?}
+
+\[
+P(145 \leq X \leq 165) = P(X \leq 165) - P(X \leq 145)
+\]
+
+Estandarizando:
+\[
+z_1 = \frac{145 - 155}{20} = -0.5, \quad z_2 = \frac{165 - 155}{20} = 0.5
+\]
+
+\[
+P(-0.5 \leq Z \leq 0.5) = P(Z \leq 0.5) - P(Z \leq -0.5)
+\]
+
+\[
+= 0.6915 - 0.3085 = 0.3830
+\]
+
+\alert{Respuesta}: Aproximadamente 38\% obtienen entre 145 y 165.
+
+\vspace{0.5em}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+\begin{axis}[
+  domain=-3:3, samples=100, axis lines=middle,
+  xlabel={Puntaje}, ytick=\empty, xtick={-0.5,0,0.5},
+  xticklabels={145, 155, 165}, height=4cm, width=9cm
+]
+\addplot[very thick, javeriana] {exp(-x^2/2)/sqrt(2*pi)};
+\addplot[fill=javerianalight, opacity=0.5, domain=-0.5:0.5] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Encontrar cuantiles (valores de x dada una probabilidad)}
+\begin{block}{Problema inverso}
+En lugar de calcular $P(X \leq x)$ dado $x$, ahora queremos encontrar $x$ dada la probabilidad.
+\end{block}
+
+\textbf{Ejemplo}: ¿Qué puntaje deja al 75\% de los estudiantes por debajo? (percentil 75)
+
+Queremos encontrar $x$ tal que $P(X \leq x) = 0.75$
+
+\vspace{0.5em}
+\textbf{Procedimiento}:
+\begin{enumerate}
+\item Encontrar el valor $z$ en la normal estándar tal que $P(Z \leq z) = 0.75$
+\item Usar tabla Z inversa o R: $z = 0.674$
+\item Desestandardizar: $x = \mu + z\sigma = 155 + 0.674(20) = 168.48$
+\end{enumerate}
+
+\alert{Respuesta}: El percentil 75 es 168.48 puntos. El 75\% de estudiantes obtiene $\leq$ 168.48.
+
+\vspace{0.5em}
+\textbf{Otro ejemplo}: ¿Qué puntaje deja al 90\% por debajo?\\
+$z = 1.282$, $x = 155 + 1.282(20) = 180.64$
+\end{frame}
+
+\begin{frame}[fragile]{Funciones de la normal en R (1/2)}
+\begin{lstlisting}
+# dnorm(): funcion de densidad f(x)
+dnorm(155, mean = 155, sd = 20)
+# [1] 0.01994711
+
+# pnorm(): funcion de distribucion acumulada P(X <= x)
+pnorm(150, mean = 155, sd = 20)  # P(X <= 150)
+# [1] 0.4012937
+
+pnorm(170, mean = 155, sd = 20)  # P(X <= 170)
+# [1] 0.7733726
+
+# P(X > 170)
+1 - pnorm(170, mean = 155, sd = 20)
+# [1] 0.2266274
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Funciones de la normal en R (2/2)}
+\begin{lstlisting}
+# P(145 <= X <= 165)
+pnorm(165, mean = 155, sd = 20) - pnorm(145, mean = 155, sd = 20)
+# [1] 0.3829249
+
+# qnorm(): cuantiles (inversa de pnorm)
+qnorm(0.75, mean = 155, sd = 20)  # percentil 75
+# [1] 168.4898
+
+qnorm(0.90, mean = 155, sd = 20)  # percentil 90
+# [1] 180.6311
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{rnorm(): generar valores aleatorios normales}
+\begin{lstlisting}
+# rnorm(): generar valores aleatorios de N(mu, sigma^2)
+set.seed(123)  # para reproducibilidad
+muestra <- rnorm(n = 1000, mean = 155, sd = 20)
+
+# Verificar que la muestra tiene media ~ 155 y sd ~ 20
+mean(muestra)
+# [1] 154.9176
+sd(muestra)
+# [1] 19.82844
+
+# Histograma con curva teorica superpuesta
+library(ggplot2)
+ggplot(data.frame(x = muestra), aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "lightblue", color = "white") +
+  stat_function(fun = dnorm, args = list(mean = 155, sd = 20),
+                color = "red", linewidth = 1) +
+  labs(title = "Muestra simulada vs distribucion teorica N(155, 20^2)",
+       x = "Puntaje", y = "Densidad") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparar datos reales con curva normal (1/2)}
+\begin{lstlisting}
+# Cargar datos reales de ICFES
+library(tidyverse)
+icfes <- read_csv("datos/saber_pro_ni_2024.csv")
+
+# Calcular media y sd muestrales
+mu_hat <- mean(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+sigma_hat <- sd(icfes$MOD_INGLES_PUNT, na.rm = TRUE)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparar datos reales con curva normal (2/2)}
+\begin{lstlisting}
+# Histograma de datos reales con curva normal teorica
+ggplot(icfes, aes(x = MOD_INGLES_PUNT)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40,
+                 fill = "steelblue", color = "white", alpha = 0.7) +
+  stat_function(fun = dnorm,
+                args = list(mean = mu_hat, sd = sigma_hat),
+                color = "red", linewidth = 1.2) +
+  labs(title = "Distribucion real vs normal teorica",
+       subtitle = paste("N(", round(mu_hat, 1), ",",
+                        round(sigma_hat, 1), "^2)"),
+       x = "Puntaje de ingles", y = "Densidad") +
+  theme_minimal()
+
+# ?Los datos se parecen a una distribucion normal?
+shapiro.test(sample(icfes$MOD_INGLES_PUNT, 5000))
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Distribuciones chi-cuadrado, t y F}
+% ============================================================================
+
+\begin{frame}{Distribución chi-cuadrado ($\chi^2$)}
+\begin{block}{Definición}
+Si $Z_1, Z_2, \ldots, Z_k$ son variables aleatorias independientes $N(0,1)$, entonces
+\[
+\chi^2 = Z_1^2 + Z_2^2 + \cdots + Z_k^2 \sim \chi^2(k)
+\]
+sigue una distribución chi-cuadrado con $k$ grados de libertad.
+\end{block}
+
+\textbf{Propiedades}:
+\begin{itemize}
+\item Sólo valores positivos ($\chi^2 \geq 0$)
+\item Asimétrica (sesgada a la derecha)
+\item Media: $E(\chi^2) = k$
+\item Varianza: $\text{Var}(\chi^2) = 2k$
+\item A medida que $k$ aumenta, se aproxima a la normal
+\end{itemize}
+
+\textbf{Uso principal}:
+\begin{itemize}
+\item Inferencia sobre varianzas: $(n-1)s^2/\sigma^2 \sim \chi^2(n-1)$
+\item Pruebas de bondad de ajuste
+\item Pruebas de independencia en tablas de contingencia
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución chi-cuadrado en R (1/2)}
+\begin{lstlisting}
+library(ggplot2)
+
+# Graficar chi-cuadrado para diferentes grados de libertad
+x <- seq(0, 20, by = 0.1)
+df_chisq <- data.frame(
+  x = rep(x, 4),
+  y = c(dchisq(x, df = 2), dchisq(x, df = 5),
+        dchisq(x, df = 10), dchisq(x, df = 15)),
+  df = rep(c("df = 2", "df = 5", "df = 10", "df = 15"),
+           each = length(x))
+)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución chi-cuadrado en R (2/2)}
+\begin{lstlisting}
+ggplot(df_chisq, aes(x = x, y = y, color = df)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Distribucion chi-cuadrado para varios gl",
+       x = "Valor", y = "Densidad", color = "Grados de libertad") +
+  theme_minimal()
+
+# Calcular probabilidades
+pchisq(10, df = 5)  # P(chi^2 <= 10) con 5 gl
+# [1] 0.9247726
+
+# Cuantiles
+qchisq(0.95, df = 5)  # percentil 95 con 5 gl
+# [1] 11.0705
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Distribución t de Student}
+\begin{block}{Definición}
+Si $Z \sim N(0,1)$ y $V \sim \chi^2(k)$ son independientes, entonces
+\[
+t = \frac{Z}{\sqrt{V/k}} \sim t(k)
+\]
+sigue una distribución t de Student con $k$ grados de libertad.
+\end{block}
+
+\textbf{Propiedades}:
+\begin{itemize}
+\item Simétrica alrededor de 0 (como la normal)
+\item Colas más pesadas que la normal (más probabilidad en valores extremos)
+\item Media: $E(t) = 0$ (si $k > 1$)
+\item Varianza: $\text{Var}(t) = k/(k-2)$ (si $k > 2$), mayor que la normal estándar
+\item A medida que $k \to \infty$, $t(k) \to N(0,1)$
+\item Para $k \geq 30$, es prácticamente idéntica a la normal
+\end{itemize}
+
+\textbf{Uso principal}:
+\begin{itemize}
+\item Inferencia sobre medias cuando $\sigma$ es desconocida: $\frac{\bar{X} - \mu}{s/\sqrt{n}} \sim t(n-1)$
+\item Intervalos de confianza y pruebas de hipótesis para medias
+\end{itemize}
+\end{frame}
+
+\begin{frame}{¿De dónde viene la distribución t?}
+\textbf{Motivación histórica}:
+
+Cuando queremos inferir sobre la media poblacional $\mu$:
+\begin{itemize}
+\item Si conocemos $\sigma$: $\frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)$
+\item Pero en la práctica, $\sigma$ es desconocido, usamos $s$
+\item Reemplazar $\sigma$ por $s$ introduce incertidumbre adicional
+\item William Gosset (seudónimo "Student") descubrió en 1908 que:
+\end{itemize}
+
+\[
+\frac{\bar{X} - \mu}{s/\sqrt{n}} \sim t(n-1)
+\]
+
+\vspace{0.5em}
+\textbf{Consecuencias}:
+\begin{itemize}
+\item Para muestras pequeñas ($n < 30$), la distribución t tiene colas más pesadas
+\item Intervalos de confianza son más anchos (reflejan mayor incertidumbre)
+\item A medida que $n$ crece, $s \to \sigma$ y $t \to N(0,1)$
+\end{itemize}
+
+\alert{Por eso usamos t en lugar de Z cuando estimamos $\sigma$ con $s$}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución t en R (1/2)}
+\begin{lstlisting}
+# Comparar t con diferentes gl vs normal estandar
+x <- seq(-4, 4, by = 0.05)
+df_t <- data.frame(
+  x = rep(x, 4),
+  y = c(dt(x, df = 1), dt(x, df = 5), dt(x, df = 30), dnorm(x)),
+  dist = rep(c("t(1)", "t(5)", "t(30)", "N(0,1)"),
+             each = length(x))
+)
+
+ggplot(df_t, aes(x = x, y = y, color = dist, linetype = dist)) +
+  geom_line(linewidth = 1) +
+  scale_linetype_manual(values = c("solid", "solid", "solid", "dashed")) +
+  labs(title = "Distribucion t vs Normal estandar",
+       subtitle = "Nota: colas mas pesadas para t con gl bajos",
+       x = "Valor", y = "Densidad") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución t en R (2/2)}
+\begin{lstlisting}
+# Probabilidades y cuantiles
+pt(2, df = 10)  # P(t <= 2) con 10 gl
+# [1] 0.9634783
+
+qt(0.975, df = 10)  # percentil 97.5% (para IC 95%)
+# [1] 2.228139
+
+qt(0.975, df = 30)  # con 30 gl
+# [1] 2.042272
+
+qnorm(0.975)  # normal estandar
+# [1] 1.959964
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Distribución F de Fisher}
+\begin{block}{Definición}
+Si $U \sim \chi^2(k_1)$ y $V \sim \chi^2(k_2)$ son independientes, entonces
+\[
+F = \frac{U/k_1}{V/k_2} \sim F(k_1, k_2)
+\]
+sigue una distribución F con $k_1$ y $k_2$ grados de libertad (numerador y denominador).
+\end{block}
+
+\textbf{Propiedades}:
+\begin{itemize}
+\item Sólo valores positivos ($F \geq 0$)
+\item Asimétrica (sesgada a la derecha)
+\item Depende de dos parámetros: $k_1$ (gl numerador) y $k_2$ (gl denominador)
+\end{itemize}
+
+\textbf{Usos principales}:
+\begin{itemize}
+\item Comparar varianzas de dos poblaciones: $\frac{s_1^2/\sigma_1^2}{s_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$
+\item ANOVA (análisis de varianza): comparar medias de $k$ grupos
+\item Pruebas de significancia global en regresión lineal múltiple
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución F en R (1/2)}
+\begin{lstlisting}
+# Graficar F con diferentes grados de libertad
+x <- seq(0, 5, by = 0.05)
+df_f <- data.frame(
+  x = rep(x, 3),
+  y = c(df(x, df1 = 5, df2 = 10),
+        df(x, df1 = 10, df2 = 20),
+        df(x, df1 = 20, df2 = 30)),
+  df_pair = rep(c("F(5, 10)", "F(10, 20)", "F(20, 30)"),
+                each = length(x))
+)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Distribución F en R (2/2)}
+\begin{lstlisting}
+ggplot(df_f, aes(x = x, y = y, color = df_pair)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Distribucion F para varios grados de libertad",
+       x = "Valor", y = "Densidad",
+       color = "Grados de libertad") +
+  theme_minimal()
+
+# Probabilidades
+pf(2.5, df1 = 5, df2 = 20)  # P(F <= 2.5)
+# [1] 0.9345867
+
+# Cuantiles (valores criticos para pruebas)
+qf(0.95, df1 = 5, df2 = 20)  # percentil 95
+# [1] 2.710588
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Muestreo y distribución muestral de $\bar{X}$}
+% ============================================================================
+
+\begin{frame}{Población vs muestra}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Población}
+\begin{itemize}
+\item Conjunto completo de elementos de interés
+\item Parámetros (fijos, usualmente desconocidos):
+  \begin{itemize}
+  \item Media: $\mu$
+  \item Desviación estándar: $\sigma$
+  \item Proporción: $p$
+  \end{itemize}
+\item Notación: $N$ = tamaño poblacional
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Muestra}
+\begin{itemize}
+\item Subconjunto de la población
+\item Estadísticos (variables, observables):
+  \begin{itemize}
+  \item Media: $\bar{x}$
+  \item Desviación estándar: $s$
+  \item Proporción: $\hat{p}$
+  \end{itemize}
+\item Notación: $n$ = tamaño muestral
+\end{itemize}
+\end{columns}
+
+\vspace{1em}
+\begin{block}{Objetivo de la estadística inferencial}
+Usar estadísticos muestrales ($\bar{x}$, $s$, $\hat{p}$) para hacer inferencias sobre parámetros poblacionales ($\mu$, $\sigma$, $p$).
+\end{block}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Población: todos los estudiantes de NI en Colombia ($N \approx 50,000$)\\
+Muestra: 500 estudiantes seleccionados aleatoriamente de la base ICFES\\
+Estimamos $\mu$ (puntaje medio poblacional) con $\bar{x}$ (puntaje medio muestral)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Muestreo aleatorio simple}
+\begin{block}{Definición}
+En el \textbf{muestreo aleatorio simple} (MAS), cada elemento de la población tiene la misma probabilidad de ser seleccionado, y cada muestra del mismo tamaño tiene igual probabilidad.
+\end{block}
+
+\textbf{Supuestos clave}:
+\begin{enumerate}
+\item Las observaciones son \alert{independientes} entre sí
+\item Cada observación proviene de la \alert{misma distribución} (población)
+\item Notación: $X_1, X_2, \ldots, X_n$ son i.i.d. (independientes e idénticamente distribuidas)
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Consecuencias}:
+\begin{itemize}
+\item Evita sesgos de selección
+\item Permite generalizar de la muestra a la población
+\item Fundamento matemático de la inferencia estadística
+\end{itemize}
+
+\vspace{0.5em}
+\alert{En la práctica}: muestreo aleatorio perfecto es difícil. A veces usamos muestreo estratificado, por conglomerados, etc., pero MAS es el punto de partida teórico.
+\end{frame}
+
+\begin{frame}{Distribución muestral de $\bar{X}$}
+\begin{block}{Concepto fundamental}
+La \textbf{distribución muestral de $\bar{X}$} es la distribución de probabilidad de todas las posibles medias muestrales de tamaño $n$ que podríamos obtener de una población.
+\end{block}
+
+\textbf{Experimento mental}:
+\begin{enumerate}
+\item Tomar una muestra aleatoria de tamaño $n$ y calcular $\bar{x}$
+\item Devolver la muestra a la población
+\item Repetir pasos 1-2 infinitas veces
+\item La distribución de todos esos $\bar{x}$ es la distribución muestral de $\bar{X}$
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Propiedades} (para cualquier población con media $\mu$ y varianza $\sigma^2$):
+\[
+E(\bar{X}) = \mu
+\]
+\[
+\text{Var}(\bar{X}) = \frac{\sigma^2}{n}, \quad \text{DE}(\bar{X}) = \frac{\sigma}{\sqrt{n}}
+\]
+
+\alert{Error estándar}: $\text{SE}(\bar{X}) = \sigma/\sqrt{n}$ (desviación estándar de $\bar{X}$)
+\end{frame}
+
+\begin{frame}{Interpretación del error estándar}
+\[
+\text{SE}(\bar{X}) = \frac{\sigma}{\sqrt{n}}
+\]
+
+\textbf{Mensajes clave}:
+\begin{enumerate}
+\item \alert{$\bar{X}$ es menos variable que $X$}
+  \begin{itemize}
+  \item $\text{DE}(X) = \sigma$, pero $\text{DE}(\bar{X}) = \sigma/\sqrt{n}$
+  \item Promedios varían menos que valores individuales
+  \end{itemize}
+\item \alert{El error estándar disminuye con $\sqrt{n}$, no con $n$}
+  \begin{itemize}
+  \item Para reducir SE a la mitad, necesitamos 4 veces más observaciones
+  \item Rendimientos decrecientes del tamaño muestral
+  \end{itemize}
+\item \alert{Más grande la muestra, más precisa la estimación de $\mu$}
+  \begin{itemize}
+  \item $n = 25$: $\text{SE} = \sigma/5$
+  \item $n = 100$: $\text{SE} = \sigma/10$
+  \item $n = 400$: $\text{SE} = \sigma/20$
+  \end{itemize}
+\end{enumerate}
+
+\begin{exampleblock}{Ejemplo}
+Si $\sigma = 20$ puntos, entonces con $n=100$: $\text{SE} = 20/10 = 2$ puntos.\\
+La media muestral típicamente difiere de $\mu$ en aproximadamente 2 puntos.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Teorema Central del Límite}
+% ============================================================================
+
+\begin{frame}{Teorema Central del Límite (TCL)}
+\begin{block}{Teorema Central del Límite}
+Si $X_1, X_2, \ldots, X_n$ es una muestra aleatoria de tamaño $n$ de una población con media $\mu$ y desviación estándar $\sigma$ (finitos), entonces para $n$ suficientemente grande:
+\[
+\bar{X} \sim N\left(\mu, \frac{\sigma^2}{n}\right) \quad \text{aproximadamente}
+\]
+O equivalentemente:
+\[
+Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1) \quad \text{aproximadamente}
+\]
+\end{block}
+
+\vspace{0.5em}
+\textbf{Mensajes clave}:
+\begin{enumerate}
+\item \alert{No importa la forma de la distribución original}: puede ser sesgada, bimodal, uniforme, etc.
+\item \alert{Para $n$ grande, $\bar{X}$ es aproximadamente normal}
+\item \alert{"Suficientemente grande"}: generalmente $n \geq 30$, pero depende de la forma original
+  \begin{itemize}
+  \item Si la población es normal: $\bar{X}$ es exactamente normal para cualquier $n$
+  \item Si la población es simétrica: $n \approx 15$ suele ser suficiente
+  \item Si la población es muy sesgada: puede necesitarse $n \geq 50$ o más
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{¿Por qué el TCL es tan importante?}
+\begin{alertblock}{El TCL es el teorema más importante de la estadística}
+\end{alertblock}
+
+\textbf{Razones}:
+\begin{enumerate}
+\item \textbf{Fundamento de la inferencia}:
+  \begin{itemize}
+  \item Intervalos de confianza para medias
+  \item Pruebas de hipótesis sobre medias
+  \item Tamaño de muestra para precisión deseada
+  \end{itemize}
+\item \textbf{Universalidad}:
+  \begin{itemize}
+  \item Aplica a cualquier población (con media y varianza finitas)
+  \item No necesitamos conocer la distribución poblacional
+  \end{itemize}
+\item \textbf{Justifica el uso de la distribución normal}:
+  \begin{itemize}
+  \item Muchos fenómenos naturales y sociales son sumas o promedios
+  \item Por el TCL, tienden a ser normales
+  \end{itemize}
+\item \textbf{Permite aproximaciones}:
+  \begin{itemize}
+  \item Binomial $\to$ Normal (para $n$ grande)
+  \item Poisson $\to$ Normal (para $\lambda$ grande)
+  \end{itemize}
+\end{enumerate}
+
+\alert{Sin el TCL, la inferencia estadística sería muchísimo más complicada}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 1: población no normal (1/2)}
+\begin{lstlisting}
+library(tidyverse)
+
+# Cargar datos Saber 11 (poblacion)
+# Supongamos que tenemos puntajes de Saber 11 Ingles (no normales)
+saber11 <- read_csv("datos/saber_11_2023.csv")
+
+# Parametros poblacionales
+mu <- mean(saber11$PUNT_INGLES, na.rm = TRUE)
+sigma <- sd(saber11$PUNT_INGLES, na.rm = TRUE)
+cat("Media poblacional:", round(mu, 2), "\n")
+cat("DE poblacional:", round(sigma, 2), "\n")
+
+# Verificar asimetria
+library(moments)
+skewness(saber11$PUNT_INGLES, na.rm = TRUE)
+# [1] 0.42 (positiva, sesgada a la derecha)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 1: población no normal (2/2)}
+\begin{lstlisting}
+# Graficar la distribucion poblacional
+ggplot(saber11, aes(x = PUNT_INGLES)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 50,
+                 fill = "steelblue", color = "white") +
+  geom_density(color = "red", linewidth = 1) +
+  labs(title = "Distribucion poblacional de Saber 11 Ingles",
+       subtitle = "Nota: NO es normal (sesgada a la derecha)",
+       x = "Puntaje", y = "Densidad") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 2: muestrear (1/2)}
+\begin{lstlisting}
+# Funcion para tomar una muestra y calcular su media
+tomar_muestra_y_promediar <- function(datos, n) {
+  muestra <- sample(datos, size = n, replace = FALSE)
+  mean(muestra, na.rm = TRUE)
+}
+
+# Simular 2000 muestras de tamano n = 30
+set.seed(456)
+n <- 30
+num_simulaciones <- 2000
+
+medias_n30 <- replicate(num_simulaciones,
+                        tomar_muestra_y_promediar(saber11$PUNT_INGLES, n))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 2: muestrear (2/2)}
+\begin{lstlisting}
+# Estadisticas de la distribucion muestral
+mean(medias_n30)  # Debe estar cerca de mu
+sd(medias_n30)    # Debe estar cerca de sigma/sqrt(n)
+
+cat("Media de las medias muestrales:", round(mean(medias_n30), 2), "\n")
+cat("DE de las medias muestrales:", round(sd(medias_n30), 2), "\n")
+cat("SE teorico (sigma/sqrt(n)):", round(sigma/sqrt(n), 2), "\n")
+
+# Comparacion
+# mean(medias_n30) ~ mu  (insesgado)
+# sd(medias_n30) ~ sigma/sqrt(n)  (error estandar)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 3: visualizar normalidad (1/2)}
+\begin{lstlisting}
+# Graficar la distribucion de medias muestrales (n=30)
+df_medias <- data.frame(medias = medias_n30)
+
+ggplot(df_medias, aes(x = medias)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40,
+                 fill = "lightgreen", color = "white", alpha = 0.7) +
+  stat_function(fun = dnorm,
+                args = list(mean = mu, sd = sigma/sqrt(n)),
+                color = "red", linewidth = 1.2) +
+  labs(title = paste("Distribucion muestral de X-barra (n =", n, ")"),
+       subtitle = "Curva roja: N(mu, sigma^2/n) teorica",
+       x = "Media muestral", y = "Densidad") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 3: visualizar normalidad (2/2)}
+\begin{lstlisting}
+# Observacion: !La distribucion de medias ES aproximadamente normal,
+# aunque la poblacion original NO lo era!
+# Esto es el Teorema Central del Limite en accion.
+
+# Verificar normalidad con QQ-plot
+ggplot(df_medias, aes(sample = medias)) +
+  stat_qq() + stat_qq_line(color = "red") +
+  labs(title = "QQ-plot de medias muestrales") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 4: efecto de n (1/2)}
+\begin{lstlisting}
+# Repetir para diferentes tamanos de muestra: n = 10, 30, 100, 500
+tamanos <- c(10, 30, 100, 500)
+resultados <- list()
+
+set.seed(789)
+for (n in tamanos) {
+  medias <- replicate(2000,
+                      tomar_muestra_y_promediar(saber11$PUNT_INGLES, n))
+  resultados[[paste0("n_", n)]] <- data.frame(
+    medias = medias,
+    n = paste("n =", n),
+    se_teorico = sigma / sqrt(n)
+  )
+}
+
+df_todas <- bind_rows(resultados)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación TCL paso 4: efecto de n (2/2)}
+\begin{lstlisting}
+# Graficar todas juntas
+ggplot(df_todas, aes(x = medias)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "steelblue", alpha = 0.6) +
+  facet_wrap(~ n, scales = "free", ncol = 2) +
+  labs(title = "Efecto del tamano de muestra en la distribucion de X-barra",
+       x = "Media muestral", y = "Densidad") +
+  theme_minimal()
+
+# Observacion: a mayor n, la distribucion es mas concentrada (menor SE)
+# y mas normal
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparación SE teórico vs simulado (1/2)}
+\begin{lstlisting}
+# Comparar SE teorico vs simulado para cada n
+comparacion_se <- df_todas %>%
+  group_by(n) %>%
+  summarise(
+    SE_simulado = sd(medias),
+    SE_teorico = first(se_teorico)
+  ) %>%
+  mutate(diferencia = abs(SE_simulado - SE_teorico))
+
+comparacion_se
+
+# Resultado esperado:
+#   n         SE_simulado  SE_teorico  diferencia
+#   n = 10         3.15        3.16        0.01
+#   n = 30         1.83        1.83        0.00
+#   n = 100        1.00        1.00        0.00
+#   n = 500        0.45        0.45        0.00
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparación SE teórico vs simulado (2/2)}
+\begin{lstlisting}
+# Conclusion: el SE teorico (sigma/sqrt(n)) predice muy bien
+# la variabilidad de X-barra
+
+# Grafico de barras comparando SE
+ggplot(comparacion_se, aes(x = n)) +
+  geom_col(aes(y = SE_teorico), fill = "red", alpha = 0.5, width = 0.4) +
+  geom_col(aes(y = SE_simulado), fill = "blue", alpha = 0.5,
+           width = 0.4, position = position_nudge(x = 0.3)) +
+  labs(title = "SE teorico vs simulado",
+       y = "Error estandar") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Propiedades de estimadores}
+% ============================================================================
+
+\begin{frame}{¿Qué es un estimador?}
+\begin{block}{Definición}
+Un \textbf{estimador} es una regla o fórmula para calcular una aproximación de un parámetro poblacional desconocido a partir de datos muestrales.
+\end{block}
+
+\textbf{Notación}:
+\begin{itemize}
+\item Parámetro (desconocido): $\theta$ (puede ser $\mu$, $\sigma^2$, $p$, etc.)
+\item Estimador (función de los datos): $\hat{\theta}$ (ej: $\bar{X}$, $s^2$, $\hat{p}$)
+\item Estimación (valor numérico): $\hat{\theta} = 155.3$ puntos
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplos de estimadores}
+\begin{itemize}
+\item Estimador de $\mu$: $\hat{\mu} = \bar{X} = \frac{1}{n}\sum X_i$
+\item Estimador de $\sigma^2$: $\hat{\sigma}^2 = s^2 = \frac{1}{n-1}\sum(X_i - \bar{X})^2$
+\item Estimador de $p$ (proporción): $\hat{p} = \frac{X}{n}$ (donde $X$ = número de éxitos)
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.5em}
+\alert{Pregunta}: ¿Cómo sabemos si un estimador es "bueno"? $\to$ Propiedades deseables
+\end{frame}
+
+\begin{frame}{Propiedad 1: Insesgamiento}
+\begin{block}{Definición}
+Un estimador $\hat{\theta}$ es \textbf{insesgado} si su valor esperado es igual al parámetro:
+\[
+E(\hat{\theta}) = \theta
+\]
+En promedio (sobre todas las muestras posibles), el estimador acierta al valor verdadero.
+\end{block}
+
+\textbf{Sesgo}: $\text{Sesgo}(\hat{\theta}) = E(\hat{\theta}) - \theta$
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplos}
+\begin{itemize}
+\item $\bar{X}$ es insesgado para $\mu$: $E(\bar{X}) = \mu$
+\item $s^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$ es insesgado para $\sigma^2$
+\item $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ es \alert{sesgado} (subestima $\sigma^2$)
+  \begin{itemize}
+  \item $E(\hat{\sigma}^2) = \frac{n-1}{n}\sigma^2 < \sigma^2$
+  \item Por eso usamos $n-1$ en el denominador
+  \end{itemize}
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.5em}
+\alert{Insesgamiento no garantiza precisión en una muestra individual, pero sí "en promedio"}
+\end{frame}
+
+\begin{frame}{Propiedad 2: Eficiencia}
+\begin{block}{Definición}
+Entre dos estimadores insesgados de $\theta$, el más \textbf{eficiente} es el que tiene menor varianza.
+\end{block}
+
+\[
+\text{Si } E(\hat{\theta}_1) = E(\hat{\theta}_2) = \theta \text{ y } \text{Var}(\hat{\theta}_1) < \text{Var}(\hat{\theta}_2), \text{ entonces } \hat{\theta}_1 \text{ es más eficiente}
+\]
+
+\vspace{0.5em}
+\textbf{Interpretación}:
+\begin{itemize}
+\item Menor varianza = estimaciones más consistentes entre muestras
+\item Menor varianza = intervalos de confianza más estrechos
+\end{itemize}
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplo}
+Para estimar $\mu$ de una distribución normal:
+\begin{itemize}
+\item Media muestral: $\text{Var}(\bar{X}) = \sigma^2/n$
+\item Mediana muestral: $\text{Var}(\text{mediana}) \approx 1.57 \sigma^2/n$
+\end{itemize}
+$\bar{X}$ es más eficiente que la mediana (para normales).
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Propiedad 3: Consistencia}
+\begin{block}{Definición}
+Un estimador $\hat{\theta}_n$ es \textbf{consistente} si converge al parámetro verdadero cuando el tamaño de muestra tiende a infinito:
+\[
+\hat{\theta}_n \xrightarrow{P} \theta \quad \text{cuando } n \to \infty
+\]
+\end{block}
+
+\textbf{Interpretación}:
+\begin{itemize}
+\item Con más datos, el estimador se acerca más y más al valor verdadero
+\item Probabilidad de estar cerca de $\theta$ tiende a 1
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Condición suficiente para consistencia}:
+\[
+\lim_{n \to \infty} E(\hat{\theta}_n) = \theta \quad \text{y} \quad \lim_{n \to \infty} \text{Var}(\hat{\theta}_n) = 0
+\]
+
+\vspace{0.5em}
+\begin{exampleblock}{Ejemplos}
+\begin{itemize}
+\item $\bar{X}$ es consistente: $E(\bar{X}) = \mu$ y $\text{Var}(\bar{X}) = \sigma^2/n \to 0$
+\item $s^2$ es consistente para $\sigma^2$
+\end{itemize}
+\end{exampleblock}
+
+\alert{Todos los estimadores comunes que usamos son consistentes}
+\end{frame}
+
+\begin{frame}{Resumen: propiedades de estimadores}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Propiedad} & \textbf{Significado} \\
+\midrule
+Insesgamiento & En promedio, el estimador acierta ($E(\hat{\theta}) = \theta$) \\
+\addlinespace
+Eficiencia & Menor varianza entre estimadores insesgados (más preciso) \\
+\addlinespace
+Consistencia & Converge al parámetro cuando $n \to \infty$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{1em}
+\textbf{Estimadores comunes y sus propiedades}:
+\begin{itemize}
+\item $\bar{X}$ para $\mu$: insesgado, eficiente (para normales), consistente
+\item $s^2$ para $\sigma^2$: insesgado, consistente
+\item $\hat{p} = X/n$ para $p$: insesgado, consistente
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Trade-off sesgo-varianza}
+A veces un estimador ligeramente sesgado puede tener mucho menor varianza, y ser preferible en la práctica (ej: regresión ridge). Pero en este curso usamos estimadores insesgados.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Resumen y conexión}
+% ============================================================================
+
+\begin{frame}{Resumen de la sesión}
+\textbf{Conceptos clave cubiertos}:
+
+\begin{enumerate}
+\item \textbf{Variables aleatorias}: discretas vs continuas, E(X), Var(X)
+\item \textbf{Distribución normal}: $N(\mu, \sigma^2)$, propiedades, cálculo de probabilidades
+  \begin{itemize}
+  \item \code{pnorm()}, \code{qnorm()}, \code{dnorm()}, \code{rnorm()}
+  \end{itemize}
+\item \textbf{Distribuciones t, chi-cuadrado, F}: de dónde vienen, para qué sirven
+\item \textbf{Muestreo}: población vs muestra, distribución muestral de $\bar{X}$
+  \begin{itemize}
+  \item $E(\bar{X}) = \mu$, $\text{SE}(\bar{X}) = \sigma/\sqrt{n}$
+  \end{itemize}
+\item \textbf{Teorema Central del Límite}: $\bar{X} \sim N(\mu, \sigma^2/n)$ para $n$ grande
+  \begin{itemize}
+  \item Fundamento de toda la inferencia estadística
+  \end{itemize}
+\item \textbf{Propiedades de estimadores}: insesgamiento, eficiencia, consistencia
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{La distribución normal + TCL = fundamento de la inferencia}
+\begin{alertblock}{Conexión fundamental}
+\end{alertblock}
+
+\textbf{1. Muchas variables en la naturaleza son normales (o aproximadamente)}
+\begin{itemize}
+\item Alturas, pesos, puntajes de pruebas, errores de medición, etc.
+\end{itemize}
+
+\textbf{2. Incluso cuando la población NO es normal, $\bar{X}$ sí lo es (TCL)}
+\begin{itemize}
+\item Para $n \geq 30$, $\bar{X} \sim N(\mu, \sigma^2/n)$ aproximadamente
+\end{itemize}
+
+\textbf{3. Conociendo la distribución de $\bar{X}$, podemos}:
+\begin{itemize}
+\item Construir \alert{intervalos de confianza}: ¿entre qué valores está $\mu$ con 95\% de confianza?
+\item Hacer \alert{pruebas de hipótesis}: ¿es $\mu = 150$ compatible con nuestros datos?
+\item Calcular \alert{tamaños de muestra}: ¿cuántos estudiantes necesito para estimar $\mu$ con margen de error $\pm 2$ puntos?
+\end{itemize}
+
+\vspace{0.5em}
+\alert{Sin el TCL, necesitaríamos conocer la distribución poblacional exacta para hacer inferencia. Gracias al TCL, no es necesario.}
+\end{frame}
+
+\begin{frame}{Próxima sesión: Intervalos de Confianza}
+\textbf{Fecha}: próxima sesión (según calendario)
+
+\textbf{Temas a cubrir}:
+\begin{itemize}
+\item Concepto de intervalo de confianza (IC)
+\item IC para la media (varianza conocida y desconocida)
+\item IC para la proporción
+\item IC para la diferencia de medias (dos muestras)
+\item Interpretación correcta de ICs
+\item Determinación del tamaño de muestra
+\end{itemize}
+
+\vspace{1em}
+\textbf{Preparación}:
+\begin{itemize}
+\item Repasar \code{qnorm()}, \code{qt()}, \code{pnorm()}, \code{pt()}
+\item Asegurarse de entender el error estándar: $\text{SE} = \sigma/\sqrt{n}$
+\item Repasar el TCL: $\bar{X} \sim N(\mu, \sigma^2/n)$ para $n$ grande
+\end{itemize}
+
+\vspace{0.5em}
+\alert{El intervalo de confianza es la aplicación más directa del TCL y la distribución normal}
+\end{frame}
+
+\end{document}

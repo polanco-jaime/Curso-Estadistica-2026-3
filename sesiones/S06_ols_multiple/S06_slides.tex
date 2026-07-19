@@ -1,0 +1,1125 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 6: Fundamentos de Pruebas de Hipótesis}
+\subtitle{$H_0$, $H_1$, p-valor, errores y potencia estad\'istica}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Viernes 25 de septiembre de 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Introducción a las Pruebas de Hipótesis}
+% ============================================================================
+
+\begin{frame}{¿Qué es una Hipótesis Estadística?}
+\begin{definition}[Hipótesis estadística]
+Una \textbf{hipótesis estadística} es una afirmación sobre un parámetro poblacional que puede ser verdadera o falsa.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Ejemplos}:
+\begin{itemize}
+  \item La media de inglés en NI es 160 puntos ($\mu = 160$)
+  \item La proporción de estudiantes que superan B1 es mayor al 70\% ($p > 0.70$)
+  \item Las IES públicas y privadas tienen el mismo rendimiento promedio ($\mu_1 = \mu_2$)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Diferencia con intervalos de confianza}:
+\begin{itemize}
+  \item \textbf{IC}: ¿Cuál es el rango plausible de valores para $\mu$?
+  \item \textbf{Prueba de hipótesis}: ¿Hay evidencia suficiente para afirmar que $\mu \neq 160$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hipótesis Nula vs Hipótesis Alternativa}
+\begin{block}{Hipótesis nula ($H_0$)}
+\begin{itemize}
+  \item La afirmación que se asume verdadera inicialmente
+  \item Generalmente de "no diferencia" o "no efecto"
+  \item Siempre contiene igualdad: $=$, $\leq$, o $\geq$
+  \item Es lo que buscamos \alert{rechazar} con evidencia
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Hipótesis alternativa ($H_1$ o $H_a$)}
+\begin{itemize}
+  \item La afirmación que queremos probar
+  \item Refleja nuestro interés de investigación
+  \item Contiene: $\neq$, $<$, o $>$
+  \item Solo la aceptamos si hay \alert{evidencia fuerte} contra $H_0$
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Analogía jurídica}: $H_0$ = "inocente", $H_1$ = "culpable". Asumimos inocencia hasta que se pruebe culpabilidad.
+\end{frame}
+
+\begin{frame}{Tres Formas de la Hipótesis Alternativa}
+\textbf{1. Prueba de dos colas (bilateral)}:
+\[
+H_0: \mu = \mu_0 \quad \text{vs} \quad H_1: \mu \neq \mu_0
+\]
+\textbf{Pregunta}: ¿Es $\mu$ \alert{diferente} de $\mu_0$ (mayor O menor)?
+
+\vspace{0.3cm}
+\textbf{2. Prueba de cola derecha (unilateral)}:
+\[
+H_0: \mu \leq \mu_0 \quad \text{vs} \quad H_1: \mu > \mu_0
+\]
+\textbf{Pregunta}: ¿Es $\mu$ \alert{mayor} que $\mu_0$?
+
+\vspace{0.3cm}
+\textbf{3. Prueba de cola izquierda (unilateral)}:
+\[
+H_0: \mu \geq \mu_0 \quad \text{vs} \quad H_1: \mu < \mu_0
+\]
+\textbf{Pregunta}: ¿Es $\mu$ \alert{menor} que $\mu_0$?
+
+\vspace{0.3cm}
+\textbf{Nota}: La forma depende de la pregunta de investigación.
+\end{frame}
+
+\begin{frame}{Ejemplos con Datos ICFES}
+\textbf{Ejemplo 1 (dos colas)}: ¿El puntaje promedio de inglés en NI es diferente de 160?
+\[
+H_0: \mu = 160 \quad \text{vs} \quad H_1: \mu \neq 160
+\]
+
+\vspace{0.3cm}
+\textbf{Ejemplo 2 (cola derecha)}: ¿El puntaje promedio de inglés en NI supera el umbral de B1 (160)?
+\[
+H_0: \mu \leq 160 \quad \text{vs} \quad H_1: \mu > 160
+\]
+
+\vspace{0.3cm}
+\textbf{Ejemplo 3 (cola izquierda)}: ¿El puntaje promedio de matemáticas en NI es inferior a 150?
+\[
+H_0: \mu \geq 150 \quad \text{vs} \quad H_1: \mu < 150
+\]
+
+\vspace{0.3cm}
+\textbf{Decisión}: Depende del contexto y la pregunta. Si no hay razón para esperar una dirección específica, usar dos colas.
+\end{frame}
+
+\begin{frame}{La Hipótesis Nula como ``Statu Quo''}
+\textbf{Filosofía}:
+\begin{itemize}
+  \item $H_0$ representa el estado actual del conocimiento o la creencia aceptada
+  \item Solo la rechazamos si los datos muestran evidencia \alert{fuerte} en contra
+  \item Si no hay evidencia suficiente, mantenemos $H_0$ (NO la "aceptamos")
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplos}:
+\begin{itemize}
+  \item $H_0$: "El nuevo método de enseñanza NO mejora el rendimiento" (statu quo)
+  \item $H_1$: "El nuevo método SÍ mejora el rendimiento" (afirmación que queremos probar)
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Importante}
+\textbf{No rechazar $H_0$} NO es lo mismo que "aceptar $H_0$". Solo significa que no hay evidencia suficiente para rechazarla. Puede ser que:
+\begin{itemize}
+  \item $H_0$ sea verdadera
+  \item La muestra sea muy pequeña (falta de poder estadístico)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Analogía con un Juicio}
+\begin{center}
+\begin{tabular}{lcl}
+\textbf{Juicio} & & \textbf{Prueba de hipótesis} \\[0.3cm]
+Acusado & $\longleftrightarrow$ & Hipótesis nula $H_0$ \\
+Inocente (presunción) & $\longleftrightarrow$ & $H_0$ es verdadera (presunción) \\
+Evidencia & $\longleftrightarrow$ & Datos de la muestra \\
+Veredicto "culpable" & $\longleftrightarrow$ & Rechazar $H_0$ \\
+Veredicto "no culpable" & $\longleftrightarrow$ & No rechazar $H_0$ \\
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Principio clave}: Solo declaramos "culpable" (rechazamos $H_0$) si la evidencia es \alert{más allá de una duda razonable}.
+
+\vspace{0.3cm}
+\textbf{Nota}: "No culpable" $\neq$ "inocente". Solo significa que no hay evidencia suficiente para condenar.
+\end{frame}
+
+% ============================================================================
+\section{Error Tipo I, Tipo II y Nivel de Significancia}
+% ============================================================================
+
+\begin{frame}{Dos Tipos de Errores}
+\textbf{Decisiones posibles}:
+\begin{enumerate}
+  \item Rechazar $H_0$
+  \item No rechazar $H_0$
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Realidad desconocida}:
+\begin{enumerate}
+  \item $H_0$ es verdadera
+  \item $H_0$ es falsa
+\end{enumerate}
+
+\vspace{0.3cm}
+Esto da lugar a 4 escenarios:
+\begin{table}
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+& \textbf{$H_0$ verdadera} & \textbf{$H_0$ falsa} \\
+\midrule
+\textbf{No rechazar $H_0$} & Decisión correcta & \textcolor{red}{Error tipo II ($\beta$)} \\
+\textbf{Rechazar $H_0$} & \textcolor{red}{Error tipo I ($\alpha$)} & Decisión correcta \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Error Tipo I ($\alpha$)}
+\begin{definition}[Error tipo I]
+Rechazar $H_0$ cuando en realidad es \alert{verdadera}.
+\end{definition}
+
+\vspace{0.3cm}
+\begin{itemize}
+  \item También llamado \textbf{falso positivo}
+  \item Probabilidad: $P(\text{rechazar } H_0 \mid H_0 \text{ verdadera}) = \alpha$
+  \item En la analogía jurídica: condenar a un inocente
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo educativo}:
+\begin{itemize}
+  \item $H_0$: "El nuevo programa NO mejora el rendimiento"
+  \item Error tipo I: Concluir que el programa funciona cuando en realidad no tiene efecto
+  \item Consecuencia: Invertir recursos en un programa inefectivo
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Control}: Fijamos $\alpha$ antes del análisis (típicamente 0.05 o 0.01).
+\end{frame}
+
+\begin{frame}{Error Tipo II ($\beta$)}
+\begin{definition}[Error tipo II]
+\alert{No rechazar} $H_0$ cuando en realidad es \alert{falsa}.
+\end{definition}
+
+\vspace{0.3cm}
+\begin{itemize}
+  \item También llamado \textbf{falso negativo}
+  \item Probabilidad: $P(\text{no rechazar } H_0 \mid H_0 \text{ falsa}) = \beta$
+  \item En la analogía jurídica: absolver a un culpable
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo educativo}:
+\begin{itemize}
+  \item $H_0$: "El nuevo programa NO mejora el rendimiento"
+  \item Error tipo II: Concluir que el programa no funciona cuando en realidad SÍ mejora el rendimiento
+  \item Consecuencia: Descartar un programa efectivo
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Control}: Más difícil. Depende del verdadero valor del parámetro (desconocido) y del tamaño de muestra $n$.
+\end{frame}
+
+\begin{frame}{Tabla Resumen de Errores}
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{2.8cm}p{3.8cm}p{3.8cm}}
+\toprule
+\textbf{Escenario} & \textbf{Error tipo I ($\alpha$)} & \textbf{Error tipo II ($\beta$)} \\
+\midrule
+\textbf{Definición} & Rechazar $H_0$ verdadera & No rechazar $H_0$ falsa \\[0.15cm]
+\textbf{Nombre alternativo} & Falso positivo & Falso negativo \\[0.15cm]
+\textbf{Analogía jurídica} & Condenar inocente & Absolver culpable \\[0.15cm]
+\textbf{Analogía médica} & Diagnóstico positivo en sano & Diagnóstico negativo en enfermo \\[0.15cm]
+\textbf{Control} & Fijamos $\alpha$ (0.05, 0.01) & Depende de $n$, $\alpha$, efecto \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Nivel de Significancia $\alpha$}
+\begin{definition}[Nivel de significancia]
+El \textbf{nivel de significancia} $\alpha$ es la probabilidad máxima de cometer un error tipo I que estamos dispuestos a tolerar.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Valores comunes}:
+\begin{itemize}
+  \item $\alpha = 0.05$ (5\%): estándar en ciencias sociales
+  \item $\alpha = 0.01$ (1\%): cuando queremos ser más conservadores
+  \item $\alpha = 0.10$ (10\%): cuando el error tipo II es más costoso
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Interpretación}: Con $\alpha = 0.05$, aceptamos que en el 5\% de las pruebas (a largo plazo) rechazaremos $H_0$ incorrectamente.
+
+\vspace{0.3cm}
+\begin{alertblock}{Importante}
+$\alpha$ NO es la probabilidad de que $H_0$ sea verdadera. Es la probabilidad de rechazarla \alert{si} es verdadera.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Trade-off entre $\alpha$ y $\beta$}
+\textbf{Relación inversa}:
+\begin{itemize}
+  \item Si reducimos $\alpha$ (ser más estrictos para rechazar $H_0$), aumenta $\beta$
+  \item Si aumentamos $\alpha$ (ser menos estrictos), disminuye $\beta$
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (0,0) -- (6,0) node[right] {$\alpha$};
+  \draw[->] (0,0) -- (0,4) node[above] {$\beta$};
+
+  \draw[thick, blue] (0.5,3.5) .. controls (2,2) and (4,1) .. (5.5,0.5);
+
+  \node at (3,3.5) {\small Trade-off: $\alpha \downarrow \Rightarrow \beta \uparrow$};
+
+  \draw[dashed, red] (1.5,0) -- (1.5,2.8) node[above right] {\small $\alpha = 0.05$};
+  \draw[dashed, red] (0,2.8) -- (1.5,2.8);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{Solución}: Aumentar el tamaño de muestra $n$ reduce TANTO $\alpha$ como $\beta$.
+\end{frame}
+
+% ============================================================================
+\section{El p-valor}
+% ============================================================================
+
+\begin{frame}{¿Qué es el p-valor?}
+\begin{definition}[p-valor]
+El \textbf{p-valor} es la probabilidad de obtener un resultado tan extremo o más extremo que el observado, \alert{asumiendo que $H_0$ es verdadera}.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Fórmula conceptual}:
+\[
+\text{p-valor} = P(\text{estadístico tan extremo o más} \mid H_0 \text{ verdadera})
+\]
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item p-valor \alert{pequeño} $\Rightarrow$ los datos son incompatibles con $H_0$ $\Rightarrow$ evidencia contra $H_0$
+  \item p-valor \alert{grande} $\Rightarrow$ los datos son compatibles con $H_0$ $\Rightarrow$ no hay evidencia contra $H_0$
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Regla de decisión}
+Si p-valor $< \alpha$, rechazamos $H_0$.\\
+Si p-valor $\geq \alpha$, no rechazamos $H_0$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Errores Comunes de Interpretación del p-valor}
+\begin{alertblock}{Lo que el p-valor NO es}
+\begin{enumerate}
+  \item \textcolor{red}{\textbf{NO}} es $P(H_0 \text{ verdadera} \mid \text{datos})$
+  \begin{itemize}
+    \item Es al revés: $P(\text{datos} \mid H_0 \text{ verdadera})$
+  \end{itemize}
+
+  \item \textcolor{red}{\textbf{NO}} es la probabilidad de que el resultado sea "por azar"
+  \begin{itemize}
+    \item Todo en estadística involucra azar; el p-valor cuantifica qué tan compatible son los datos con $H_0$
+  \end{itemize}
+
+  \item \textcolor{red}{\textbf{NO}} mide la magnitud del efecto
+  \begin{itemize}
+    \item Un p-valor pequeño puede deberse a un efecto pequeño con muestra grande
+  \end{itemize}
+
+  \item \textcolor{red}{\textbf{NO}} es la probabilidad de replicar el resultado
+\end{enumerate}
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Recordar}: El p-valor solo mide evidencia contra $H_0$, no prueba que $H_1$ sea verdadera.
+\end{frame}
+
+\begin{frame}{Escala Cualitativa del p-valor}
+\begin{table}
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{p-valor} & \textbf{Evidencia contra $H_0$} & \textbf{Decisión ($\alpha = 0.05$)} \\
+\midrule
+$p < 0.01$ & Muy fuerte & Rechazar $H_0$ \\
+$0.01 \leq p < 0.05$ & Moderada & Rechazar $H_0$ \\
+$0.05 \leq p < 0.10$ & Débil & No rechazar $H_0$ \\
+$p \geq 0.10$ & Ninguna & No rechazar $H_0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Notas}:
+\begin{itemize}
+  \item Esta es una guía general, no una regla rígida
+  \item El umbral de 0.05 es convencional, no mágico
+  \item En algunos campos (física de partículas), se usa $\alpha = 0.0000003$ (5 sigmas)
+  \item En estudios exploratorios, a veces se tolera $\alpha = 0.10$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Visualización del p-valor (dos colas)}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (-4,0) -- (4,0) node[right] {$t$};
+  \draw[->] (0,0) -- (0,3);
+
+  % Distribucion t
+  \draw[domain=-3.5:3.5, smooth, variable=\x, thick, samples=100]
+    plot ({\x},{2.5*exp(-0.4*\x*\x)});
+
+  % Regiones de rechazo
+  \fill[red!30] (-3.5,0) -- plot[domain=-3.5:-2] ({\x},{2.5*exp(-0.4*\x*\x)}) -- (-2,0) -- cycle;
+  \fill[red!30] (3.5,0) -- plot[domain=3.5:2] ({\x},{2.5*exp(-0.4*\x*\x)}) -- (2,0) -- cycle;
+
+  % Valores criticos
+  \draw[dashed] (-2,0) -- (-2,{2.5*exp(-0.4*4)});
+  \draw[dashed] (2,0) -- (2,{2.5*exp(-0.4*4)});
+
+  \node[below] at (-2,0) {$-t_{\alpha/2}$};
+  \node[below] at (2,0) {$t_{\alpha/2}$};
+
+  % Estadistico observado
+  \draw[->, very thick, blue] (2.5,2.5) -- (2.5,0.3) node[below] {\small $t_{\text{obs}}$};
+
+  \node[red] at (-3,1) {\small $\alpha/2$};
+  \node[red] at (3,1) {\small $\alpha/2$};
+  \node at (0,2) {\small No rechazar};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\small
+p-valor = área en rojo MÁS ALLÁ de $|t_{\text{obs}}|$ (ambas colas).\\
+Si p-valor $< \alpha$, $t_{\text{obs}}$ cae en la región de rechazo.
+\end{frame}
+
+% ============================================================================
+\section{Prueba z para una Muestra ($\sigma$ Conocida)}
+% ============================================================================
+
+\begin{frame}{Estadístico de Prueba $z$}
+\textbf{Supuestos}:
+\begin{itemize}
+  \item Muestra aleatoria simple de tamaño $n$
+  \item Población normal O $n \geq 30$ (TLC)
+  \item $\sigma$ conocida
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Estadístico de prueba}
+\[
+z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}
+\]
+donde:
+\begin{itemize}
+  \item $\mu_0$ = valor hipotético de $H_0: \mu = \mu_0$
+  \item Si $H_0$ es verdadera, $z \sim N(0,1)$
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Interpretación}: $z$ mide cuántas desviaciones estándar está $\bar{x}$ del valor hipotético $\mu_0$.
+\end{frame}
+
+\begin{frame}{Región de Rechazo y Valor Crítico}
+\textbf{Prueba de dos colas}: $H_0: \mu = \mu_0$ vs $H_1: \mu \neq \mu_0$
+\begin{itemize}
+  \item Rechazar $H_0$ si $|z| > z_{\alpha/2}$
+  \item p-valor = $2 \cdot P(Z > |z_{\text{obs}}|)$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Prueba de cola derecha}: $H_0: \mu \leq \mu_0$ vs $H_1: \mu > \mu_0$
+\begin{itemize}
+  \item Rechazar $H_0$ si $z > z_{\alpha}$
+  \item p-valor = $P(Z > z_{\text{obs}})$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Prueba de cola izquierda}: $H_0: \mu \geq \mu_0$ vs $H_1: \mu < \mu_0$
+\begin{itemize}
+  \item Rechazar $H_0$ si $z < -z_{\alpha}$
+  \item p-valor = $P(Z < z_{\text{obs}})$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: ¿La Media de Inglés es Mayor que 155? (1/2)}
+\textbf{Pregunta}: ¿El puntaje promedio de \variable{MOD\_INGLES\_PUNT} en NI es significativamente mayor que 155?
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu \leq 155 \quad \text{vs} \quad H_1: \mu > 155
+\]
+
+\begin{lstlisting}
+# Datos (simulados)
+xbar <- 162.5
+n <- 120
+sigma <- 18  # Supuesto conocido
+mu_0 <- 155
+alpha <- 0.05
+
+# Estadistico de prueba
+z_obs <- (xbar - mu_0) / (sigma / sqrt(n))
+cat("Estadistico z:", round(z_obs, 3))
+
+# p-valor (cola derecha)
+p_valor <- pnorm(z_obs, lower.tail = FALSE)
+cat("\np-valor:", round(p_valor, 6))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: ¿La Media de Inglés es Mayor que 155? (2/2)}
+\begin{lstlisting}
+# Valor critico
+z_critico <- qnorm(1 - alpha)
+cat("Valor critico z:", round(z_critico, 3))
+
+# Decision
+if (p_valor < alpha) {
+  cat("\nDecision: Rechazar H0 al nivel", alpha)
+} else {
+  cat("\nDecision: No rechazar H0 al nivel", alpha)
+}
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Resultado esperado}:
+\begin{itemize}
+  \item $z = 4.56$ (muy por encima de $z_{0.05} = 1.645$)
+  \item p-valor $\approx 0.000003$ (extremadamente pequeño)
+  \item Decisión: Rechazar $H_0$ con gran confianza
+  \item Conclusión: Hay evidencia muy fuerte de que $\mu > 155$
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Prueba t para una Muestra ($\sigma$ Desconocida)}
+% ============================================================================
+
+\begin{frame}{Estadístico de Prueba $t$}
+\textbf{Caso real}: $\sigma$ desconocida, usamos $s$.
+
+\vspace{0.3cm}
+\begin{block}{Estadístico de prueba}
+\[
+t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}
+\]
+donde:
+\begin{itemize}
+  \item $s$ = desviación estándar muestral
+  \item Si $H_0$ es verdadera, $t \sim t(n-1)$
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Regiones de rechazo}:
+\begin{itemize}
+  \item \textbf{Dos colas}: Rechazar si $|t| > t_{\alpha/2, n-1}$
+  \item \textbf{Cola derecha}: Rechazar si $t > t_{\alpha, n-1}$
+  \item \textbf{Cola izquierda}: Rechazar si $t < -t_{\alpha, n-1}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: ¿La Media Supera el Umbral B1?}
+\textbf{Pregunta}: ¿El puntaje promedio de inglés en NI supera el umbral B1 de 160 puntos?
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu \leq 160 \quad \text{vs} \quad H_1: \mu > 160
+\]
+
+\begin{lstlisting}
+# Cargar datos reales
+icfes_ni <- read.csv("datos/icfes_ni_2023.csv")
+ingles <- icfes_ni$MOD_INGLES_PUNT
+
+# Calcular estadisticos
+n <- length(ingles)
+xbar <- mean(ingles, na.rm = TRUE)
+s <- sd(ingles, na.rm = TRUE)
+mu_0 <- 160
+
+# Estadistico t
+t_obs <- (xbar - mu_0) / (s / sqrt(n))
+cat("Estadistico t:", round(t_obs, 3))
+
+# p-valor (cola derecha)
+p_valor <- pt(t_obs, df = n - 1, lower.tail = FALSE)
+cat("\np-valor:", round(p_valor, 6))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Usar \code{t.test()} en R}
+\begin{lstlisting}
+# Metodo directo: t.test()
+resultado <- t.test(ingles, mu = 160, alternative = "greater")
+
+print(resultado)
+
+# Extraer componentes
+cat("\nEstadistico t:", resultado$statistic)
+cat("\np-valor:", resultado$p.value)
+cat("\nIC de una cola:", resultado$conf.int)
+
+# Decision manual
+alpha <- 0.05
+if (resultado$p.value < alpha) {
+  cat("\nDecision: Rechazar H0")
+  cat("\nConcluimos que mu > 160")
+} else {
+  cat("\nDecision: No rechazar H0")
+  cat("\nNo hay evidencia suficiente para afirmar que mu > 160")
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Interpretación del Output de \code{t.test()}}
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+	One Sample t-test
+
+data:  ingles
+t = 1.9135, df = 119, p-value = 0.02911
+alternative hypothesis: true mean is greater than 160
+95 percent confidence interval:
+ 160.56    Inf
+sample estimates:
+mean of x
+   162.50
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item $t = 1.914$, $\text{gl} = 119$
+  \item p-valor $= 0.0291 < 0.05$ $\Rightarrow$ \alert{Rechazamos $H_0$}
+  \item Conclusión: Hay evidencia suficiente (al 5\% de significancia) para afirmar que $\mu > 160$
+  \item IC de una cola: $[160.56, \infty)$ no incluye valores $\leq 160$
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Prueba t para Dos Muestras Independientes}
+% ============================================================================
+
+\begin{frame}{Comparar Dos Medias Poblacionales}
+\textbf{Pregunta}: ¿Difiere el rendimiento promedio entre dos grupos?
+
+\vspace{0.3cm}
+\textbf{Ejemplos}:
+\begin{itemize}
+  \item ¿El puntaje de inglés difiere entre IES públicas y privadas?
+  \item ¿El salario inicial promedio difiere entre hombres y mujeres en NI?
+  \item ¿Estudiantes de Bogotá tienen mejor rendimiento que los de otras regiones?
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu_1 = \mu_2 \quad \text{vs} \quad H_1: \mu_1 \neq \mu_2
+\]
+(o $H_1: \mu_1 > \mu_2$ o $H_1: \mu_1 < \mu_2$)
+
+\vspace{0.3cm}
+\textbf{Equivalente}:
+\[
+H_0: \mu_1 - \mu_2 = 0 \quad \text{vs} \quad H_1: \mu_1 - \mu_2 \neq 0
+\]
+\end{frame}
+
+\begin{frame}{Estadístico de Prueba para Dos Muestras}
+\textbf{Supuestos}:
+\begin{itemize}
+  \item Dos muestras aleatorias \alert{independientes}
+  \item Poblaciones normales o $n_1, n_2 \geq 30$
+  \item Varianzas poblacionales desconocidas
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Estadístico de prueba (Welch)}
+\[
+t = \frac{(\bar{x}_1 - \bar{x}_2) - 0}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+\]
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Grados de libertad (fórmula de Welch)}:
+\[
+\text{gl} = \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{(s_1^2/n_1)^2}{n_1-1} + \frac{(s_2^2/n_2)^2}{n_2-1}}
+\]
+\small (No necesitas memorizarla, R la calcula automáticamente)
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Inglés en IES Públicas vs Privadas}
+\textbf{Pregunta}: ¿Difiere el puntaje promedio de inglés entre IES públicas y privadas en NI?
+
+\vspace{0.3cm}
+\textbf{Hipótesis}:
+\[
+H_0: \mu_{\text{púb}} = \mu_{\text{priv}} \quad \text{vs} \quad H_1: \mu_{\text{púb}} \neq \mu_{\text{priv}}
+\]
+
+\begin{lstlisting}
+# Dividir datos por tipo de IES
+publica <- icfes_ni %>%
+  filter(TIPO_IES == "Publica") %>%
+  pull(MOD_INGLES_PUNT)
+
+privada <- icfes_ni %>%
+  filter(TIPO_IES == "Privada") %>%
+  pull(MOD_INGLES_PUNT)
+
+# Prueba t de dos muestras
+resultado <- t.test(publica, privada, var.equal = FALSE)
+# var.equal = FALSE usa Welch (recomendado)
+
+print(resultado)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Método Alternativo: Fórmula con \textasciitilde}
+\begin{lstlisting}
+# Metodo mas elegante usando formula
+resultado <- t.test(MOD_INGLES_PUNT ~ TIPO_IES,
+                    data = icfes_ni,
+                    var.equal = FALSE)
+
+print(resultado)
+
+# Extraer elementos
+cat("Diferencia de medias:", diff(resultado$estimate))
+cat("\np-valor:", resultado$p.value)
+cat("\nIC para la diferencia:", resultado$conf.int)
+
+# Interpretacion
+if (resultado$p.value < 0.05) {
+  cat("\nHay diferencia significativa al 5%")
+} else {
+  cat("\nNo hay diferencia significativa al 5%")
+}
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: La fórmula \code{y \textasciitilde\ grupo} es estándar en R para modelos.
+\end{frame}
+
+% ============================================================================
+\section{d de Cohen y Tamaño del Efecto}
+% ============================================================================
+
+\begin{frame}{Significancia Estadística vs Significancia Práctica}
+\textbf{Problema}: Con muestras grandes, diferencias muy pequeñas pueden ser estadísticamente significativas (p-valor pequeño) pero \alert{irrelevantes} en la práctica.
+
+\vspace{0.3cm}
+\textbf{Ejemplo}:
+\begin{itemize}
+  \item $n_1 = n_2 = 10{,}000$
+  \item $\bar{x}_1 = 162.5$, $\bar{x}_2 = 161.8$ (diferencia de 0.7 puntos)
+  \item p-valor $< 0.001$ (muy significativo estadísticamente)
+  \item ¿Es relevante una diferencia de 0.7 puntos en inglés?
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Lección}
+\textbf{Significancia estadística} (p-valor pequeño) $\neq$ \textbf{Significancia práctica} (efecto relevante).
+
+\vspace{0.2cm}
+Necesitamos medir el \alert{tamaño del efecto}.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{d de Cohen}
+\begin{definition}[d de Cohen]
+Una medida estandarizada del tamaño del efecto:
+\[
+d = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}}
+\]
+donde:
+\[
+s_{\text{pooled}} = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
+\]
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Interpretación (Cohen, 1988)}:
+\begin{itemize}
+  \item $|d| \approx 0.2$: efecto \alert{pequeño}
+  \item $|d| \approx 0.5$: efecto \alert{mediano}
+  \item $|d| \approx 0.8$: efecto \alert{grande}
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ventaja}: Independiente del tamaño de muestra y de las unidades de medida.
+\end{frame}
+
+\begin{frame}[fragile]{Calcular d de Cohen en R}
+\begin{lstlisting}
+# Opcion 1: Manual
+n1 <- length(publica)
+n2 <- length(privada)
+s1 <- sd(publica, na.rm = TRUE)
+s2 <- sd(privada, na.rm = TRUE)
+xbar1 <- mean(publica, na.rm = TRUE)
+xbar2 <- mean(privada, na.rm = TRUE)
+
+# Desviacion estandar pooled
+s_pooled <- sqrt(((n1 - 1) * s1^2 + (n2 - 1) * s2^2) / (n1 + n2 - 2))
+
+# d de Cohen
+d <- (xbar1 - xbar2) / s_pooled
+cat("d de Cohen:", round(d, 3))
+
+# Opcion 2: Paquete effsize
+library(effsize)
+resultado_cohen <- cohen.d(publica, privada, na.rm = TRUE)
+print(resultado_cohen)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo con Interpretación}
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+Cohen's d
+
+d estimate: 0.35 (small)
+95 percent confidence interval:
+   lower    upper
+  0.1842   0.5158
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item $d = 0.35$ (efecto pequeño-mediano)
+  \item La diferencia entre IES públicas y privadas es de 0.35 desviaciones estándar
+  \item IC para $d$: $(0.18, 0.52)$ (no incluye 0, consistente con p-valor $< 0.05$)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Conclusión}: Aunque hay evidencia estadística de diferencia, el efecto es relativamente pequeño en magnitud práctica.
+\end{frame}
+
+\begin{frame}{Reporte Completo: Estadística + Efecto}
+\textbf{Recomendación}: Siempre reportar TANTO la significancia estadística como el tamaño del efecto.
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplo de reporte}
+``Se encontró una diferencia estadísticamente significativa en el puntaje promedio de inglés entre estudiantes de IES públicas ($M = 160.3$, $DE = 17.8$) y privadas ($M = 166.5$, $DE = 18.2$), $t(238) = -2.41$, $p = 0.017$, $d = 0.35$. Aunque la diferencia es significativa, el tamaño del efecto es pequeño.''
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Elementos clave}:
+\begin{enumerate}
+  \item Estadísticos descriptivos ($M$, $DE$)
+  \item Estadístico de prueba ($t$) y gl
+  \item p-valor
+  \item Tamaño del efecto ($d$)
+  \item Interpretación contextual
+\end{enumerate}
+\end{frame}
+
+% ============================================================================
+\section{Potencia Estadística}
+% ============================================================================
+
+\begin{frame}{¿Qué es la Potencia Estadística?}
+\begin{definition}[Potencia estadística]
+\[
+\text{Potencia} = 1 - \beta = P(\text{rechazar } H_0 \mid H_0 \text{ falsa})
+\]
+Es la probabilidad de \alert{detectar} un efecto cuando realmente existe.
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item Alta potencia (ej. 0.80 o 80\%) = buena capacidad de detectar efectos reales
+  \item Baja potencia (ej. 0.30) = es probable que NO detectemos un efecto aunque exista
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Convención}:
+\begin{itemize}
+  \item Potencia mínima aceptable: 0.80 (80\%)
+  \item Ideal: 0.90 o mayor
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Factores que Afectan la Potencia}
+\begin{enumerate}
+  \item \textbf{Tamaño de muestra ($n$)}: Mayor $n$ $\Rightarrow$ mayor potencia
+
+  \item \textbf{Nivel de significancia ($\alpha$)}: Mayor $\alpha$ $\Rightarrow$ mayor potencia (pero más error tipo I)
+
+  \item \textbf{Tamaño del efecto}: Efectos grandes son más fáciles de detectar
+
+  \item \textbf{Variabilidad ($\sigma$)}: Menor $\sigma$ $\Rightarrow$ mayor potencia
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Relación clave}:
+\[
+\text{Potencia} = f(n, \alpha, \text{efecto}, \sigma)
+\]
+
+\vspace{0.3cm}
+\textbf{Control}: El único factor que controlamos fácilmente es $n$ (diseño del estudio).
+\end{frame}
+
+\begin{frame}{Curva de Potencia}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (0,0) -- (7,0) node[right] {$\mu$ verdadero};
+  \draw[->] (0,0) -- (0,4) node[above] {Potencia};
+
+  % Curva de potencia
+  \draw[thick, blue, domain=0:6.5, smooth, samples=100]
+    plot (\x, {3.5 / (1 + exp(-1.5*(\x - 3)))});
+
+  % Lineas de referencia
+  \draw[dashed] (0,2.8) -- (6.5,2.8) node[right] {\small 0.80};
+  \draw[dashed] (3,0) -- (3,4) node[above] {\small $\mu_0$};
+
+  \node at (5.5,3.3) {\small Mayor efecto};
+  \node at (1.5,0.5) {\small Menor efecto};
+
+  \node[below] at (3,0) {160};
+  \node[below] at (0,0) {155};
+  \node[below] at (6,0) {165};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\small
+La potencia aumenta cuando el verdadero $\mu$ se aleja más de $\mu_0$ (mayor tamaño del efecto).
+\end{frame}
+
+\begin{frame}[fragile]{Calcular Potencia en R}
+\begin{lstlisting}
+library(pwr)
+
+# Potencia para prueba t de dos muestras
+# Parametros:
+# n = tamano de muestra por grupo
+# d = d de Cohen
+# sig.level = alpha
+# type = "two.sample", "one.sample", "paired"
+# alternative = "two.sided", "greater", "less"
+
+# Ejemplo: n = 120 por grupo, d = 0.5, alpha = 0.05
+potencia <- pwr.t.test(n = 120, d = 0.5, sig.level = 0.05,
+                       type = "two.sample",
+                       alternative = "two.sided")
+
+print(potencia)
+cat("\nPotencia:", round(potencia$power, 3))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Interpretación}: Con $n = 120$ por grupo, tenemos 95\% de probabilidad de detectar un efecto de $d = 0.5$ si existe.
+\end{frame}
+
+\begin{frame}[fragile]{Calcular Tamaño de Muestra Requerido}
+\begin{lstlisting}
+# Pregunta: Cuantos estudiantes necesito por grupo para
+# detectar un efecto de d = 0.3 con potencia 0.80?
+
+n_requerido <- pwr.t.test(d = 0.3, sig.level = 0.05,
+                          power = 0.80,
+                          type = "two.sample",
+                          alternative = "two.sided")
+
+print(n_requerido)
+cat("\nn por grupo:", ceiling(n_requerido$n))
+
+# Explorar diferentes escenarios
+efectos <- c(0.2, 0.3, 0.5, 0.8)
+n_por_efecto <- sapply(efectos, function(d) {
+  ceiling(pwr.t.test(d = d, sig.level = 0.05, power = 0.80,
+                     type = "two.sample")$n)
+})
+
+data.frame(d_Cohen = efectos, n_por_grupo = n_por_efecto)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Relación entre IC y Pruebas de Hipótesis}
+% ============================================================================
+
+\begin{frame}{Dos Caras de la Misma Moneda}
+\begin{theorem}[Equivalencia IC - Prueba de hipótesis]
+Si un IC al $(1-\alpha) \times 100\%$ para $\mu$ \alert{NO contiene} el valor $\mu_0$, entonces rechazamos $H_0: \mu = \mu_0$ al nivel de significancia $\alpha$ (prueba de dos colas).
+\end{theorem}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}:
+\begin{itemize}
+  \item IC al 95\% para $\mu$: $(162.3, 168.7)$
+  \item $H_0: \mu = 160$ vs $H_1: \mu \neq 160$
+  \item Como 160 NO está en el IC, rechazamos $H_0$ al 5\%
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ventaja de los IC}:
+\begin{itemize}
+  \item Proporcionan más información que solo "rechazar/no rechazar"
+  \item Muestran el rango de valores plausibles para $\mu$
+  \item Facilitan la interpretación práctica
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Verificar la Equivalencia en R}
+\begin{lstlisting}
+# Prueba de hipotesis
+resultado_test <- t.test(ingles, mu = 160, alternative = "two.sided")
+
+cat("p-valor:", resultado_test$p.value)
+cat("\nIC al 95%:", resultado_test$conf.int)
+
+# Verificar si 160 esta en el IC
+mu_0 <- 160
+ic <- resultado_test$conf.int
+
+if (mu_0 >= ic[1] & mu_0 <= ic[2]) {
+  cat("\n160 esta en el IC -> No rechazar H0")
+} else {
+  cat("\n160 NO esta en el IC -> Rechazar H0")
+}
+
+# Comparar con decision basada en p-valor
+if (resultado_test$p.value < 0.05) {
+  cat("\np-valor < 0.05 -> Rechazar H0")
+} else {
+  cat("\np-valor >= 0.05 -> No rechazar H0")
+}
+
+# Deben coincidir!
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{¿Cuándo Usar IC vs Prueba de Hipótesis?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Intervalos de Confianza}:
+\begin{itemize}
+  \item Enfoque en \alert{estimación}
+  \item ¿Cuál es el valor probable del parámetro?
+  \item Proporcionan rango de valores
+  \item Más informativos
+  \item Útiles para reportar hallazgos
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Pruebas de Hipótesis}:
+\begin{itemize}
+  \item Enfoque en \alert{decisión}
+  \item ¿Hay evidencia contra $H_0$?
+  \item Proporcionan p-valor
+  \item Más formales
+  \item Útiles para comparaciones
+\end{itemize}
+\end{columns}
+
+\vspace{0.5cm}
+\begin{exampleblock}{Recomendación}
+En la práctica, \alert{reportar ambos}: IC + prueba de hipótesis. Esto da una visión completa de los resultados.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Conclusiones}
+% ============================================================================
+
+\begin{frame}{Resumen de la Sesión}
+\textbf{Hoy aprendimos}:
+\begin{enumerate}
+  \item \textbf{Hipótesis}: $H_0$ (nula) vs $H_1$ (alternativa)
+  \item \textbf{Errores}:
+  \begin{itemize}
+    \item Tipo I ($\alpha$): rechazar $H_0$ verdadera
+    \item Tipo II ($\beta$): no rechazar $H_0$ falsa
+  \end{itemize}
+  \item \textbf{p-valor}: Probabilidad de datos tan extremos dado $H_0$ verdadera
+  \item \textbf{Prueba z}: Para $\mu$ con $\sigma$ conocida
+  \item \textbf{Prueba t}: Para $\mu$ con $\sigma$ desconocida (una muestra y dos muestras)
+  \item \textbf{d de Cohen}: Medir tamaño del efecto
+  \item \textbf{Potencia}: Probabilidad de detectar un efecto real
+  \item \textbf{IC y pruebas}: Dos enfoques complementarios
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Próxima sesión}: Prueba t pareada, ANOVA, y pruebas no paramétricas.
+\end{frame}
+
+\begin{frame}{Tabla Resumen: ¿Qué Prueba Usar?}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{3cm}p{2.5cm}p{4cm}}
+\toprule
+\textbf{Situación} & \textbf{Condición} & \textbf{Prueba} \\
+\midrule
+1 muestra, $\sigma$ conocida & $n$ grande o población normal & Prueba $z$ \\[0.2cm]
+1 muestra, $\sigma$ desconocida & Población normal o $n \geq 30$ & Prueba $t$ (una muestra) \\[0.2cm]
+2 muestras independientes & Poblaciones normales o $n_1, n_2 \geq 30$ & Prueba $t$ (dos muestras, Welch) \\[0.2cm]
+2 muestras pareadas & Diferencias normales o $n \geq 30$ & Prueba $t$ pareada (próxima sesión) \\[0.2cm]
+$> 2$ grupos & Normalidad, homocedasticidad & ANOVA (próxima sesión) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Ejercicios para la Próxima Clase}
+\textbf{Con los datos de ICFES}:
+\begin{enumerate}
+  \item Probar $H_0: \mu_{\text{inglés}} = 155$ vs $H_1: \mu \neq 155$ para NI (dos colas)
+  \item Comparar el puntaje de \variable{MOD\_RAZONA\_CUANTITAT} entre IES públicas y privadas (incluir d de Cohen)
+  \item Calcular la potencia de tu prueba del ejercicio 2 (usar \code{pwr})
+  \item Determinar cuántos estudiantes necesitarías para detectar un efecto de $d = 0.4$ con potencia 0.85
+  \item \textbf{Desafío}: Comparar inglés entre género usando tanto IC como prueba de hipótesis, y verificar la equivalencia
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Lectura}: Anderson et al., Capítulo 9 (Pruebas de Hipótesis)
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Large
+¡Gracias por su atención!
+
+\vspace{1cm}
+\normalsize
+Preguntas y discusión
+\end{center}
+\end{frame}
+
+\end{document}

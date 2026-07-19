@@ -1,0 +1,154 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, frame=single, breaklines=true, showstringspaces=false}
+
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Problem Set 7}\\[3pt]
+{\large Bondad de Ajuste y Regresi\'on Lineal Simple}\\[6pt]
+Asignado: Octubre 16 (Sesi\'on 9) \quad$|$\quad Entrega: Octubre 30 (Sesi\'on 10)\\[3pt]
+\textit{Plazo extendido: 2 semanas}
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+\vspace{2pt}
+{\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
+\vspace{6pt}
+
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
+microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+El c\'odigo R debe incluirse.
+
+\vspace{10pt}
+
+\section*{Enunciado}
+
+En este Problem Set evaluar\'a si la distribuci\'on de niveles de ingl\'es
+seg\'un el MCER es uniforme entre estudiantes de Negocios Internacionales (NI),
+y estimar\'a un modelo de regresi\'on lineal simple para predecir el rendimiento
+en Saber Pro a partir de Saber 11.
+
+\begin{enumerate}[label=\arabic*)]
+  \item \textbf{Prueba $\chi^2$ de bondad de ajuste:} ¿los niveles de ingl\'es
+        seg\'un el Marco Com\'un Europeo de Referencia (MCER) se distribuyen
+        uniformemente entre los estudiantes de NI?
+        \begin{enumerate}[label=\alph*)]
+          \item Construya una tabla de frecuencias observadas para los niveles
+                MCER (A$-$, A1, A2, B1, B2) en la variable
+                \texttt{MOD\_INGLES\_DESEM\_MCER}.
+          \item Plantee las hip\'otesis:
+                \[
+                  H_0: p_1 = p_2 = \cdots = p_5 = \frac{1}{5}
+                  \quad \text{vs.} \quad
+                  H_1: \text{al menos una } p_i \text{ difiere de } \frac{1}{5}
+                \]
+          \item Calcule las frecuencias esperadas bajo $H_0$ (distribuci\'on
+                uniforme).
+          \item Aplique la prueba $\chi^2$ de bondad de ajuste usando
+                \texttt{chisq.test()} y reporte el estad\'istico $\chi^2$,
+                grados de libertad y $p$-valor.
+          \item ¿Rechaza $H_0$ al nivel $\alpha = 0.05$? Interprete el
+                resultado: ¿qu\'e niveles MCER est\'an sobrerrepresentados
+                o subrepresentados?
+        \end{enumerate}
+
+  \item \textbf{Regresi\'on lineal simple (OLS):} estime un modelo para predecir
+        el puntaje de ingl\'es en Saber Pro (\texttt{MOD\_INGLES\_PUNT}) a partir
+        del puntaje de ingl\'es en Saber 11 (\texttt{PUNT\_INGLES}).
+        \begin{enumerate}[label=\alph*)]
+          \item Prepare los datos: cruce las bases de Saber 11 y Saber Pro
+                usando el dataset \texttt{ph-jabri.ICFES.Saber11\_SaberPro}.
+                Filtre estudiantes de NI con datos completos en ambas pruebas.
+          \item Grafique un diagrama de dispersi\'on (scatterplot) de
+                \texttt{PUNT\_INGLES} (eje $x$) vs.\
+                \texttt{MOD\_INGLES\_PUNT} (eje $y$). ¿Observa una relaci\'on
+                lineal?
+          \item Estime el modelo OLS:
+                \[
+                  \texttt{MOD\_INGLES\_PUNT}_i = \beta_0 + \beta_1
+                  \texttt{PUNT\_INGLES}_i + \varepsilon_i
+                \]
+                usando \texttt{lm()} y presente el \texttt{summary()} completo.
+          \item Interprete los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$:
+                \begin{itemize}
+                  \item ¿Qu\'e representa $\hat{\beta}_0$ (intercepto)?
+                  \item ¿Qu\'e representa $\hat{\beta}_1$ (pendiente)? Si el
+                        puntaje de Saber 11 aumenta en 10 puntos, ¿cu\'anto
+                        se espera que aumente el puntaje de Saber Pro?
+                \end{itemize}
+        \end{enumerate}
+
+  \item \textbf{Diagn\'ostico de residuos:} eval\'ue la calidad del ajuste del
+        modelo OLS.
+        \begin{enumerate}[label=\alph*)]
+          \item Calcule los residuos $\hat{\varepsilon}_i = y_i - \hat{y}_i$
+                y grafique:
+                \begin{itemize}
+                  \item Residuos vs.\ valores ajustados $\hat{y}_i$
+                  \item Q-Q plot de residuos
+                \end{itemize}
+          \item Interprete los gr\'aficos: ¿los residuos parecen cumplir los
+                supuestos de linealidad, homocedasticidad y normalidad?
+          \item Identifique las 3 observaciones con mayor residuo absoluto
+                (outliers potenciales). ¿Qu\'e caracter\'isticas tienen?
+        \end{enumerate}
+
+  \item \textbf{Bondad de ajuste ($R^2$):} eval\'ue el poder explicativo del
+        modelo.
+        \begin{enumerate}[label=\alph*)]
+          \item Reporte el coeficiente de determinaci\'on $R^2$ y el $R^2$
+                ajustado.
+          \item Interprete $R^2$: ¿qu\'e porcentaje de la variabilidad en el
+                puntaje de Saber Pro es explicado por el puntaje de Saber 11?
+          \item ¿El modelo tiene un buen ajuste? Justifique.
+        \end{enumerate}
+
+  \item \textbf{Predicci\'on:} use el modelo estimado para predecir el puntaje
+        de Saber Pro de un estudiante de NI que obtuvo 75 puntos en ingl\'es
+        en Saber 11.
+        \begin{enumerate}[label=\alph*)]
+          \item Calcule la predicci\'on puntual $\hat{y}$.
+          \item Calcule un intervalo de confianza al 95\% para la predicci\'on
+                usando \texttt{predict()} con \texttt{interval = "prediction"}.
+          \item Interprete el intervalo: ¿en qu\'e rango se espera que est\'e
+                el puntaje de Saber Pro con 95\% de confianza?
+        \end{enumerate}
+
+  \item \textbf{Conclusiones:} sintetice los hallazgos:
+        \begin{enumerate}[label=\alph*)]
+          \item ¿La distribuci\'on de niveles MCER es uniforme en NI?
+          \item ¿El puntaje de Saber 11 es un buen predictor del puntaje de
+                Saber Pro en ingl\'es?
+          \item ¿Qu\'e limitaciones tiene el modelo OLS simple estimado?
+        \end{enumerate}
+\end{enumerate}
+
+\vspace{10pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Cada entrega completa suma $+0.0625$ a la nota final.}
+\end{center}
+
+\end{document}

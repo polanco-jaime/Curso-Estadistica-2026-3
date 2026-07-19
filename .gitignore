@@ -1,2 +1,20 @@
 # Exámenes - contenido privado
 examenes/
+
+# LaTeX auxiliares
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+
+# Libros con copyright
+David_R*.pdf
+
+# macOS
+.DS_Store

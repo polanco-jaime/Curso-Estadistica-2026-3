@@ -1,0 +1,860 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+\title{Sesión 5: IC para Proporciones y Tamaño de Muestra}
+\subtitle{Completando la caja de herramientas de estimación}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\date{Viernes 18 de septiembre de 2026}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{IC para Proporciones}
+% ============================================================================
+
+\begin{frame}{Motivación: Estimar Proporciones}
+\textbf{Ejemplos de proporciones en educación}:
+\begin{itemize}
+  \item ¿Qué proporción de estudiantes de NI alcanza nivel B1 en inglés?
+  \item ¿Qué porcentaje de estudiantes aprueba el examen ICFES con más de 300 puntos globales?
+  \item ¿Cuál es la tasa de deserción en el primer año?
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Diferencia con medias}:
+\begin{itemize}
+  \item Variable de interés: \alert{categórica binaria} (éxito/fracaso, sí/no)
+  \item Codificación: 1 = éxito, 0 = fracaso
+  \item Proporción muestral: $\hat{p} = \frac{\text{número de éxitos}}{n} = \frac{x}{n}$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Objetivo}: Construir IC para la proporción poblacional $p$.
+\end{frame}
+
+\begin{frame}{Proporción Muestral $\hat{p}$}
+\begin{definition}[Proporción muestral]
+\[
+\hat{p} = \frac{x}{n}
+\]
+donde:
+\begin{itemize}
+  \item $x$ = número de éxitos en la muestra
+  \item $n$ = tamaño de la muestra
+  \item $\hat{p}$ estima la proporción poblacional $p$
+\end{itemize}
+\end{definition}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}: En una muestra de $n = 200$ estudiantes de NI, 140 superan B1 en inglés.
+\[
+\hat{p} = \frac{140}{200} = 0.70 = 70\%
+\]
+
+\vspace{0.3cm}
+\textbf{Conexión con Bernoulli}: Cada estudiante es un ensayo Bernoulli con probabilidad $p$ de éxito. Entonces $x \sim \text{Binomial}(n, p)$.
+\end{frame}
+
+\begin{frame}{Distribución Muestral de $\hat{p}$}
+\textbf{Propiedades}:
+\begin{itemize}
+  \item Valor esperado: $E(\hat{p}) = p$ (insesgado)
+  \item Varianza: $\text{Var}(\hat{p}) = \frac{p(1-p)}{n}$
+  \item Desviación estándar (error estándar): $\text{DE}(\hat{p}) = \sqrt{\frac{p(1-p)}{n}}$
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Teorema Central del Límite para proporciones}
+Si $n$ es suficientemente grande, entonces:
+\[
+\hat{p} \sim N\left(p, \frac{p(1-p)}{n}\right) \quad \text{aproximadamente}
+\]
+Es decir:
+\[
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1) \quad \text{aproximadamente}
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Condición de Aplicabilidad}
+\textbf{¿Cuándo es válida la aproximación normal?}
+
+\vspace{0.3cm}
+\begin{alertblock}{Regla empírica}
+La aproximación normal es adecuada si:
+\[
+n \cdot \hat{p} \geq 5 \quad \text{y} \quad n \cdot (1 - \hat{p}) \geq 5
+\]
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Interpretación}:
+\begin{itemize}
+  \item Necesitamos al menos 5 éxitos y 5 fracasos en la muestra
+  \item Garantiza que la distribución binomial no esté muy sesgada
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}: $n = 200$, $\hat{p} = 0.70$
+\begin{itemize}
+  \item $n \cdot \hat{p} = 200 \times 0.70 = 140 \geq 5$ \checkmark
+  \item $n \cdot (1 - \hat{p}) = 200 \times 0.30 = 60 \geq 5$ \checkmark
+  \item Aproximación normal es válida
+\end{itemize}
+\end{frame}
+
+\begin{frame}{IC para una Proporción}
+\textbf{Problema}: La fórmula teórica requiere conocer $p$, pero eso es lo que queremos estimar.
+
+\vspace{0.3cm}
+\textbf{Solución}: Reemplazar $p$ por $\hat{p}$ en el error estándar.
+
+\vspace{0.3cm}
+\begin{block}{IC al $(1-\alpha) \times 100\%$ para $p$}
+\[
+\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+Equivalentemente:
+\[
+\left( \hat{p} - z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}, \quad \hat{p} + z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \right)
+\]
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Nota}: Usamos $z$ (no $t$) porque la fórmula del error estándar ya usa $\hat{p}$ como estimador de $p$.
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Proporción de Estudiantes que Superan B1}
+\textbf{Contexto}: En los datos ICFES, definimos éxito como \variable{MOD\_INGLES\_PUNT} $\geq 160$ (aproximadamente B1).
+
+\begin{lstlisting}
+# Cargar datos
+icfes_ni <- read.csv("datos/icfes_ni_2023.csv")
+
+# Crear variable binaria (1 = supera B1, 0 = no supera)
+icfes_ni$supera_B1 <- ifelse(icfes_ni$MOD_INGLES_PUNT >= 160, 1, 0)
+
+# Calcular proporcion muestral
+n <- nrow(icfes_ni)
+x <- sum(icfes_ni$supera_B1, na.rm = TRUE)
+p_hat <- x / n
+
+cat("Tamano de muestra:", n)
+cat("\nExitos (supera B1):", x)
+cat("\nProporcion muestral:", round(p_hat, 4))
+
+# Verificar condicion de aplicabilidad
+cat("\nn*p_hat =", n * p_hat)
+cat("\nn*(1-p_hat) =", n * (1 - p_hat))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Calcular IC Manualmente}
+\begin{lstlisting}
+# IC al 95% usando la formula
+alpha <- 0.05
+z_critico <- qnorm(1 - alpha/2)
+
+# Error estandar
+ee <- sqrt(p_hat * (1 - p_hat) / n)
+
+# Margen de error
+E <- z_critico * ee
+
+# Limites del IC
+ic_inf <- p_hat - E
+ic_sup <- p_hat + E
+
+cat("Error estandar:", round(ee, 4))
+cat("\nMargen de error:", round(E, 4))
+cat("\nIC al 95%: (", round(ic_inf, 4), ",",
+    round(ic_sup, 4), ")")
+cat("\nEn porcentaje: (", round(ic_inf*100, 2), "%,",
+    round(ic_sup*100, 2), "%)")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Usar \code{prop.test()} en R}
+\R\ tiene funciones integradas para IC de proporciones:
+
+\begin{lstlisting}
+# Metodo 1: prop.test() (usa correccion de continuidad)
+resultado_prop <- prop.test(x, n, conf.level = 0.95)
+print(resultado_prop)
+
+# Extraer IC
+ic_prop <- resultado_prop$conf.int
+cat("\nIC con prop.test():", round(ic_prop, 4))
+
+# Metodo 2: binom.test() (metodo exacto, recomendado para n pequeno)
+resultado_binom <- binom.test(x, n, conf.level = 0.95)
+ic_binom <- resultado_binom$conf.int
+cat("\nIC con binom.test():", round(ic_binom, 4))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Diferencias}:
+\begin{itemize}
+  \item \code{prop.test()}: usa aproximación normal con corrección de continuidad
+  \item \code{binom.test()}: usa distribución binomial exacta (mejor para $n$ pequeño)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpretación del Resultado}
+\textbf{Ejemplo hipotético}: $n = 500$, $x = 360$, $\hat{p} = 0.72$
+
+\vspace{0.3cm}
+IC al 95\%: $(0.680, 0.760)$ o $(68.0\%, 76.0\%)$
+
+\vspace{0.3cm}
+\begin{exampleblock}{Interpretación}
+Estamos 95\% confiados de que la proporción poblacional de estudiantes de NI que superan el nivel B1 en inglés está entre 68\% y 76\%.
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Implicación práctica}:
+\begin{itemize}
+  \item Si la meta institucional es que al menos 75\% supere B1, no podemos afirmar con 95\% de confianza que se cumple (porque 75\% está en el límite superior)
+  \item Necesitaríamos más datos o un nivel de confianza menor
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{IC por Departamento}
+\textbf{Pregunta}: ¿Varía la proporción de estudiantes que superan B1 entre departamentos?
+
+\begin{lstlisting}
+library(dplyr)
+
+# Calcular IC de proporcion por departamento
+ic_prop_depto <- icfes_ni %>%
+  group_by(ESTU_DEPTO_RESIDE) %>%
+  summarise(
+    n = n(),
+    exitos = sum(supera_B1, na.rm = TRUE),
+    p_hat = exitos / n,
+    ee = sqrt(p_hat * (1 - p_hat) / n),
+    z_critico = qnorm(0.975),
+    ic_inf = p_hat - z_critico * ee,
+    ic_sup = p_hat + z_critico * ee
+  ) %>%
+  filter(n >= 30)  # Solo deptos con muestra suficiente
+
+# Ordenar por p_hat
+ic_prop_depto <- ic_prop_depto %>%
+  arrange(desc(p_hat))
+
+head(ic_prop_depto, 10)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Forest Plot de Proporciones}
+\begin{lstlisting}
+library(ggplot2)
+
+ggplot(ic_prop_depto,
+       aes(x = p_hat, y = reorder(ESTU_DEPTO_RESIDE, p_hat))) +
+  geom_point(size = 3, color = "darkgreen") +
+  geom_errorbarh(aes(xmin = ic_inf, xmax = ic_sup),
+                 height = 0.3, color = "darkgreen") +
+  geom_vline(xintercept = weighted.mean(ic_prop_depto$p_hat,
+                                         ic_prop_depto$n),
+             linetype = "dashed", color = "red") +
+  scale_x_continuous(labels = scales::percent) +
+  labs(x = "Proporcion que supera B1 (IC 95%)",
+       y = "Departamento",
+       title = "Proporcion de Estudiantes de NI que Superan B1 en Ingles",
+       subtitle = "Por departamento (n >= 30)") +
+  theme_minimal()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparar Dos Proporciones}
+\textbf{Pregunta}: ¿Difiere la proporción de estudiantes que superan B1 entre IES públicas y privadas?
+
+\begin{lstlisting}
+# Crear tabla de contingencia
+tabla <- table(icfes_ni$TIPO_IES, icfes_ni$supera_B1)
+print(tabla)
+
+# Prueba de proporciones (adelanto de pruebas de hipotesis)
+test_2prop <- prop.test(tabla, conf.level = 0.95)
+print(test_2prop)
+
+# Calcular IC separados
+ic_publica <- prop.test(tabla[1,2], sum(tabla[1,]), conf.level = 0.95)
+ic_privada <- prop.test(tabla[2,2], sum(tabla[2,]), conf.level = 0.95)
+
+cat("IC publica:", round(ic_publica$conf.int, 4))
+cat("\nIC privada:", round(ic_privada$conf.int, 4))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Nota}: Si los dos IC NO se solapan, hay evidencia de diferencia significativa.
+\end{frame}
+
+% ============================================================================
+\section{Tamaño de Muestra para Medias}
+% ============================================================================
+
+\begin{frame}{Planificación del Muestreo}
+\textbf{Pregunta inversa}: En lugar de calcular el IC dado $n$, ¿cuál debe ser $n$ para obtener un IC con un margen de error deseado?
+
+\vspace{0.3cm}
+\textbf{Aplicaciones}:
+\begin{itemize}
+  \item Encuesta de satisfacción: ¿cuántos estudiantes de NI encuestar para estimar el salario inicial promedio con error $\pm \$300{,}000$ COP?
+  \item Estudio de mercado: ¿cuántos usuarios de Rappi necesito para estimar el tiempo promedio de entrega con precisión de $\pm 2$ minutos?
+  \item Asignar presupuesto: más $n$ $\Rightarrow$ mayor costo de recolección
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Componentes del problema}:
+\begin{itemize}
+  \item Margen de error deseado $E$
+  \item Nivel de confianza $(1-\alpha)$
+  \item Estimación previa de la variabilidad ($\sigma$ o $s$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fórmula de Tamaño de Muestra para $\mu$}
+Recordemos que el margen de error es:
+\[
+E = z_{\alpha/2} \frac{\sigma}{\sqrt{n}}
+\]
+
+Despejando $n$:
+\[
+n = \left( \frac{z_{\alpha/2} \cdot \sigma}{E} \right)^2
+\]
+
+\vspace{0.3cm}
+\begin{block}{Tamaño de muestra para estimar $\mu$}
+\[
+n = \left( \frac{z_{\alpha/2} \cdot \sigma}{E} \right)^2
+\]
+donde:
+\begin{itemize}
+  \item $E$ = margen de error deseado
+  \item $\sigma$ = desviación estándar poblacional (estimada de un estudio piloto o literatura)
+\end{itemize}
+\textbf{Redondear siempre hacia arriba} para garantizar la precisión deseada.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Tamaño de Muestra para MOD\_INGLES\_PUNT}
+\textbf{Escenario}: Queremos estimar la media de \variable{MOD\_INGLES\_PUNT} en NI con un margen de error de $\pm 2$ puntos al 95\% de confianza. De estudios previos, sabemos que $\sigma \approx 18$.
+
+\begin{lstlisting}
+# Parametros
+E <- 2           # Margen de error deseado
+sigma <- 18      # Desviacion estandar estimada
+confianza <- 0.95
+alpha <- 1 - confianza
+
+# Valor critico
+z_critico <- qnorm(1 - alpha/2)
+
+# Calcular n
+n <- (z_critico * sigma / E)^2
+
+cat("z critico:", round(z_critico, 4))
+cat("\nn calculado:", n)
+cat("\nn redondeado hacia arriba:", ceiling(n))
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Resultado}: Necesitamos $n = \lceil 311.17 \rceil = 312$ estudiantes.
+\end{frame}
+
+\begin{frame}{Relación entre $n$, $E$, y Nivel de Confianza}
+\textbf{Efecto de diferentes parámetros}:
+
+\vspace{0.3cm}
+\begin{enumerate}
+  \item \textbf{Mayor precisión (menor $E$)} $\Rightarrow$ mayor $n$
+  \begin{itemize}
+    \item Si queremos $E = 1$ en lugar de $E = 2$, entonces $n$ se multiplica por $2^2 = 4$
+    \item $n \propto 1/E^2$
+  \end{itemize}
+
+  \item \textbf{Mayor confianza} $\Rightarrow$ mayor $n$
+  \begin{itemize}
+    \item 95\% de confianza: $z = 1.96$
+    \item 99\% de confianza: $z = 2.576$ ($+31\%$ más grande)
+    \item $n$ aumenta en $(2.576/1.96)^2 = 1.73$, es decir, 73\% más
+  \end{itemize}
+
+  \item \textbf{Mayor variabilidad ($\sigma$)} $\Rightarrow$ mayor $n$
+  \begin{itemize}
+    \item $n \propto \sigma^2$
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Sensibilidad del Tamaño de Muestra}
+\begin{lstlisting}
+# Explorar diferentes combinaciones
+library(tidyr)
+
+combinaciones <- expand.grid(
+  E = c(1, 2, 3, 5),
+  confianza = c(0.90, 0.95, 0.99)
+)
+
+combinaciones$z <- qnorm(1 - (1 - combinaciones$confianza)/2)
+combinaciones$n <- ceiling((combinaciones$z * sigma / combinaciones$E)^2)
+
+# Tabla pivotada
+tabla_n <- combinaciones %>%
+  select(E, confianza, n) %>%
+  pivot_wider(names_from = confianza, values_from = n,
+              names_prefix = "Conf_")
+
+print(tabla_n)
+\end{lstlisting}
+
+\vspace{0.3cm}
+\small
+\textbf{Interpretación}: A medida que $E$ disminuye o la confianza aumenta, $n$ crece rápidamente.
+\end{frame}
+
+\begin{frame}[fragile]{¿Qué Hacer si No Conocemos $\sigma$?}
+\textbf{Opciones}:
+
+\vspace{0.3cm}
+\begin{enumerate}
+  \item \textbf{Estudio piloto}: Tomar una muestra pequeña ($n_{\text{piloto}} = 30-50$), calcular $s$ y usar como estimación de $\sigma$.
+
+  \item \textbf{Literatura}: Buscar estudios previos similares y usar su $\sigma$ reportada.
+
+  \item \textbf{Rango}: Si conocemos el rango aproximado de la variable, usar $\sigma \approx \text{rango}/4$ o $\text{rango}/6$.
+\end{enumerate}
+
+\begin{lstlisting}
+# Ejemplo: estudio piloto
+piloto <- sample(icfes_ni$MOD_INGLES_PUNT, 50, replace = FALSE)
+sigma_estimado <- sd(piloto, na.rm = TRUE)
+
+cat("Sigma estimado del piloto:", round(sigma_estimado, 2))
+
+# Usar sigma_estimado para calcular n
+n_final <- ceiling((qnorm(0.975) * sigma_estimado / 2)^2)
+cat("\nTamano de muestra necesario:", n_final)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Tamaño de Muestra para Proporciones}
+% ============================================================================
+
+\begin{frame}{Fórmula de Tamaño de Muestra para $p$}
+Recordemos que el margen de error para una proporción es:
+\[
+E = z_{\alpha/2} \sqrt{\frac{p(1-p)}{n}}
+\]
+
+Despejando $n$:
+\[
+n = \frac{z_{\alpha/2}^2 \cdot p(1-p)}{E^2}
+\]
+
+\vspace{0.3cm}
+\begin{alertblock}{Problema}
+La fórmula requiere conocer $p$, pero eso es lo que queremos estimar.
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Soluciones}:
+\begin{itemize}
+  \item Usar una estimación previa $p^*$ (de estudios piloto o literatura)
+  \item Usar $p^* = 0.5$ (enfoque conservador)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Enfoque Conservador: $p^* = 0.5$}
+\textbf{Propiedad}: El producto $p(1-p)$ alcanza su máximo cuando $p = 0.5$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (0,0) -- (5.5,0) node[right] {$p$};
+  \draw[->] (0,0) -- (0,3) node[above] {$p(1-p)$};
+
+  \draw[domain=0:5, smooth, variable=\x, thick, blue, samples=100]
+    plot ({\x},{12*(\x/5)*(1-\x/5)});
+
+  \draw[dashed] (2.5,0) -- (2.5,3);
+  \node[below] at (2.5,0) {0.5};
+  \node[above] at (2.5,3) {max = 0.25};
+
+  \node[below] at (0,0) {0};
+  \node[below] at (5,0) {1};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{Implicación}: Usar $p^* = 0.5$ garantiza que $n$ será suficiente \alert{sin importar el valor verdadero de $p$}.
+
+\vspace{0.3cm}
+\begin{block}{Fórmula conservadora}
+\[
+n = \frac{z_{\alpha/2}^2 \cdot 0.25}{E^2} = \frac{z_{\alpha/2}^2}{4E^2}
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Tamaño de Muestra para Proporción}
+\textbf{Escenario}: Queremos estimar la proporción de estudiantes de NI que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$) con un margen de error de $\pm 3\%$ al 95\% de confianza.
+
+\begin{lstlisting}
+# Parametros
+E <- 0.03        # Margen de error (3%)
+confianza <- 0.95
+z_critico <- qnorm(1 - (1 - confianza)/2)
+
+# Metodo 1: Enfoque conservador (p* = 0.5)
+n_conservador <- ceiling((z_critico^2 * 0.25) / E^2)
+cat("n conservador (p*=0.5):", n_conservador)
+
+# Metodo 2: Estimacion previa (supongamos p* = 0.20)
+p_star <- 0.20
+n_estimado <- ceiling((z_critico^2 * p_star * (1 - p_star)) / E^2)
+cat("\nn con p*=0.20:", n_estimado)
+
+# Diferencia
+cat("\nAhorro de muestra:", n_conservador - n_estimado)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Comparación de Métodos}
+\textbf{Resultados del ejemplo}:
+\begin{itemize}
+  \item Con $p^* = 0.5$ (conservador): $n = 1068$
+  \item Con $p^* = 0.20$ (estimado): $n = 683$
+  \item Ahorro: $1068 - 683 = 385$ estudiantes (36\% menos)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Trade-off}:
+\begin{itemize}
+  \item \textbf{Conservador}: Garantiza precisión sin importar $p$, pero puede ser costoso
+  \item \textbf{Estimado}: Más eficiente, pero arriesgado si $p^*$ está muy lejos de $p$
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Recomendación}
+Si tienes una estimación razonable de $p$ (de un piloto o literatura), úsala. Si no, usa $p^* = 0.5$ para estar seguro.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Función en R para Tamaño de Muestra}
+\begin{lstlisting}
+# Funcion personalizada
+calcular_n_proporcion <- function(E, confianza = 0.95, p_star = 0.5) {
+  z <- qnorm(1 - (1 - confianza)/2)
+  n <- (z^2 * p_star * (1 - p_star)) / E^2
+  return(ceiling(n))
+}
+
+# Ejemplos de uso
+cat("n para E=0.03, conf=95%, p*=0.5:",
+    calcular_n_proporcion(0.03))
+
+cat("\nn para E=0.05, conf=95%, p*=0.5:",
+    calcular_n_proporcion(0.05))
+
+cat("\nn para E=0.03, conf=99%, p*=0.5:",
+    calcular_n_proporcion(0.03, confianza = 0.99))
+
+cat("\nn para E=0.03, conf=95%, p*=0.20:",
+    calcular_n_proporcion(0.03, p_star = 0.20))
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{Muestreo Estratificado y Consideraciones Prácticas}
+% ============================================================================
+
+\begin{frame}{Muestreo Aleatorio Simple vs Estratificado}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Muestreo Aleatorio Simple (MAS)}:
+\begin{itemize}
+  \item Cada elemento tiene igual probabilidad de selección
+  \item Fácil de implementar
+  \item Puede no ser representativo de subgrupos
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}: Seleccionar 500 estudiantes de NI al azar de toda Colombia.
+
+\column{0.48\textwidth}
+\textbf{Muestreo Estratificado}:
+\begin{itemize}
+  \item Dividir la población en \alert{estratos} homogéneos
+  \item Muestrear dentro de cada estrato
+  \item Garantiza representatividad
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}: Dividir por departamento, luego seleccionar proporcionalmente de cada uno.
+\end{columns}
+
+\vspace{0.5cm}
+\begin{block}{Estratos comunes en educación}
+\begin{itemize}
+  \item Departamento o región
+  \item Tipo de IES (pública/privada)
+  \item Nivel socioeconómico
+  \item Género
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Ventajas del Muestreo Estratificado}
+\textbf{1. Mayor precisión}:
+\begin{itemize}
+  \item Si los estratos son homogéneos internamente, la variabilidad dentro de cada estrato es menor que la variabilidad global
+  \item Esto reduce el error estándar de las estimaciones
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{2. Representatividad garantizada}:
+\begin{itemize}
+  \item Asegura que cada subgrupo importante esté representado
+  \item Evita muestras "raras" (por ejemplo, todos de Bogotá)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{3. Estimaciones por subgrupo}:
+\begin{itemize}
+  \item Permite calcular IC separados para cada estrato
+  \item Útil para comparaciones regionales
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{4. Eficiencia administrativa}:
+\begin{itemize}
+  \item Facilita la logística de recolección de datos
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Asignación Proporcional vs Óptima}
+\textbf{Asignación proporcional}:
+\[
+n_i = n \cdot \frac{N_i}{N}
+\]
+donde $N_i$ = tamaño del estrato $i$, $N$ = tamaño poblacional total.
+
+\vspace{0.3cm}
+\textbf{Ejemplo}: Si el 15\% de los estudiantes de NI están en Antioquia, asignamos el 15\% de la muestra a Antioquia.
+
+\vspace{0.3cm}
+\textbf{Asignación óptima (Neyman)}:
+\[
+n_i = n \cdot \frac{N_i \sigma_i}{\sum_{j=1}^k N_j \sigma_j}
+\]
+Asigna más muestra a estratos con \alert{mayor variabilidad} $\sigma_i$.
+
+\vspace{0.3cm}
+\begin{alertblock}{Limitación}
+La asignación óptima requiere conocer $\sigma_i$ de antemano (estudios piloto o literatura).
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Asignación Proporcional por Departamento}
+\begin{lstlisting}
+# Supongamos que queremos n = 1000 estudiantes de NI
+
+# Paso 1: Conocer la distribucion poblacional
+poblacion_depto <- icfes_ni %>%
+  count(ESTU_DEPTO_RESIDE, name = "N_i") %>%
+  mutate(peso = N_i / sum(N_i))
+
+# Paso 2: Asignar muestra proporcionalmente
+n_total <- 1000
+poblacion_depto$n_i <- ceiling(n_total * poblacion_depto$peso)
+
+# Ajuste fino: asegurar que sum(n_i) = n_total
+exceso <- sum(poblacion_depto$n_i) - n_total
+if (exceso > 0) {
+  # Reducir de los estratos mas grandes
+  poblacion_depto$n_i[order(-poblacion_depto$N_i)[1:exceso]] <-
+    poblacion_depto$n_i[order(-poblacion_depto$N_i)[1:exceso]] - 1
+}
+
+print(poblacion_depto)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Consideraciones Prácticas en el Diseño Muestral}
+\textbf{1. Costo vs Precisión}:
+\begin{itemize}
+  \item Mayor $n$ $\Rightarrow$ mayor precisión, pero también mayor costo
+  \item Equilibrio: ¿cuánta precisión necesitamos realmente?
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{2. Tasa de respuesta}:
+\begin{itemize}
+  \item No todos los seleccionados responderán
+  \item Ajustar: si esperamos 70\% de respuesta y queremos $n = 500$, seleccionar $500/0.7 \approx 715$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{3. Datos faltantes}:
+\begin{itemize}
+  \item Aumentar $n$ para compensar valores perdidos
+  \item Métodos de imputación
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{4. Poder estadístico}:
+\begin{itemize}
+  \item Para pruebas de hipótesis (próximas sesiones), $n$ debe ser suficiente para \alert{detectar} diferencias relevantes
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Resumen de toda la Unidad 2}
+% ============================================================================
+
+\begin{frame}{Tabla Maestra de Intervalos de Confianza}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{2cm}p{3.5cm}p{4.5cm}}
+\toprule
+\textbf{Parámetro} & \textbf{Condiciones} & \textbf{IC al $(1-\alpha) \times 100\%$} \\
+\midrule
+$\mu$ & $\sigma$ conocida, $n$ grande o población normal & $\bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}$ \\[0.3cm]
+$\mu$ & $\sigma$ desconocida, población normal o $n \geq 30$ & $\bar{x} \pm t_{\alpha/2,n-1} \frac{s}{\sqrt{n}}$ \\[0.3cm]
+$\sigma^2$ & Población normal & $\left(\frac{(n-1)s^2}{\chi^2_{\alpha/2}}, \frac{(n-1)s^2}{\chi^2_{1-\alpha/2}}\right)$ \\[0.3cm]
+$p$ & $n\hat{p} \geq 5$ y $n(1-\hat{p}) \geq 5$ & $\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Tabla de Tamaño de Muestra}
+\begin{table}
+\centering
+\small
+\begin{tabular}{llp{5cm}}
+\toprule
+\textbf{Parámetro} & \textbf{Fórmula} & \textbf{Notas} \\
+\midrule
+$\mu$ & $n = \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2$ & Requiere estimación previa de $\sigma$ \\[0.3cm]
+$p$ & $n = \frac{z_{\alpha/2}^2 \cdot p^*(1-p^*)}{E^2}$ & Usar $p^* = 0.5$ si no hay estimación previa \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\textbf{Recordar}: Siempre redondear $n$ hacia arriba.
+\end{frame}
+
+\begin{frame}{Conexión con Pruebas de Hipótesis}
+\textbf{Adelanto de la próxima unidad}:
+
+\vspace{0.3cm}
+\begin{block}{Relación IC - Pruebas de hipótesis}
+Si un IC al $(1-\alpha) \times 100\%$ NO contiene un valor $\theta_0$, entonces rechazamos $H_0: \theta = \theta_0$ al nivel de significancia $\alpha$.
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Ejemplo}:
+\begin{itemize}
+  \item IC al 95\% para $\mu$: $(162, 168)$
+  \item $H_0: \mu = 160$ vs $H_1: \mu \neq 160$
+  \item Como 160 NO está en $(162, 168)$, rechazamos $H_0$ al nivel $\alpha = 0.05$
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Ventaja de los IC}: Proporcionan más información que solo "rechazar" o "no rechazar" $H_0$. Dan un rango de valores plausibles.
+\end{frame}
+
+\begin{frame}{Resumen Conceptual de la Unidad 2}
+\textbf{Lógica general de la inferencia}:
+
+\vspace{0.3cm}
+\begin{enumerate}
+  \item \textbf{Muestra}: Observamos datos de una muestra aleatoria
+  \item \textbf{Estadístico}: Calculamos un estimador puntual ($\bar{x}$, $\hat{p}$, $s^2$)
+  \item \textbf{Distribución muestral}: Sabemos cómo se comporta el estadístico (TLC, distribuciones $t$, $\chi^2$)
+  \item \textbf{IC}: Construimos un intervalo que probablemente contiene el parámetro
+  \item \textbf{Interpretación}: Comunicamos incertidumbre de forma cuantitativa
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Próximos pasos}:
+\begin{itemize}
+  \item Unidad 3: Pruebas de hipótesis (¿es $\mu$ significativamente diferente de un valor?)
+  \item Unidad 4: Regresión lineal (¿cómo se relacionan dos variables?)
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+\section{Conclusiones}
+% ============================================================================
+
+\begin{frame}{Resumen de la Sesión}
+\textbf{Hoy aprendimos}:
+\begin{enumerate}
+  \item \textbf{IC para proporciones}:
+  \begin{itemize}
+    \item $\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$
+    \item Condición: $n\hat{p} \geq 5$ y $n(1-\hat{p}) \geq 5$
+    \item Funciones en R: \code{prop.test()}, \code{binom.test()}
+  \end{itemize}
+
+  \item \textbf{Tamaño de muestra para medias}:
+  \begin{itemize}
+    \item $n = \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2$
+  \end{itemize}
+
+  \item \textbf{Tamaño de muestra para proporciones}:
+  \begin{itemize}
+    \item $n = \frac{z_{\alpha/2}^2 \cdot p^*(1-p^*)}{E^2}$
+    \item Enfoque conservador: $p^* = 0.5$
+  \end{itemize}
+
+  \item \textbf{Muestreo estratificado}: Mayor precisión y representatividad
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Próxima sesión}: Fundamentos de pruebas de hipótesis ($H_0$, $H_1$, p-valor, errores tipo I y II).
+\end{frame}
+
+\begin{frame}{Ejercicios para la Próxima Clase}
+\textbf{Con los datos de ICFES}:
+\begin{enumerate}
+  \item Calcular IC al 95\% para la proporción de estudiantes de NI que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$)
+  \item Crear forest plot de proporciones por región (Caribe, Andina, Pacífico, etc.)
+  \item Determinar el tamaño de muestra necesario para estimar la media de \variable{MOD\_RAZONA\_CUANTITAT} con error $\pm 3$ puntos al 99\% de confianza
+  \item Comparar IC de proporción de aprobación (puntaje global $\geq 300$) entre IES públicas y privadas
+  \item \textbf{Desafío}: Diseñar un muestreo estratificado por departamento con asignación proporcional para $n = 800$
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Lectura}: Anderson et al., Capítulos 8-9 (Estimación e Intervalos de Confianza)
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Large
+¡Gracias por su atención!
+
+\vspace{1cm}
+\normalsize
+Preguntas y discusión
+\end{center}
+\end{frame}
+
+\end{document}
