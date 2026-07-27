@@ -216,10 +216,9 @@ write_parquet(saber11, "saber11/saber11.parquet")
 cat("  -> saber11/saber11.parquet guardado:", nrow(saber11), "filas\n")
 
 # --- Cruce Saber11 - SaberPro ------------------------------------------------
-cat("Extrayendo cruce Saber11-SaberPro...\n")
-sql_cruce <- "SELECT * FROM `ph-jabri.ICFES.Saber11_SaberPro`"
-cruce <- bq_project_query(proyecto_bq, sql_cruce) |>
-  bq_table_download()
+cat("Leyendo cruce Saber11-SaberPro desde archivo local...\n")
+cruce <- read.csv("cruce/Cruce Examen Saber 11 - Examen Saber Pro.txt",
+                   sep = ";", header = TRUE, stringsAsFactors = FALSE)
 write_parquet(cruce, "cruce/cruce_saber11_saberpro.parquet")
 cat("  -> cruce/cruce_saber11_saberpro.parquet guardado:", nrow(cruce), "filas\n")
 
