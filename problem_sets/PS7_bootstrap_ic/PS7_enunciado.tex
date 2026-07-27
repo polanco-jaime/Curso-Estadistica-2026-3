@@ -37,23 +37,51 @@ Asignado: Octubre 16 (Sesi\'on 9) \quad$|$\quad Entrega: Octubre 30 (Sesi\'on 10
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Este PS utiliza los tres datasets del repositorio del curso:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
+cruce     <- read_parquet("datos/cruce/cruce_saber11_saberpro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l l}
+\toprule
+\textbf{Variable} & \textbf{Dataset} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}  & Saber Pro & Puntaje m\'odulo de ingl\'es           & Num\'erico \\
+\texttt{MOD\_INGLES\_DESEM} & Saber Pro & Nivel MCER (A$-$, A1, A2, B1, B+)    & Categ\'orico \\
+\texttt{PUNT\_INGLES}       & Saber 11  & Puntaje prueba de ingl\'es             & Num\'erico \\
+\texttt{estu\_consecutivo\_sb11}  & Cruce & Llave para vincular con Saber 11  & ID \\
+\texttt{estu\_consecutivo\_sbpro} & Cruce & Llave para vincular con Saber Pro & ID \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\textit{Para cruzar las bases, use el archivo de cruce que vincula
+\texttt{ESTU\_CONSECUTIVO} de Saber 11 con \texttt{ESTU\_CONSECUTIVO}
+de Saber Pro.}
 
 \section*{Enunciado}
 
 En este Problem Set evaluar\'a si la distribuci\'on de niveles de ingl\'es
-seg\'un el MCER es uniforme entre estudiantes de Negocios Internacionales (NI),
-y estimar\'a un modelo de regresi\'on lineal simple para predecir el rendimiento
-en Saber Pro a partir de Saber 11.
+seg\'un el MCER es uniforme, y estimar\'a un modelo de regresi\'on lineal
+simple para predecir el rendimiento en Saber Pro a partir de Saber 11.
 
 \begin{enumerate}[label=\arabic*)]
   \item \textbf{Prueba $\chi^2$ de bondad de ajuste:} ¿los niveles de ingl\'es
         seg\'un el Marco Com\'un Europeo de Referencia (MCER) se distribuyen
-        uniformemente entre los estudiantes de NI?
+        uniformemente entre los estudiantes?
         \begin{enumerate}[label=\alph*)]
           \item Construya una tabla de frecuencias observadas para los niveles
                 MCER (A$-$, A1, A2, B1, B2) en la variable
@@ -79,8 +107,8 @@ en Saber Pro a partir de Saber 11.
         del puntaje de ingl\'es en Saber 11 (\texttt{PUNT\_INGLES}).
         \begin{enumerate}[label=\alph*)]
           \item Prepare los datos: cruce las bases de Saber 11 y Saber Pro
-                usando el dataset \texttt{ph-jabri.ICFES.Saber11\_SaberPro}.
-                Filtre estudiantes de NI con datos completos en ambas pruebas.
+                usando el archivo de cruce (\texttt{cruce\_saber11\_saberpro.parquet}).
+                Filtre estudiantes con datos completos en ambas pruebas.
           \item Grafique un diagrama de dispersi\'on (scatterplot) de
                 \texttt{PUNT\_INGLES} (eje $x$) vs.\
                 \texttt{MOD\_INGLES\_PUNT} (eje $y$). ¿Observa una relaci\'on
@@ -126,7 +154,7 @@ en Saber Pro a partir de Saber 11.
         \end{enumerate}
 
   \item \textbf{Predicci\'on:} use el modelo estimado para predecir el puntaje
-        de Saber Pro de un estudiante de NI que obtuvo 75 puntos en ingl\'es
+        de Saber Pro de un estudiante que obtuvo 75 puntos en ingl\'es
         en Saber 11.
         \begin{enumerate}[label=\alph*)]
           \item Calcule la predicci\'on puntual $\hat{y}$.
@@ -138,7 +166,7 @@ en Saber Pro a partir de Saber 11.
 
   \item \textbf{Conclusiones:} sintetice los hallazgos:
         \begin{enumerate}[label=\alph*)]
-          \item ¿La distribuci\'on de niveles MCER es uniforme en NI?
+          \item ¿La distribuci\'on de niveles MCER es uniforme?
           \item ¿El puntaje de Saber 11 es un buen predictor del puntaje de
                 Saber Pro en ingl\'es?
           \item ¿Qu\'e limitaciones tiene el modelo OLS simple estimado?

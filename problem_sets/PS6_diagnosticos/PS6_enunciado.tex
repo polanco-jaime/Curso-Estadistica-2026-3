@@ -36,22 +36,43 @@ Asignado: Septiembre 25 (Sesi\'on 6) \quad$|$\quad Entrega: Octubre 2 (Sesi\'on 
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Los datos se encuentran en el repositorio del curso en formato Parquet:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variable} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}       & Puntaje m\'odulo de ingl\'es         & Num\'erico \\
+\texttt{MOD\_INGLES\_DESEM}      & Nivel MCER (A$-$, A1, A2, B1, B+)  & Categ\'orico \\
+\texttt{FAMI\_ESTRATOVIVIENDA}   & Estrato socioecon\'omico (1--6)     & Ordinal \\
+\texttt{ESTU\_GENERO}            & G\'enero del estudiante              & Categ\'orico \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
-En este Problem Set explorar\'a diferencias en el puntaje de ingl\'es de
-estudiantes de Negocios Internacionales (NI) seg\'un diferentes variables
-categ\'oricas, usando ANOVA, pruebas no param\'etricas y medidas de asociaci\'on.
+En este Problem Set explorar\'a diferencias en el puntaje de ingl\'es
+seg\'un diferentes variables categ\'oricas, usando ANOVA, pruebas no
+param\'etricas y medidas de asociaci\'on.
 
 \begin{enumerate}[label=\arabic*)]
   \item \textbf{ANOVA de una v\'ia por estrato socioecon\'omico:} ¿var\'ia el
         puntaje de ingl\'es en Saber Pro (\texttt{MOD\_INGLES\_PUNT}) seg\'un el
-        estrato socioecon\'omico de los estudiantes de NI?
+        estrato socioecon\'omico de los estudiantes?
         \begin{enumerate}[label=\alph*)]
           \item Plantee las hip\'otesis del ANOVA:
                 \[
@@ -81,7 +102,7 @@ categ\'oricas, usando ANOVA, pruebas no param\'etricas y medidas de asociaci\'on
         \end{enumerate}
 
   \item \textbf{Prueba de Mann-Whitney por g\'enero:} ¿difiere el puntaje de
-        ingl\'es entre hombres y mujeres en NI?
+        ingl\'es entre hombres y mujeres en Saber Pro?
         \begin{enumerate}[label=\alph*)]
           \item Justifique por qu\'e puede ser apropiado usar una prueba no
                 param\'etrica (Mann-Whitney) en lugar de la prueba $t$.
@@ -94,7 +115,7 @@ categ\'oricas, usando ANOVA, pruebas no param\'etricas y medidas de asociaci\'on
 
   \item \textbf{Prueba $\chi^2$ de independencia: g\'enero $\times$ nivel MCER:}
         ¿existe asociaci\'on entre el g\'enero y el nivel de ingl\'es seg\'un
-        el MCER (A$-$, A1, A2, B1, B2) en NI?
+        el MCER (A$-$, A1, A2, B1, B2) en Saber Pro?
         \begin{enumerate}[label=\alph*)]
           \item Construya una tabla de contingencia cruzando g\'enero con
                 nivel MCER (\texttt{table()}).
@@ -124,7 +145,7 @@ categ\'oricas, usando ANOVA, pruebas no param\'etricas y medidas de asociaci\'on
         \begin{enumerate}[label=\alph*)]
           \item ¿El estrato socioecon\'omico explica diferencias en el puntaje
                 de ingl\'es? ¿Cu\'ales estratos difieren?
-          \item ¿Existe brecha de g\'enero en ingl\'es en NI?
+          \item ¿Existe brecha de g\'enero en ingl\'es en Saber Pro?
           \item ¿El nivel de ingl\'es MCER est\'a asociado con el g\'enero?
         \end{enumerate}
 \end{enumerate}

@@ -37,19 +37,50 @@ Asignado: Octubre 30 (Sesi\'on 10) \quad$|$\quad Entrega: Noviembre 13 (Sesi\'on
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse. Este PS integra los conceptos de regresi\'on
 m\'ultiple y diagn\'osticos avanzados como cierre del curso.
 
-\vspace{10pt}
+\section*{Datos}
+
+Este PS utiliza los tres datasets del repositorio del curso:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
+cruce     <- read_parquet("datos/cruce/cruce_saber11_saberpro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l l}
+\toprule
+\textbf{Variable} & \textbf{Dataset} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}          & Saber Pro & Puntaje ingl\'es (variable dependiente)  & Num\'erico \\
+\texttt{PUNT\_INGLES}               & Saber 11  & Puntaje ingl\'es                         & Num\'erico \\
+\texttt{PUNT\_MATEMATICAS}          & Saber 11  & Puntaje matem\'aticas                    & Num\'erico \\
+\texttt{PUNT\_LECTURA\_CRITICA}     & Saber 11  & Puntaje lectura cr\'itica                & Num\'erico \\
+\texttt{PUNT\_SOCIALES\_CIUDADANAS} & Saber 11  & Puntaje sociales y ciudadanas            & Num\'erico \\
+\texttt{PUNT\_C\_NATURALES}         & Saber 11  & Puntaje ciencias naturales               & Num\'erico \\
+\texttt{estu\_consecutivo\_sb11}    & Cruce     & Llave para vincular con Saber 11         & ID \\
+\texttt{estu\_consecutivo\_sbpro}   & Cruce     & Llave para vincular con Saber Pro        & ID \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\textit{Use el archivo de cruce para vincular \texttt{ESTU\_CONSECUTIVO}
+de Saber 11 con \texttt{ESTU\_CONSECUTIVO} de Saber Pro.}
 
 \section*{Enunciado}
 
 En este Problem Set (capstone) estimar\'a un modelo de regresi\'on lineal
-m\'ultiple para predecir el puntaje de ingl\'es en Saber Pro de estudiantes
-de Negocios Internacionales (NI), usando m\'ultiples regresores de Saber 11,
-y realizar\'a un diagn\'ostico exhaustivo del modelo.
+m\'ultiple para predecir el puntaje de ingl\'es en Saber Pro usando
+m\'ultiples regresores de Saber 11, y realizar\'a un diagn\'ostico exhaustivo
+del modelo.
 
 \begin{enumerate}[label=\arabic*)]
   \item \textbf{Modelo OLS m\'ultiple con regresores de Saber 11:} estime un
@@ -177,7 +208,7 @@ y realizar\'a un diagn\'ostico exhaustivo del modelo.
         an\'alisis completo.
         \begin{enumerate}[label=\alph*)]
           \item ¿Cu\'ales son los principales determinantes del puntaje de
-                ingl\'es en Saber Pro para estudiantes de NI?
+                ingl\'es en Saber Pro para estudiantes?
           \item ¿El modelo cumple razonablemente los supuestos de Gauss-Markov?
                 ¿Qu\'e violaciones identific\'o?
           \item Si tuviera que recomendar un solo ajuste al modelo para
@@ -185,7 +216,7 @@ y realizar\'a un diagn\'ostico exhaustivo del modelo.
                 regresor por VIF alto, usar errores robustos, excluir outliers,
                 transformar variables).
           \item ¿El modelo tiene utilidad pr\'actica para predecir el
-                rendimiento en Saber Pro de futuros estudiantes de NI?
+                rendimiento en Saber Pro de futuros estudiantes?
         \end{enumerate}
 \end{enumerate}
 

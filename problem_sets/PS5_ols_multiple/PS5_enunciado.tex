@@ -36,22 +36,40 @@ Asignado: Septiembre 18 (Sesi\'on 5) \quad$|$\quad Entrega: Septiembre 25 (Sesi\
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Los datos se encuentran en el repositorio del curso en formato Parquet:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variable} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT} & Puntaje m\'odulo de ingl\'es     & Num\'erico \\
+\texttt{INST\_ORIGEN}      & Tipo de IES: Oficial / Privada  & Categ\'orico \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
-Los estudiantes de Negocios Internacionales (NI) deben alcanzar una competencia
-s\'olida en ingl\'es para su desempe\~no profesional. En este Problem Set
-evaluar\'a si el puntaje promedio de ingl\'es en Saber Pro difiere del umbral
-de referencia nacional y si existen diferencias entre IES p\'ublicas y privadas.
+En este Problem Set evaluar\'a si el puntaje promedio de ingl\'es en Saber Pro
+difiere de un umbral de referencia y si existen diferencias entre IES p\'ublicas
+y privadas.
 
 \begin{enumerate}[label=\arabic*)]
   \item \textbf{Prueba $t$ de una muestra:} ¿el puntaje promedio de ingl\'es
-        en Saber Pro (\texttt{MOD\_INGLES\_PUNT}) de los estudiantes de NI
+        en Saber Pro (\texttt{MOD\_INGLES\_PUNT}) de los estudiantes
         difiere significativamente de 160 puntos?
         \begin{enumerate}[label=\alph*)]
           \item Plantee las hip\'otesis nula y alternativa:
@@ -67,7 +85,7 @@ de referencia nacional y si existen diferencias entre IES p\'ublicas y privadas.
         \end{enumerate}
 
   \item \textbf{Prueba $t$ de dos muestras independientes:} ¿existe diferencia
-        significativa en el puntaje de ingl\'es entre estudiantes de NI de
+        significativa en el puntaje de ingl\'es entre estudiantes de
         instituciones p\'ublicas y privadas?
         \begin{enumerate}[label=\alph*)]
           \item Plantee $H_0$ y $H_1$ para la comparaci\'on de medias.
@@ -109,7 +127,7 @@ de referencia nacional y si existen diferencias entre IES p\'ublicas y privadas.
 
   \item \textbf{Conclusiones:} sintetice los hallazgos principales:
         \begin{enumerate}[label=\alph*)]
-          \item ¿El puntaje promedio de NI difiere del umbral de 160 puntos?
+          \item ¿El puntaje promedio difiere del umbral de 160 puntos?
           \item ¿Existe brecha p\'ublico--privado en ingl\'es? ¿Es grande?
           \item ¿El tama\~no de muestra actual es adecuado para detectar
                 diferencias relevantes?

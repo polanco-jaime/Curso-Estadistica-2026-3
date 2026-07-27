@@ -38,11 +38,31 @@ Asignado: Agosto 21 (Sesi\'on 3) \quad$|$\quad Entrega: Septiembre 11 (Sesi\'on 
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Este PS utiliza dos datasets del repositorio del curso:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l l}
+\toprule
+\textbf{Variable} & \textbf{Dataset} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT} & Saber Pro & Puntaje m\'odulo de ingl\'es  & Num\'erico \\
+\texttt{PUNT\_INGLES}      & Saber 11  & Puntaje prueba de ingl\'es   & Num\'erico \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
@@ -51,8 +71,7 @@ normal y una simulaci\'on del Teorema Central del L\'imite (TCL).
 
 \subsection*{Parte 1: Ejercicios con la Distribuci\'on Normal}
 
-Usando la variable \texttt{MOD\_INGLES\_PUNT} (puntaje de ingl\'es en Saber Pro)
-para estudiantes de Negocios Internacionales (NI):
+Usando la variable \texttt{MOD\_INGLES\_PUNT} (puntaje de ingl\'es en Saber Pro):
 
 \begin{enumerate}[label=\alph*)]
   \item \textbf{Par\'ametros:} calcule la media $\mu$ y desviaci\'on est\'andar

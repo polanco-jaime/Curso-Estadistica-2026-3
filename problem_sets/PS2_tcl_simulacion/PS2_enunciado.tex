@@ -37,17 +37,43 @@ Asignado: Agosto 14 (Sesi\'on 2) \quad$|$\quad Entrega: Agosto 21 (Sesi\'on 3)
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Los datos se encuentran en el repositorio del curso en formato Parquet:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variable} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}           & Puntaje m\'odulo de ingl\'es        & Num\'erico \\
+\texttt{MOD\_RAZONA\_CUANTITAT\_PUNT} & Puntaje razonamiento cuantitativo  & Num\'erico \\
+\texttt{MOD\_LECTURA\_CRITICA\_PUNT}  & Puntaje lectura cr\'itica           & Num\'erico \\
+\texttt{MOD\_COMPETEN\_CIUDADA\_PUNT} & Puntaje competencias ciudadanas    & Num\'erico \\
+\texttt{MOD\_COMUNICA\_ESCRITA\_PUNT} & Puntaje comunicaci\'on escrita      & Num\'erico \\
+\texttt{MOD\_INGLES\_DESEM}           & Nivel MCER (A$-$, A1, A2, B1, B+) & Categ\'orico \\
+\texttt{ESTU\_GENERO}                & G\'enero del estudiante              & Categ\'orico \\
+\texttt{INST\_ORIGEN}                & Tipo de IES: Oficial / Privada     & Categ\'orico \\
+\texttt{FAMI\_ESTRATOVIVIENDA}       & Estrato socioecon\'omico (1--6)     & Ordinal \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
 \begin{enumerate}[label=\alph*)]
-  \item \textbf{Matriz de correlaciones:} usando los datos de Saber Pro para
-        Negocios Internacionales (NI), calcule la matriz de correlaciones de
+  \item \textbf{Matriz de correlaciones:} usando los datos de Saber Pro,
+        calcule la matriz de correlaciones de
         Pearson y de Spearman para los 5 m\'odulos:
         \begin{itemize}
           \item \texttt{MOD\_INGLES\_PUNT}

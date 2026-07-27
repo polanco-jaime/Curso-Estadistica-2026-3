@@ -37,21 +37,41 @@ Asignado: Julio 31 (Sesi\'on 1) \quad$|$\quad Entrega: Agosto 14 (Sesi\'on 2)
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES del programa de Negocios Internacionales (NI). La entrega es
-digital al inicio de la clase indicada. El c\'odigo R debe incluirse.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada. El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Los datos se encuentran en el repositorio del curso en formato Parquet:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variable} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}       & Puntaje m\'odulo de ingl\'es (Saber Pro) & Num\'erico \\
+\texttt{ESTU\_DEPTO\_RESIDE}     & Departamento de residencia del estudiante & Categ\'orico \\
+\texttt{INST\_ORIGEN}            & Tipo de IES: Oficial / Privada & Categ\'orico \\
+\texttt{FAMI\_ESTRATOVIVIENDA}   & Estrato socioecon\'omico (1--6) & Ordinal \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
 Realice un an\'alisis descriptivo completo de la variable \texttt{MOD\_INGLES\_PUNT}
-(puntaje de ingl\'es en Saber Pro) para estudiantes de Negocios Internacionales (NI).
+(puntaje de ingl\'es en Saber Pro).
 Su an\'alisis debe incluir:
 
 \begin{enumerate}[label=\alph*)]
   \item \textbf{Medidas de tendencia central:} calcule la media, mediana y moda de
-        \texttt{MOD\_INGLES\_PUNT} para el conjunto completo de datos de NI.
+        \texttt{MOD\_INGLES\_PUNT} para el conjunto completo de datos.
 
   \item \textbf{Medidas de dispersi\'on:} calcule la desviaci\'on est\'andar, varianza,
         rango y rango intercuart\'ilico (IQR).

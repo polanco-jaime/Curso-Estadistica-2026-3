@@ -37,17 +37,36 @@ Asignado: Septiembre 11 (Sesi\'on 4) \quad$|$\quad Entrega: Septiembre 18 (Sesi\
 {\centering\small Repositorio: \url{https://github.com/polanco-jaime/Curso-Estadistica-2026-3}\par}
 \vspace{6pt}
 
-\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R sobre
-microdatos ICFES. La entrega es digital al inicio de la clase indicada.
+\textbf{Instrucciones.} Este Problem Set es individual y se resuelve en R.
+La entrega es digital al inicio de la clase indicada.
 El c\'odigo R debe incluirse.
 
-\vspace{10pt}
+\section*{Datos}
+
+Los datos se encuentran en el repositorio del curso en formato Parquet:
+
+\begin{lstlisting}
+library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+\end{lstlisting}
+
+\textbf{Diccionario de variables utilizadas:}
+
+\vspace{4pt}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variable} & \textbf{Descripci\'on} & \textbf{Tipo} \\
+\midrule
+\texttt{MOD\_INGLES\_PUNT}       & Puntaje m\'odulo de ingl\'es         & Num\'erico \\
+\texttt{MOD\_INGLES\_DESEM}      & Nivel MCER (A$-$, A1, A2, B1, B+)  & Categ\'orico \\
+\texttt{ESTU\_DEPTO\_RESIDE}     & Departamento de residencia          & Categ\'orico \\
+\bottomrule
+\end{tabular}
 
 \section*{Enunciado}
 
-Utilizando la variable \texttt{MOD\_INGLES\_PUNT} (puntaje de ingl\'es en Saber Pro)
-para estudiantes de Negocios Internacionales (NI), construya intervalos de confianza
-y analice la precisi\'on de la estimaci\'on.
+Utilizando la variable \texttt{MOD\_INGLES\_PUNT} (puntaje de ingl\'es en Saber Pro),
+construya intervalos de confianza y analice la precisi\'on de la estimaci\'on.
 
 \begin{enumerate}[label=\alph*)]
   \item \textbf{IC para la media global:} calcule un intervalo de confianza al
@@ -80,12 +99,12 @@ y analice la precisi\'on de la estimaci\'on.
         ¿Qu\'e departamentos se distinguen significativamente de la media nacional?
 
   \item \textbf{IC para una proporci\'on:} calcule un intervalo de confianza al
-        95\% para la proporci\'on de estudiantes de NI que superan el nivel B1 en
+        95\% para la proporci\'on de estudiantes que superan el nivel B1 en
         ingl\'es (es decir, \texttt{MOD\_INGLES\_DESEM} $\in \{\text{B1, B+}\}$).
         Use \texttt{prop.test()}.
         \begin{itemize}
           \item Reporte el intervalo $[\,\underline{p},\, \overline{p}\,]$.
-          \item Interprete el resultado. ¿Qu\'e porcentaje de estudiantes NI alcanza
+          \item Interprete el resultado. ¿Qu\'e porcentaje de estudiantes alcanza
                 B1 o superior?
         \end{itemize}
 
