@@ -75,7 +75,6 @@ fi
 
 echo "[sync] Preparando commit..."
 git add -A
-git add -f -- '*.pdf' 2>/dev/null || true
 
 # No commitear si no hay cambios staged
 if git diff --cached --quiet 2>/dev/null; then
