@@ -40,27 +40,30 @@ Una \textbf{hipótesis estadística} es una afirmación sobre un parámetro pobl
 \end{frame}
 
 \begin{frame}{Hipótesis Nula vs Hipótesis Alternativa}
+\begin{columns}[T]
+\column{0.48\textwidth}
 \begin{block}{Hipótesis nula ($H_0$)}
 \begin{itemize}
-  \item La afirmación que se asume verdadera inicialmente
-  \item Generalmente de "no diferencia" o "no efecto"
-  \item Siempre contiene igualdad: $=$, $\leq$, o $\geq$
-  \item Es lo que buscamos \alert{rechazar} con evidencia
+  \item Se asume verdadera inicialmente
+  \item ``No diferencia'' o ``no efecto''
+  \item Contiene igualdad: $=$, $\leq$, $\geq$
+  \item Buscamos \alert{rechazarla} con evidencia
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
+\column{0.48\textwidth}
 \begin{block}{Hipótesis alternativa ($H_1$ o $H_a$)}
 \begin{itemize}
   \item La afirmación que queremos probar
-  \item Refleja nuestro interés de investigación
+  \item Refleja el interés de investigación
   \item Contiene: $\neq$, $<$, o $>$
-  \item Solo la aceptamos si hay \alert{evidencia fuerte} contra $H_0$
+  \item Solo la aceptamos con \alert{evidencia fuerte}
 \end{itemize}
 \end{block}
+\end{columns}
 
 \vspace{0.3cm}
-\textbf{Analogía jurídica}: $H_0$ = "inocente", $H_1$ = "culpable". Asumimos inocencia hasta que se pruebe culpabilidad.
+\textbf{Analogía jurídica}: $H_0$ = ``inocente'', $H_1$ = ``culpable''. Asumimos inocencia hasta que se pruebe culpabilidad.
 \end{frame}
 
 \begin{frame}{Tres Formas de la Hipótesis Alternativa}
@@ -471,11 +474,8 @@ donde:
 \begin{frame}[fragile]{Ejemplo: ¿La Media de Inglés es Mayor que 155? (1/2)}
 \textbf{Pregunta}: ¿El puntaje promedio de \variable{MOD\_INGLES\_PUNT} en NI es significativamente mayor que 155?
 
-\vspace{0.3cm}
-\textbf{Hipótesis}:
-\[
-H_0: \mu \leq 155 \quad \text{vs} \quad H_1: \mu > 155
-\]
+\smallskip
+\textbf{Hipótesis}: $H_0: \mu \leq 155$ \quad vs \quad $H_1: \mu > 155$
 
 \begin{lstlisting}
 # Datos (simulados)
@@ -547,14 +547,11 @@ donde:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo: ¿La Media Supera el Umbral B1?}
+\begin{frame}[fragile]{Ejemplo: ¿La Media Supera el Umbral B1? (1/2)}
 \textbf{Pregunta}: ¿El puntaje promedio de inglés en NI supera el umbral B1 de 160 puntos?
 
-\vspace{0.3cm}
-\textbf{Hipótesis}:
-\[
-H_0: \mu \leq 160 \quad \text{vs} \quad H_1: \mu > 160
-\]
+\smallskip
+\textbf{Hipótesis}: $H_0: \mu \leq 160$ \quad vs \quad $H_1: \mu > 160$
 
 \begin{lstlisting}
 # Cargar datos reales
@@ -566,7 +563,11 @@ n <- length(ingles)
 xbar <- mean(ingles, na.rm = TRUE)
 s <- sd(ingles, na.rm = TRUE)
 mu_0 <- 160
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Ejemplo: ¿La Media Supera el Umbral B1? (2/2)}
+\begin{lstlisting}
 # Estadistico t
 t_obs <- (xbar - mu_0) / (s / sqrt(n))
 cat("Estadistico t:", round(t_obs, 3))
@@ -575,6 +576,9 @@ cat("Estadistico t:", round(t_obs, 3))
 p_valor <- pt(t_obs, df = n - 1, lower.tail = FALSE)
 cat("\np-valor:", round(p_valor, 6))
 \end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Nota}: Usamos prueba $t$ porque $\sigma$ es desconocida y la estimamos con $s$.
 \end{frame}
 
 \begin{frame}[fragile]{Usar \code{t.test()} en R}
@@ -655,26 +659,21 @@ H_0: \mu_1 - \mu_2 = 0 \quad \text{vs} \quad H_1: \mu_1 - \mu_2 \neq 0
 \end{frame}
 
 \begin{frame}{Estadístico de Prueba para Dos Muestras}
-\textbf{Supuestos}:
-\begin{itemize}
-  \item Dos muestras aleatorias \alert{independientes}
-  \item Poblaciones normales o $n_1, n_2 \geq 30$
-  \item Varianzas poblacionales desconocidas
-\end{itemize}
+\textbf{Supuestos}: Dos muestras aleatorias \alert{independientes}; poblaciones normales o $n_1, n_2 \geq 30$; varianzas desconocidas.
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{block}{Estadístico de prueba (Welch)}
 \[
-t = \frac{(\bar{x}_1 - \bar{x}_2) - 0}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+t = \frac{(\bar{x}_1 - \bar{x}_2) - 0}{\sqrt{\dfrac{s_1^2}{n_1} + \dfrac{s_2^2}{n_2}}}
 \]
 \end{block}
 
-\vspace{0.3cm}
-\textbf{Grados de libertad (fórmula de Welch)}:
-\[
-\text{gl} = \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{(s_1^2/n_1)^2}{n_1-1} + \frac{(s_2^2/n_2)^2}{n_2-1}}
-\]
-\small (No necesitas memorizarla, R la calcula automáticamente)
+\vspace{0.2cm}
+\textbf{Grados de libertad (Welch)}: \quad
+$\text{gl} = \dfrac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{(s_1^2/n_1)^2}{n_1-1} + \frac{(s_2^2/n_2)^2}{n_2-1}}$
+
+\smallskip
+\small No necesitas memorizarla; R la calcula automáticamente.
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo: Inglés en IES Públicas vs Privadas}
@@ -710,7 +709,6 @@ print(resultado)
 resultado <- t.test(MOD_INGLES_PUNT ~ TIPO_IES,
                     data = icfes_ni,
                     var.equal = FALSE)
-
 print(resultado)
 
 # Extraer elementos
@@ -725,8 +723,6 @@ if (resultado$p.value < 0.05) {
   cat("\nNo hay diferencia significativa al 5%")
 }
 \end{lstlisting}
-
-\vspace{0.3cm}
 \small
 \textbf{Nota}: La fórmula \code{y \textasciitilde\ grupo} es estándar en R para modelos.
 \end{frame}
@@ -926,12 +922,7 @@ La potencia aumenta cuando el verdadero $\mu$ se aleja más de $\mu_0$ (mayor ta
 library(pwr)
 
 # Potencia para prueba t de dos muestras
-# Parametros:
-# n = tamano de muestra por grupo
-# d = d de Cohen
-# sig.level = alpha
-# type = "two.sample", "one.sample", "paired"
-# alternative = "two.sided", "greater", "less"
+# Parametros: n, d (Cohen), sig.level, type, alternative
 
 # Ejemplo: n = 120 por grupo, d = 0.5, alpha = 0.05
 potencia <- pwr.t.test(n = 120, d = 0.5, sig.level = 0.05,
@@ -942,7 +933,7 @@ print(potencia)
 cat("\nPotencia:", round(potencia$power, 3))
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Interpretación}: Con $n = 120$ por grupo, tenemos 95\% de probabilidad de detectar un efecto de $d = 0.5$ si existe.
 \end{frame}
 
@@ -996,10 +987,11 @@ Si un IC al $(1-\alpha) \times 100\%$ para $\mu$ \alert{NO contiene} el valor $\
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Verificar la Equivalencia en R}
+\begin{frame}[fragile]{Verificar la Equivalencia en R (1/2)}
 \begin{lstlisting}
 # Prueba de hipotesis
-resultado_test <- t.test(ingles, mu = 160, alternative = "two.sided")
+resultado_test <- t.test(ingles, mu = 160,
+                         alternative = "two.sided")
 
 cat("p-valor:", resultado_test$p.value)
 cat("\nIC al 95%:", resultado_test$conf.int)
@@ -1013,7 +1005,11 @@ if (mu_0 >= ic[1] & mu_0 <= ic[2]) {
 } else {
   cat("\n160 NO esta en el IC -> Rechazar H0")
 }
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Verificar la Equivalencia en R (2/2)}
+\begin{lstlisting}
 # Comparar con decision basada en p-valor
 if (resultado_test$p.value < 0.05) {
   cat("\np-valor < 0.05 -> Rechazar H0")
@@ -1023,6 +1019,9 @@ if (resultado_test$p.value < 0.05) {
 
 # Deben coincidir!
 \end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Resultado}: Ambos métodos (IC y p-valor) llevan a la \alert{misma conclusión}. Si $\mu_0$ no está en el IC al 95\%, entonces p-valor $< 0.05$.
 \end{frame}
 
 \begin{frame}{¿Cuándo Usar IC vs Prueba de Hipótesis?}

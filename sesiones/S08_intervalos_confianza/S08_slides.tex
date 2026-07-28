@@ -61,7 +61,7 @@ Hay 892 estudiantes de IES privadas con nivel A2 en inglés.
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[fragile]{Frecuencias marginales y relativas}
+\begin{frame}[fragile]{Frecuencias marginales}
 \textbf{Frecuencias marginales} (totales por fila/columna):
 \begin{lstlisting}
 # Totales por fila (nivel MCER)
@@ -74,9 +74,9 @@ margin.table(tabla_obs, 2)
 # privada publica
 #    2750    2335
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.2cm}
-\textbf{Frecuencias relativas}:
+\begin{frame}[fragile]{Frecuencias relativas}
 \begin{lstlisting}
 # Proporciones del total
 prop.table(tabla_obs)
@@ -87,6 +87,14 @@ prop.table(tabla_obs, 1)
 # Proporciones por columna (% dentro de cada tipo IES)
 prop.table(tabla_obs, 2)
 \end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Cada tipo de proporción responde una pregunta diferente:}
+\begin{itemize}
+  \item Total: ¿qué porcentaje del total cae en esta celda?
+  \item Por fila: ¿cómo se distribuye cada nivel MCER entre tipos de IES?
+  \item Por columna: ¿cómo se distribuye cada tipo de IES entre niveles MCER?
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Visualización: mosaico}
@@ -145,21 +153,27 @@ La frecuencia esperada en la celda $(i,j)$ es:
 \[
 E_{ij} = \frac{R_i \times C_j}{n}
 \]
-donde:
-\begin{itemize}
-  \item $R_i$ = total de la fila $i$
-  \item $C_j$ = total de la columna $j$
-  \item $n$ = total general
-\end{itemize}
+donde $R_i$ = total fila $i$, $C_j$ = total columna $j$, $n$ = total general.
 \end{block}
+\end{frame}
 
-\vspace{0.2cm}
+\begin{frame}{Frecuencias esperadas: ejemplo}
 \textbf{Ejemplo:} celda (A2, privada)
 \[
-E_{\text{A2,privada}} = \frac{1648 \times 2750}{5085} = \frac{4532000}{5085} \approx 891.24
+E_{\text{A2,privada}} = \frac{1648 \times 2750}{5085} = \frac{4{,}532{,}000}{5085} \approx 891.24
 \]
 
 Observamos 892, esperábamos 891.24 (muy cercano).
+
+\vspace{0.3cm}
+\begin{block}{Lógica}
+\begin{itemize}
+  \item $R_i = 1648$ (total de estudiantes con nivel A2)
+  \item $C_j = 2750$ (total de estudiantes en IES privadas)
+  \item $n = 5085$ (total general)
+\end{itemize}
+Si las variables fueran independientes, la proporción de A2 sería la misma en ambos tipos de IES.
+\end{block}
 \end{frame}
 
 \begin{frame}{El estadístico $\chi^2$}
@@ -258,13 +272,11 @@ resultado$expected
 \begin{frame}{Interpretación del resultado}
 \begin{block}{Output de R}
 \begin{itemize}
-  \item $\chi^2 = 186.42$
-  \item gl $= 4$
-  \item p-valor $< 2.2 \times 10^{-16}$ (prácticamente 0)
+  \item $\chi^2 = 186.42$, gl $= 4$, p-valor $< 2.2 \times 10^{-16}$ (prácticamente 0)
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \textbf{Conclusión:}
 \begin{itemize}
   \item Como p-valor $< 0.05$, rechazamos $H_0$.
@@ -272,7 +284,7 @@ resultado$expected
   \item Hay una asociación estadísticamente significativa entre ambas variables.
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \begin{alertblock}{Importante}
 Rechazar $H_0$ indica \textbf{asociación}, pero no implica causalidad.\\
 La prueba NO nos dice qué tan \textbf{fuerte} es la asociación.
@@ -342,13 +354,7 @@ Es una medida de asociación para tablas de contingencia:
 \[
 V = \sqrt{\frac{\chi^2}{n \times (\min(r,c) - 1)}}
 \]
-donde:
-\begin{itemize}
-  \item $\chi^2$ = estadístico chi-cuadrado
-  \item $n$ = tamaño muestral total
-  \item $r$ = número de filas
-  \item $c$ = número de columnas
-\end{itemize}
+donde $\chi^2$ = estadístico chi-cuadrado, $n$ = tamaño muestral, $r$ = filas, $c$ = columnas.
 \end{block}
 
 \vspace{0.2cm}
@@ -368,22 +374,29 @@ min_dim <- min(nrow(tabla_obs), ncol(tabla_obs))
 
 V <- sqrt(chi2 / (n * (min_dim - 1)))
 V
-
 # [1] 0.1915
 
-# Usando el paquete DescTools (alternativa)
+# Alternativa con paquete DescTools
 library(DescTools)
 CramerV(tabla_obs)
-
 # [1] 0.1915
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.2cm}
-\begin{exampleblock}{Cálculo manual}
+\begin{frame}{V de Cramér: cálculo manual}
+\begin{exampleblock}{Cálculo paso a paso}
 \[
 V = \sqrt{\frac{186.42}{5085 \times (2-1)}} = \sqrt{\frac{186.42}{5085}} = \sqrt{0.0367} \approx 0.1915
 \]
 \end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Datos usados:}
+\begin{itemize}
+  \item $\chi^2 = 186.42$ (del resultado de \code{chisq.test()})
+  \item $n = 5085$ (total de observaciones)
+  \item $\min(r, c) - 1 = \min(5, 2) - 1 = 1$
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Interpretación de V de Cramér}
@@ -486,25 +499,19 @@ donde $p$ = número de parámetros estimados de los datos.
 
 \begin{frame}[fragile]{Ejemplo 1: Distribución uniforme de niveles MCER}
 \textbf{Pregunta:} ¿Los 5 niveles MCER se distribuyen uniformemente?
-
 \begin{lstlisting}
 # Frecuencias observadas
 niveles <- table(icfes_ni$NIVEL_MCER)
 niveles
-
 #   A-   A1   A2   B1   B+
 #  557 1278 1648 1007  595
 
 # Bajo uniformidad, esperariamos n/5 en cada nivel
 n <- sum(niveles)
-esperadas_unif <- rep(n / 5, 5)
-esperadas_unif
-
-# [1] 1017 1017 1017 1017 1017
+esperadas_unif <- rep(n / 5, 5)  # [1] 1017 1017 1017 1017 1017
 
 # Prueba chi-cuadrado
 chisq.test(niveles, p = rep(1/5, 5))
-
 # X-squared = 574.23, df = 4, p-value < 2.2e-16
 \end{lstlisting}
 
@@ -515,18 +522,16 @@ chisq.test(niveles, p = rep(1/5, 5))
 \begin{lstlisting}
 # Comparar graficamente
 library(ggplot2)
-
 df_comp <- data.frame(
   Nivel = names(niveles),
   Observado = as.numeric(niveles),
   Esperado = esperadas_unif
 )
-
 df_comp_long <- melt(df_comp, id.vars = "Nivel")
 
 ggplot(df_comp_long, aes(x = Nivel, y = value, fill = variable)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Distribucion de niveles MCER: observado vs uniforme",
+  labs(title = "Niveles MCER: observado vs uniforme",
        x = "Nivel MCER", y = "Frecuencia") +
   scale_fill_manual(values = c("steelblue", "coral")) +
   theme_minimal()
@@ -562,12 +567,11 @@ breaks <- seq(min(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE),
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Cálculo de frecuencias esperadas bajo normalidad}
+\begin{frame}[fragile]{Frecuencias esperadas bajo normalidad}
 \begin{lstlisting}
 # Frecuencias observadas
 obs_counts <- table(cut(icfes_ni$MOD_INGLES_PUNT,
-                        breaks = breaks,
-                        include.lowest = TRUE))
+                        breaks = breaks, include.lowest = TRUE))
 
 # Probabilidades bajo N(media, desv^2)
 probs <- numeric(10)
@@ -575,44 +579,45 @@ for(i in 1:10) {
   probs[i] <- pnorm(breaks[i+1], mean = media, sd = desv) -
               pnorm(breaks[i], mean = media, sd = desv)
 }
-
 # Frecuencias esperadas
 n <- sum(!is.na(icfes_ni$MOD_INGLES_PUNT))
 esp_counts <- n * probs
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Prueba de bondad de ajuste: normalidad}
+\begin{lstlisting}
 # Prueba chi-cuadrado (df = 10 - 2 - 1 = 7)
 chisq.test(obs_counts, p = probs)
 
 # X-squared = 45.82, df = 7, p-value = 2.1e-07
 \end{lstlisting}
 
+\vspace{0.3cm}
 \textbf{Conclusión:} Rechazamos $H_0$. La distribución del puntaje NO es normal.
+
+\vspace{0.2cm}
+\begin{alertblock}{Nota sobre los grados de libertad}
+gl $= k - p - 1 = 10 - 2 - 1 = 7$, donde $p = 2$ porque estimamos $\mu$ y $\sigma$ de los datos.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}[fragile]{Alternativa: Test de Shapiro-Wilk}
 Para probar normalidad en variables continuas, el test de \textbf{Shapiro-Wilk} es más potente:
-
 \begin{lstlisting}
-# Test de Shapiro-Wilk
-# (solo funciona con n <= 5000, usar una muestra)
+# Test de Shapiro-Wilk (solo funciona con n <= 5000)
 set.seed(123)
 muestra <- sample(icfes_ni$MOD_INGLES_PUNT, 5000)
-
 shapiro.test(muestra)
 
 #   Shapiro-Wilk normality test
-#
 # data:  muestra
 # W = 0.9823, p-value < 2.2e-16
 \end{lstlisting}
 
-\vspace{0.2cm}
 \begin{alertblock}{Interpretación}
-\begin{itemize}
-  \item $H_0$: los datos provienen de una distribución normal
-  \item p-valor $< 0.001$ $\Rightarrow$ rechazamos $H_0$
-  \item Los puntajes de inglés NO siguen una distribución normal
-\end{itemize}
+$H_0$: los datos provienen de una distribución normal.\\
+p-valor $< 0.001$ $\Rightarrow$ rechazamos $H_0$: los puntajes de inglés NO siguen una distribución normal.
 \end{alertblock}
 \end{frame}
 
@@ -741,25 +746,26 @@ Bogota y la region Andina muestran las proporciones mas altas de estudiantes que
 
 \begin{frame}{Diagrama de flujo: ¿Qué prueba usar?}
 \begin{center}
-\begin{tikzpicture}[node distance=1.5cm, auto,
+\begin{tikzpicture}[node distance=1.2cm, auto,
                     block/.style={rectangle, draw, fill=blue!10,
-                                  text width=5em, align=center,
-                                  rounded corners, minimum height=3em},
+                                  text width=4.5em, align=center,
+                                  rounded corners, minimum height=2.2em,
+                                  font=\small},
                     decision/.style={diamond, draw, fill=orange!10,
-                                     text width=4em, align=center,
-                                     inner sep=0pt}]
+                                     text width=3.5em, align=center,
+                                     inner sep=0pt, font=\small}]
 
 \node [decision] (tipo) {Tipo de variable};
-\node [block, below left=1cm and 1cm of tipo] (num) {Numérica};
-\node [block, below right=1cm and 1cm of tipo] (cat) {Categórica};
+\node [block, below left=0.8cm and 1cm of tipo] (num) {Numérica};
+\node [block, below right=0.8cm and 1cm of tipo] (cat) {Categórica};
 
-\node [decision, below=0.8cm of num] (ngrupos) {¿Cuántos grupos?};
-\node [block, below left=0.8cm and 0.5cm of ngrupos] (ttest) {1 o 2:\\ t-test};
-\node [block, below right=0.8cm and 0.5cm of ngrupos] (anova) {3+:\\ ANOVA};
+\node [decision, below=0.6cm of num] (ngrupos) {¿Cuántos grupos?};
+\node [block, below left=0.6cm and 0.3cm of ngrupos] (ttest) {1 o 2:\\ t-test};
+\node [block, below right=0.6cm and 0.3cm of ngrupos] (anova) {3+:\\ ANOVA};
 
-\node [decision, below=0.8cm of cat] (pregunta) {¿Qué pregunta?};
-\node [block, below left=0.8cm and 0.5cm of pregunta] (indep) {Asociación:\\ $\chi^2$ indep.};
-\node [block, below right=0.8cm and 0.5cm of pregunta] (bondad) {Bondad:\\ $\chi^2$ ajuste};
+\node [decision, below=0.6cm of cat] (pregunta) {¿Qué pregunta?};
+\node [block, below left=0.6cm and 0.3cm of pregunta] (indep) {Asociación:\\ $\chi^2$ indep.};
+\node [block, below right=0.6cm and 0.3cm of pregunta] (bondad) {Bondad:\\ $\chi^2$ ajuste};
 
 \draw[->] (tipo) -- (num);
 \draw[->] (tipo) -- (cat);
@@ -802,21 +808,18 @@ Bogota y la region Andina muestran las proporciones mas altas de estudiantes que
 \begin{frame}{Resumen: Pruebas para variables categóricas}
 \begin{block}{Prueba $\chi^2$ de independencia}
 \begin{itemize}
-  \item Compara dos variables categóricas
-  \item $H_0$: las variables son independientes
-  \item Estadístico: $\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
-  \item gl $= (r-1)(c-1)$
+  \item Compara dos variables categóricas --- $H_0$: son independientes
+  \item $\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$, \; gl $= (r-1)(c-1)$
   \item Tamaño del efecto: V de Cramér
 \end{itemize}
 \end{block}
 
 \begin{block}{Prueba $\chi^2$ de bondad de ajuste}
 \begin{itemize}
-  \item Compara una variable categórica con una distribución teórica
+  \item Compara datos observados con una distribución teórica
   \item $H_0$: los datos siguen la distribución especificada
-  \item Estadístico: $\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$
-  \item gl $= k - p - 1$
-  \item Casos especiales: uniformidad, normalidad (con Shapiro-Wilk)
+  \item $\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$, \; gl $= k - p - 1$
+  \item Alternativa para normalidad: Shapiro-Wilk
 \end{itemize}
 \end{block}
 \end{frame}
@@ -832,15 +835,16 @@ Bogota y la region Andina muestran las proporciones mas altas de estudiantes que
 
 \begin{block}{Reportar resultados completos}
 \begin{itemize}
-  \item Estadístico de prueba y grados de libertad
-  \item p-valor
+  \item Estadístico de prueba, grados de libertad y p-valor
   \item Tamaño del efecto (V de Cramér, Cohen's d, $\eta^2$, etc.)
   \item Intervalos de confianza cuando sea aplicable
   \item Interpretación en contexto
 \end{itemize}
 \end{block}
+\end{frame}
 
-\begin{exampleblock}{Próxima sesión}
+\begin{frame}{Próxima sesión}
+\begin{exampleblock}{Siguiente tema}
 Regresión lineal simple (OLS): modelando la relación entre dos variables numéricas.
 \end{exampleblock}
 \end{frame}

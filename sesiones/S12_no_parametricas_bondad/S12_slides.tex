@@ -22,8 +22,8 @@
 \begin{frame}{El pipeline estadístico completo}
 \begin{center}
 \begin{tikzpicture}[
-  node distance=0.8cm and 1.2cm,
-  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=2.2cm, minimum height=0.7cm, rounded corners, font=\small},
+  node distance=0.5cm and 1.2cm,
+  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=2.2cm, minimum height=0.6cm, rounded corners, font=\small},
   arrow/.style={->, thick, javeriana}
 ]
 \node[box] (pregunta) {Pregunta};
@@ -48,8 +48,9 @@
 \draw[arrow, dashed, bend left=30] (concl.east) to (pregunta.east);
 \end{tikzpicture}
 \end{center}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{El pipeline estadístico: proceso iterativo}
 \begin{block}{El análisis estadístico es un proceso iterativo}
 \begin{itemize}
 \item Cada paso informa el siguiente
@@ -136,24 +137,25 @@ Los programas de Negocios Internacionales requieren dominio del inglés como com
 
 \begin{frame}{Formulando una buena pregunta de investigación}
 \begin{block}{Características de una buena pregunta}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
 \item \textbf{Clara}: términos bien definidos
 \item \textbf{Medible}: variables observables
 \item \textbf{Relevante}: tiene implicaciones prácticas o teóricas
 \item \textbf{Acotada}: no demasiado amplia ni demasiado estrecha
 \end{itemize}
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Formulando una buena pregunta: ejemplo}
 \begin{columns}
 \begin{column}{0.48\textwidth}
 \begin{alertblock}{Pregunta vaga}
 "¿Por qué algunos estudiantes son mejores en inglés?"
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \small
 \textcolor{red}{Problemas:}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
 \item ¿Qué es "mejor"?
 \item ¿Qué estudiantes?
 \item ¿Qué factores?
@@ -165,10 +167,10 @@ Los programas de Negocios Internacionales requieren dominio del inglés como com
 \begin{exampleblock}{Pregunta específica}
 "¿Cuál es el efecto del estrato socioeconómico y del tipo de IES en el puntaje de inglés en Saber Pro para estudiantes de NI?"
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \small
 \textcolor{javerianalight}{Bien definida:}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
 \item Variable dependiente: puntaje inglés
 \item Variables independientes: estrato, tipo IES
 \item Población: estudiantes NI
@@ -180,7 +182,7 @@ Los programas de Negocios Internacionales requieren dominio del inglés como com
 
 \begin{frame}{Operacionalización de variables}
 \begin{center}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lll}
 \toprule
 \textbf{Concepto} & \textbf{Variable} & \textbf{Medición} \\
@@ -201,7 +203,7 @@ Región & \variable{REGION} & Andina, Caribe, etc. (categórica) \\
 \end{tabular}
 \end{center}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \small
 \textbf{Nota}: La operacionalización conecta conceptos abstractos con mediciones concretas.
 \end{frame}
@@ -224,8 +226,9 @@ names(icfes)    # Nombres de las columnas
 # Ver estadisticos basicos
 summary(icfes)
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{Cargando los datos: output}
 \begin{exampleblock}{Output esperado}
 \small
 \begin{verbatim}
@@ -253,7 +256,11 @@ nrow(ni_data)
 # Crear variable PRIVADA
 ni_data <- ni_data %>%
   mutate(PRIVADA = ifelse(TIPO_IES == "PRIVADA", 1, 0))
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Creando variable REGION}
+\begin{lstlisting}
 # Crear variable REGION
 ni_data <- ni_data %>%
   mutate(REGION = case_when(
@@ -284,8 +291,9 @@ ni_data <- ni_data %>%
 # Ver cuantas observaciones quedaron
 nrow(ni_data)
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Valores faltantes: consideraciones}
 \begin{alertblock}{Importante}
 \begin{itemize}
 \item \code{na.omit()} elimina TODAS las filas con algún NA (puede ser demasiado drástico)
@@ -342,8 +350,9 @@ ni_data %>%
     q75 = quantile(MOD_INGLES_PUNT, 0.75)
   )
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{EDA: interpretación de descriptivos}
 \begin{exampleblock}{Output esperado}
 \small
 \begin{verbatim}
@@ -352,6 +361,7 @@ ni_data %>%
 \end{verbatim}
 \end{exampleblock}
 
+\vspace{0.3cm}
 \textbf{Interpretación:}
 \begin{itemize}
 \item Media $\approx$ mediana $\Rightarrow$ distribución aproximadamente simétrica
@@ -360,7 +370,7 @@ ni_data %>%
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{EDA: desagregación por grupos}
+\begin{frame}[fragile]{EDA: desagregación por estrato y tipo de IES}
 \begin{lstlisting}
 # Por estrato socioeconomico
 ni_data %>%
@@ -379,7 +389,11 @@ ni_data %>%
     media = mean(MOD_INGLES_PUNT),
     de = sd(MOD_INGLES_PUNT)
   )
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{EDA: desagregación por región}
+\begin{lstlisting}
 # Por region
 ni_data %>%
   group_by(REGION) %>%
@@ -395,7 +409,7 @@ ni_data %>%
 \begin{frame}{EDA: hallazgos preliminares}
 \begin{exampleblock}{Hallazgos esperados (ilustrativos)}
 \small
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.1}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{Estrato} & \textbf{n} & \textbf{Media} & \textbf{DE} \\
@@ -411,13 +425,12 @@ ni_data %>%
 \end{exampleblock}
 
 \textbf{Observaciones:}
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0pt}
 \item Relación positiva entre estrato y puntaje (gradiente claro)
 \item La variabilidad (DE) disminuye al aumentar el estrato
 \item Estudiantes de estrato 6 puntúan 40 puntos más que estrato 1 (diferencia sustantiva)
 \end{itemize}
 
-\vspace{0.3cm}
 \small
 \textcolor{javeriana}{Pregunta}: ¿Esta diferencia es estadísticamente significativa? $\to$ necesitamos pruebas formales.
 \end{frame}
@@ -444,7 +457,7 @@ ggplot(ni_data, aes(x = factor(ESTU_ESTRATO), y = MOD_INGLES_PUNT,
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{EDA: más visualizaciones}
+\begin{frame}[fragile]{EDA: scatterplot Saber 11 vs Saber Pro}
 \begin{lstlisting}
 # Scatterplot: puntaje Saber 11 vs Saber Pro
 ggplot(ni_data, aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
@@ -454,7 +467,11 @@ ggplot(ni_data, aes(x = PUNT_INGLES_S11, y = MOD_INGLES_PUNT)) +
        x = "Puntaje ingles Saber 11",
        y = "Puntaje ingles Saber Pro") +
   theme_minimal()
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{EDA: proporción que alcanza B1}
+\begin{lstlisting}
 # Barplot: proporcion que alcanza B1 por tipo de IES
 ni_data <- ni_data %>%
   mutate(ALCANZA_B1 = MOD_INGLES_PUNT >= 169)
@@ -496,10 +513,11 @@ ic_regiones <- ni_data %>%
 
 print(ic_regiones)
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{IC para la media por región: resultados}
 \begin{exampleblock}{Output esperado}
-\tiny
+\small
 \begin{verbatim}
   REGION        n  media    de    ee t_crit lim_inf lim_sup
   Andina     1234  156.2  17.8  0.51   1.96   155.2   157.2
@@ -548,8 +566,9 @@ ni_data %>%
     lim_sup = prop + z_crit * ee
   )
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{IC para proporciones: resultados}
 \begin{exampleblock}{Output esperado}
 \small
 \begin{verbatim}
@@ -559,6 +578,7 @@ ni_data %>%
 \end{verbatim}
 \end{exampleblock}
 
+\vspace{0.3cm}
 \textbf{Interpretación:}
 Los IC no se superponen $\Rightarrow$ diferencia significativa: IES privadas tienen mayor proporción que alcanza B1 (35.6\% vs 23.7\%).
 \end{frame}
@@ -573,7 +593,7 @@ Los IC no se superponen $\Rightarrow$ diferencia significativa: IES privadas tie
 t.test(MOD_INGLES_PUNT ~ PRIVADA, data = ni_data, var.equal = FALSE)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{exampleblock}{Output esperado}
 \small
 \begin{verbatim}
@@ -589,7 +609,9 @@ mean in group 0  mean in group 1
           148.2            159.7
 \end{verbatim}
 \end{exampleblock}
+\end{frame}
 
+\begin{frame}{Prueba t: conclusión}
 \textbf{Conclusión:}
 \begin{itemize}
 \item $t = -11.23$, $p < 0.001$ $\Rightarrow$ diferencia altamente significativa
@@ -642,8 +664,9 @@ print(tabla)
 # Test chi-cuadrado
 chisq.test(tabla)
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{Chi-cuadrado: resultados}
 \begin{exampleblock}{Output chi-cuadrado}
 \small
 \begin{verbatim}
@@ -652,6 +675,7 @@ X-squared = 87.345, df = 2, p-value < 2.2e-16
 \end{verbatim}
 \end{exampleblock}
 
+\vspace{0.3cm}
 \textbf{Conclusión:} Hay asociación significativa entre nivel MCER y tipo de IES.
 \end{frame}
 
@@ -663,24 +687,25 @@ library(effsize)
 cohen.d(MOD_INGLES_PUNT ~ PRIVADA, data = ni_data)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{exampleblock}{Output}
 \small
 \begin{verbatim}
 Cohen's d
-
 d estimate: 0.62 (medium)
 95 percent confidence interval:
     lower     upper
     0.51      0.73
 \end{verbatim}
 \end{exampleblock}
+\end{frame}
 
+\begin{frame}{Tamaño del efecto: interpretación}
 \textbf{Interpretación:}
 \begin{itemize}
-\item $d = 0.62$ (efecto mediano según Cohen: 0.2 = pequeño, 0.5 = mediano, 0.8 = grande)
-\item La diferencia pública-privada es estadísticamente significativa Y sustantiva
-\item Más allá del p-valor: el tamaño del efecto cuantifica la relevancia práctica
+\item $d = 0.62$ (efecto mediano: 0.2 = pequeño, 0.5 = mediano, 0.8 = grande)
+\item La diferencia pública-privada es significativa Y sustantiva
+\item El tamaño del efecto cuantifica la relevancia práctica
 \end{itemize}
 \end{frame}
 
@@ -725,7 +750,7 @@ modelo2 <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
 summary(modelo2)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{exampleblock}{Output (ilustrativo)}
 \tiny
 \begin{verbatim}
@@ -741,7 +766,9 @@ Residual standard error: 12.3 on 2829 degrees of freedom
 Multiple R-squared:  0.428,	Adjusted R-squared:  0.427
 \end{verbatim}
 \end{exampleblock}
+\end{frame}
 
+\begin{frame}{Modelo múltiple: conclusiones}
 \textbf{Conclusiones:}
 \begin{itemize}
 \item Controlando por otras variables, el efecto del estrato se reduce (7.2 $\to$ 2.1)
@@ -752,7 +779,7 @@ Multiple R-squared:  0.428,	Adjusted R-squared:  0.427
 
 \begin{frame}{Sesgo de variable omitida (OVB)}
 \begin{block}{Comparación modelo1 vs modelo2}
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lrr}
 \toprule
  & \textbf{Modelo 1} & \textbf{Modelo 2} \\
@@ -766,14 +793,15 @@ $R^2$ & 0.134 & 0.428 \\
 \bottomrule
 \end{tabular}
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
-\textbf{Explicación del cambio:}
-\begin{itemize}
+\begin{frame}{OVB: explicación del cambio}
+\textbf{¿Por qué cambia el coeficiente de estrato?}
+\begin{itemize}\setlength{\itemsep}{2pt}
 \item En modelo1, ESTU\_ESTRATO captura TANTO su efecto directo COMO el efecto indirecto de variables omitidas correlacionadas (PRIVADA, PUNT\_S11)
 \item Estudiantes de estrato alto tienden a ir a IES privadas y tener mejor Saber 11
-\item Al incluir estas variables en modelo2, el efecto de estrato se "purifica"
-\item El efecto causal verdadero del estrato es ~2.1 puntos (controlado)
+\item Al incluir estas variables en modelo2, el efecto de estrato se ``purifica''
+\item El efecto causal verdadero del estrato es \textasciitilde{}2.1 puntos (controlado)
 \end{itemize}
 \end{frame}
 
@@ -920,8 +948,8 @@ abline(h = umbral, col = "red", lty = 2)
 
 \begin{frame}{Limitaciones del análisis}
 \begin{block}{Limitaciones metodológicas}
-\begin{itemize}
-\item \textbf{Causalidad vs correlación}: Los coeficientes representan asociaciones, no efectos causales. No podemos afirmar que estudiar en IES privada "causa" mayor puntaje (puede haber selección).
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item \textbf{Causalidad vs correlación}: Los coeficientes representan asociaciones, no efectos causales. No podemos afirmar que estudiar en IES privada ``causa'' mayor puntaje (puede haber selección).
 
 \item \textbf{Variables omitidas}: No controlamos por calidad del profesor, horas de estudio, motivación, experiencia previa con el inglés fuera del colegio, etc.
 
@@ -930,9 +958,10 @@ abline(h = umbral, col = "red", lty = 2)
 \item \textbf{Generalización}: Los resultados son específicos para NI en Colombia en 2023. Pueden no aplicar a otros programas o países.
 \end{itemize}
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
-\begin{exampleblock}{Futuras investigaciones}
+\begin{frame}{Futuras investigaciones}
+\begin{exampleblock}{Líneas de investigación futura}
 \begin{itemize}
 \item Estudios experimentales (ej: asignación aleatoria a programas de nivelación)
 \item Análisis longitudinales (seguimiento de cohortes)
@@ -999,9 +1028,9 @@ abline(h = umbral, col = "red", lty = 2)
 \end{frame}
 
 \begin{frame}{Rúbrica para el proyecto final}
-\small
+\footnotesize
 \begin{center}
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.1}
 \begin{tabular}{lp{6cm}r}
 \toprule
 \textbf{Criterio} & \textbf{Descripción} & \textbf{Puntos} \\
@@ -1020,7 +1049,8 @@ Código reproducible & Scripts claros, comentados, reproducibles & 5 \\
 \end{tabular}
 \end{center}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
+\small
 \textbf{Entrega}: Informe en PDF ($\leq$15 páginas) + código R (.R o .Rmd) + datos.\\
 \textbf{Fecha límite}: Viernes 20 de noviembre, 23:59h (Moodle).
 \end{frame}
@@ -1032,8 +1062,8 @@ Código reproducible & Scripts claros, comentados, reproducibles & 5 \\
 \begin{frame}{El pipeline estadístico: repaso}
 \begin{center}
 \begin{tikzpicture}[
-  node distance=0.6cm,
-  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=3cm, minimum height=0.6cm, rounded corners, font=\small}
+  node distance=0.35cm,
+  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=3cm, minimum height=0.5cm, rounded corners, font=\small}
 ]
 \node[box] (p1) {1. Pregunta clara};
 \node[box, below=of p1] (p2) {2. Datos limpios};

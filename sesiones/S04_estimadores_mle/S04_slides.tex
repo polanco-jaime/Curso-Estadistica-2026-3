@@ -92,9 +92,9 @@ s &\text{ estima } \sigma \\
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo: Estimación Puntual con Datos ICFES}
-\textbf{Contexto}: Queremos estimar la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de Negocios Internacionales en Colombia.
+\textbf{Contexto}: Queremos estimar la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI en Colombia.
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \begin{lstlisting}
 # Cargar datos
 icfes_ni <- read.csv("datos/icfes_ni_2023.csv")
@@ -112,7 +112,7 @@ sigma_estimado <- sd(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
 cat("\nEstimacion puntual de sigma:", round(sigma_estimado, 2))
 \end{lstlisting}
 
-\vspace{0.2cm}
+\smallskip
 \alert{Pregunta}: ¿Qué tan confiables son estas estimaciones? ¿Cuánto error hay?
 \end{frame}
 
@@ -224,7 +224,7 @@ Un \textbf{intervalo de confianza (IC)} para un parámetro $\theta$ al nivel $(1
 \end{tikzpicture}
 \end{center}
 
-\vspace{0.2cm}
+\smallskip
 \small
 En este ejemplo, 7 de 8 IC (87.5\%) contienen a $\mu$. Con más muestras, converge a 95\%.
 \end{frame}
@@ -237,7 +237,7 @@ E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
 \]
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Componentes}:
 \begin{itemize}
   \item $z_{\alpha/2}$ = valor crítico de la distribución normal estándar
@@ -246,7 +246,7 @@ E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
   \item Mayor $n$ $\Rightarrow$ menor $E$
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Trade-off}: Confianza vs Precisión
 \begin{itemize}
   \item Más confianza (ej. 99\%) $\Rightarrow$ intervalo más ancho
@@ -266,22 +266,18 @@ E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
   \item Desviación estándar poblacional $\sigma$ \alert{conocida}
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{block}{Fórmula del IC al $(1-\alpha) \times 100\%$}
 \[
 \bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}
-\]
-Equivalentemente:
-\[
-\left( \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \quad \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right)
+\quad\Longleftrightarrow\quad
+\left( \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \; \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right)
 \]
 \end{block}
 
-\vspace{0.3cm}
-\textbf{Fundamento}: Por el TLC, $\bar{x} \sim N\left(\mu, \frac{\sigma^2}{n}\right)$, entonces
-\[
-Z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
-\]
+\vspace{0.2cm}
+\textbf{Fundamento}: Por el TLC, $\bar{x} \sim N\!\left(\mu, \frac{\sigma^2}{n}\right)$, entonces
+$Z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)$.
 \end{frame}
 
 \begin{frame}{Valores Críticos de $z$}
@@ -346,8 +342,8 @@ cat("\nz para 90%:", z_90)
 \begin{frame}[fragile]{Ejemplo Numérico: IC con $\sigma$ Conocida}
 \textbf{Escenario}: Supongamos que de censos anteriores sabemos que $\sigma = 18$ para \variable{MOD\_INGLES\_PUNT} en NI. Tenemos una muestra de $n = 120$ estudiantes con $\bar{x} = 162.5$.
 
-\vspace{0.3cm}
-\textbf{Calcular IC al 95\%}:
+\vspace{0.2cm}
+\textbf{Calcular IC al 95\%} -- paso 1: datos y valor crítico.
 
 \begin{lstlisting}
 # Datos
@@ -362,7 +358,13 @@ z_critico <- qnorm(1 - alpha/2)
 
 # Error estandar
 ee <- sigma / sqrt(n)
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Ejemplo Numérico: IC con $\sigma$ Conocida (cont.)}
+\textbf{Paso 2}: Margen de error y límites del intervalo.
+
+\begin{lstlisting}
 # Margen de error
 E <- z_critico * ee
 
@@ -374,6 +376,11 @@ cat("IC al 95%: (", round(ic_inferior, 2), ",",
     round(ic_superior, 2), ")")
 # IC al 95%: ( 159.28 , 165.72 )
 \end{lstlisting}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Resultado}
+IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos, con margen de error $E = 3.22$.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Interpretación del Resultado}
@@ -535,7 +542,11 @@ ingles <- icfes_ni$MOD_INGLES_PUNT
 n <- length(ingles)
 xbar <- mean(ingles, na.rm = TRUE)
 s <- sd(ingles, na.rm = TRUE)
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{IC para la Media de MOD\_INGLES\_PUNT: cálculo}
+\begin{lstlisting}
 # IC al 95% usando la formula
 alpha <- 0.05
 gl <- n - 1
@@ -551,6 +562,9 @@ cat("n =", n, "\nxbar =", round(xbar, 2),
 cat("\nIC al 95%: (", round(ic_inf, 2), ",",
     round(ic_sup, 2), ")")
 \end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Nota}: Usamos la distribución $t$ porque $\sigma$ es desconocida y la estimamos con $s$.
 \end{frame}
 
 \begin{frame}[fragile]{Método Directo con \code{t.test()}}
@@ -559,8 +573,6 @@ cat("\nIC al 95%: (", round(ic_inf, 2), ",",
 \begin{lstlisting}
 # Metodo directo: t.test()
 resultado <- t.test(ingles, conf.level = 0.95)
-
-# Ver el resultado completo
 print(resultado)
 
 # Extraer solo el IC
@@ -575,8 +587,8 @@ ic_90 <- t.test(ingles, conf.level = 0.90)$conf.int
 cat("\nIC al 90%:", round(ic_90, 2))
 \end{lstlisting}
 
-\vspace{0.3cm}
-\textbf{Ventaja}: \code{t.test()} también realiza una prueba de hipótesis (que veremos en sesiones futuras).
+\vspace{0.2cm}
+\small\textbf{Ventaja}: \code{t.test()} también realiza una prueba de hipótesis (que veremos en sesiones futuras).
 \end{frame}
 
 \begin{frame}[fragile]{Interpretación del Output de \code{t.test()}}
@@ -643,7 +655,7 @@ donde $\chi^2(n-1)$ es la distribución chi-cuadrado con $n-1$ grados de liberta
 \textbf{Implicación}: El IC para $\sigma^2$ será \alert{asimétrico}.
 
 \column{0.48\textwidth}
-\begin{tikzpicture}[scale=0.65]
+\begin{tikzpicture}[scale=0.55]
   \draw[->] (-0.3,0) -- (10,0) node[right] {$\chi^2$};
   \draw[->] (0,0) -- (0,3);
 
@@ -661,7 +673,7 @@ donde $\chi^2(n-1)$ es la distribución chi-cuadrado con $n-1$ grados de liberta
 
 \vspace{0.3cm}
 \small
-\textbf{Nota}: A diferencia de $z$ y $t$, la $\chi^2$ NO es simétrica, así que los dos valores críticos no son opuestos.
+\textbf{Nota}: A diferencia de $z$ y $t$, la $\chi^2$ NO es simétrica; los valores críticos no son opuestos.
 \end{frame}
 
 \begin{frame}{Fórmula del IC para $\sigma^2$}
@@ -704,7 +716,11 @@ chi2_sup <- qchisq(1 - alpha/2, df = gl)   # Cola derecha
 # IC para sigma^2
 ic_var_inf <- (gl * s2) / chi2_sup
 ic_var_sup <- (gl * s2) / chi2_inf
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{IC para la Varianza: resultado}
+\begin{lstlisting}
 cat("s^2 =", round(s2, 2))
 cat("\nIC al 95% para sigma^2: (",
     round(ic_var_inf, 2), ",", round(ic_var_sup, 2), ")")
@@ -716,6 +732,9 @@ ic_sd_sup <- sqrt(ic_var_sup)
 cat("\nIC al 95% para sigma: (",
     round(ic_sd_inf, 2), ",", round(ic_sd_sup, 2), ")")
 \end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Nota}: El IC para $\sigma$ se obtiene tomando raíz cuadrada de los límites del IC para $\sigma^2$.
 \end{frame}
 
 \begin{frame}{Asimetría del IC para $\sigma^2$}
@@ -763,7 +782,7 @@ IC para $\sigma$:
 \end{frame}
 
 \begin{frame}[fragile]{Cálculo de IC por Departamento en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 library(dplyr)
 
 # Calcular IC por departamento
@@ -903,22 +922,22 @@ $\sigma^2$ & Población normal & $\chi^2(n-1)$ & $\left(\frac{(n-1)s^2}{\chi^2_{
 
 \begin{frame}{Diagrama de Flujo para Elegir el IC}
 \begin{center}
-\begin{tikzpicture}[
-  node distance=1.2cm and 1.5cm,
-  decision/.style={diamond, draw, fill=blue!20, text width=3cm, align=center, inner sep=0pt},
-  block/.style={rectangle, draw, fill=green!20, text width=3.5cm, align=center, rounded corners, minimum height=1cm},
+\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+  node distance=0.7cm and 1.5cm,
+  decision/.style={diamond, draw, fill=blue!20, text width=2.2cm, align=center, inner sep=0pt, font=\small},
+  block/.style={rectangle, draw, fill=green!20, text width=2.8cm, align=center, rounded corners, minimum height=0.7cm, font=\small},
   line/.style={draw, -{Latex[length=2mm]}}
 ]
 
   \node [block] (inicio) {?`Qu\'e par\'ametro estimar?};
 
-  \node [decision, below=0.8cm of inicio] (param) {$\mu$ o $\sigma^2$?};
+  \node [decision, below=0.5cm of inicio] (param) {$\mu$ o $\sigma^2$?};
 
-  \node [decision, below left=1.2cm and 2cm of param] (sigma_conocida) {?`$\sigma$ conocida?};
-  \node [block, below=1cm of sigma_conocida] (usa_z) {Usar distribuci\'on $z$};
-  \node [block, right=2cm of usa_z] (usa_t) {Usar distribuci\'on $t$};
+  \node [decision, below left=0.8cm and 1.6cm of param] (sigma_conocida) {?`$\sigma$ conocida?};
+  \node [block, below=0.6cm of sigma_conocida] (usa_z) {Usar dist.\ $z$};
+  \node [block, right=1.6cm of usa_z] (usa_t) {Usar dist.\ $t$};
 
-  \node [block, below right=1.2cm and 2cm of param] (usa_chi2) {Usar distribuci\'on $\chi^2$};
+  \node [block, below right=0.8cm and 1.6cm of param] (usa_chi2) {Usar dist.\ $\chi^2$};
 
   \path [line] (inicio) -- (param);
   \path [line] (param) -- node[above, sloped] {\small $\mu$} (sigma_conocida);
@@ -929,7 +948,7 @@ $\sigma^2$ & Población normal & $\chi^2(n-1)$ & $\left(\frac{(n-1)s^2}{\chi^2_{
 \end{tikzpicture}
 \end{center}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \small
 \textbf{Regla práctica}: Si estás estimando $\mu$ y no te dicen explícitamente que $\sigma$ es conocida, \alert{usa la distribución $t$}.
 \end{frame}

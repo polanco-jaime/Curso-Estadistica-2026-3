@@ -56,14 +56,10 @@ Normalidad & IC y pruebas inválidas & Q-Q desviado \\
 \end{tabular}
 \end{center}
 
-\vspace{0.4cm}
-\begin{exampleblock}{Ejemplo}
-Si hay heterocedasticidad:
-\begin{itemize}
-\item Los coeficientes $\hat{\beta}$ siguen siendo insesgados
-\item Pero los errores estándar son \textbf{incorrectos}
-\item Los intervalos de confianza y las pruebas $t$ son \textbf{inválidas}
-\end{itemize}
+\vspace{0.15cm}
+\begin{exampleblock}{Ejemplo: heterocedasticidad}
+Los $\hat{\beta}$ siguen insesgados, pero los errores estándar son \textbf{incorrectos}
+$\Rightarrow$ los IC y las pruebas $t$ son \textbf{inválidas}.
 \end{exampleblock}
 \end{frame}
 
@@ -78,11 +74,11 @@ Los diagnósticos nos permiten detectar problemas con el modelo ajustado y decid
 \end{itemize}
 \end{block}
 
-\vspace{0.4cm}
+\vspace{0.15cm}
 \begin{center}
 \begin{tikzpicture}[
-  node distance=1.5cm,
-  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=2.5cm, minimum height=0.8cm, rounded corners}
+  node distance=1.2cm,
+  box/.style={rectangle, draw=javeriana, fill=javeriana!10, thick, minimum width=2.2cm, minimum height=0.7cm, rounded corners, font=\small}
 ]
 \node[box] (est) {Estimar modelo};
 \node[box, right=of est] (diag) {Diagnosticar};
@@ -92,7 +88,7 @@ Los diagnósticos nos permiten detectar problemas con el modelo ajustado y decid
 \draw[->, thick, javeriana] (est) -- (diag);
 \draw[->, thick, javeriana] (diag) -- (corr);
 \draw[->, thick, javeriana] (corr) -- (reest);
-\draw[->, thick, javeriana] (reest) to[bend right=45] (diag);
+\draw[->, thick, javeriana] (reest) to[bend right=40] (diag);
 \end{tikzpicture}
 \end{center}
 \end{frame}
@@ -421,7 +417,11 @@ modelo <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
 par(mfrow = c(2, 2))  # 2x2 grid
 plot(modelo)
 par(mfrow = c(1, 1))  # volver a 1x1
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Ejemplo en R: gráficos individuales}
+\begin{lstlisting}
 # Para ver cada grafico individualmente:
 plot(modelo, which = 1)  # Residuals vs Fitted
 plot(modelo, which = 2)  # Q-Q plot
@@ -437,7 +437,7 @@ El gráfico 4 por defecto es Cook's distance, pero el más útil para observacio
 
 \begin{frame}{Interpretación conjunta de los gráficos}
 \begin{center}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lll}
 \toprule
 \textbf{Gráfico} & \textbf{Detecta} & \textbf{Solución} \\
@@ -453,9 +453,10 @@ Residuals vs Leverage & Obs. influyentes & Investigar, quizás eliminar \\
 \bottomrule
 \end{tabular}
 \end{center}
+\end{frame}
 
-\vspace{0.4cm}
-\begin{exampleblock}{Estrategia práctica}
+\begin{frame}{Estrategia práctica de diagnóstico}
+\begin{exampleblock}{Pasos a seguir}
 \begin{enumerate}
 \item Ajustar el modelo
 \item Generar los 4 gráficos con \code{plot(modelo)}
@@ -501,25 +502,23 @@ Estudiantes de estratos bajos tienen mayor variabilidad en inglés que los de es
 \item \textcolor{javerianalight}{Los coeficientes $\hat{\beta}$ siguen siendo insesgados}
 \item \textcolor{red}{Pero ya NO son eficientes (BLUE se pierde)}
 \item \textcolor{red}{Los errores estándar calculados por OLS son incorrectos}
-\item \textcolor{red}{Los intervalos de confianza y las pruebas $t$ y $F$ son inválidas}
+\item \textcolor{red}{Los IC y las pruebas $t$ y $F$ son inválidas}
 \end{itemize}
 \end{alertblock}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \begin{block}{¿Por qué los errores estándar son incorrectos?}
-La fórmula estándar de $\text{SE}(\hat{\beta})$ asume varianza constante $\sigma^2$:
-$$\text{Var}(\hat{\beta}) = \sigma^2 (X'X)^{-1}$$
+La fórmula estándar asume varianza constante $\sigma^2$: $\text{Var}(\hat{\beta}) = \sigma^2 (X'X)^{-1}$.
 
 Con heterocedasticidad, la varianza verdadera es:
 $$\text{Var}(\hat{\beta}) = (X'X)^{-1} X' \Omega X (X'X)^{-1}$$
-donde $\Omega = \text{diag}(\sigma_1^2, \sigma_2^2, \ldots, \sigma_n^2)$ (matriz diagonal con varianzas distintas).
+donde $\Omega = \text{diag}(\sigma_1^2, \sigma_2^2, \ldots, \sigma_n^2)$.
 \end{block}
 \end{frame}
 
 \begin{frame}{Test de Breusch-Pagan}
 \begin{block}{Hipótesis}
-$$H_0: \text{Homocedasticidad (varianza constante)}$$
-$$H_1: \text{Heterocedasticidad (varianza no constante)}$$
+$$H_0: \text{Homocedasticidad (varianza constante)} \qquad H_1: \text{Heterocedasticidad}$$
 \end{block}
 
 \textbf{Procedimiento:}
@@ -529,6 +528,12 @@ $$H_1: \text{Heterocedasticidad (varianza no constante)}$$
 \item Regresar $e_i^2$ contra TODAS las variables $X$ del modelo original:
   $$e_i^2 = \gamma_0 + \gamma_1 X_{1i} + \gamma_2 X_{2i} + \cdots + \gamma_k X_{ki} + u_i$$
 \item Extraer el $R^2$ de esta regresión auxiliar
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Test de Breusch-Pagan: estadístico y decisión}
+\textbf{Procedimiento (continuación):}
+\begin{enumerate}\setcounter{enumi}{4}
 \item Calcular el estadístico de prueba:
   $$BP = n \cdot R^2 \sim \chi^2_{k}$$
   donde $n$ = tamaño de muestra, $k$ = número de variables explicativas (sin contar la constante)
@@ -538,9 +543,6 @@ $$H_1: \text{Heterocedasticidad (varianza no constante)}$$
 
 \begin{frame}[fragile]{Breusch-Pagan en R}
 \begin{lstlisting}
-# Instalar paquete si no lo tienes
-# install.packages("lmtest")
-
 library(lmtest)
 
 # Estimar modelo
@@ -550,8 +552,9 @@ modelo <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
 # Test de Breusch-Pagan
 bptest(modelo)
 \end{lstlisting}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}[fragile]{Breusch-Pagan en R: interpretación}
 \begin{exampleblock}{Ejemplo de output}
 \small
 \begin{verbatim}
@@ -577,16 +580,17 @@ Asume que los errores al cuadrado se distribuyen $\chi^2$. Versión más común.
 
 \begin{block}{Breusch-Pagan estudentizado (por defecto en R)}
 Usa residuos estudentizados en lugar de residuos crudos. Más robusto a no normalidad.
-$$BP = n \cdot R^2 \sim \chi^2_{k}$$
+$BP = n \cdot R^2 \sim \chi^2_{k}$
 \end{block}
 
 \begin{block}{Test de White}
 Variante más general: incluye cuadrados y productos cruzados de las $X$.
-$$e_i^2 = \gamma_0 + \gamma_1 X_{1i} + \gamma_2 X_{2i} + \gamma_3 X_{1i}^2 + \gamma_4 X_{2i}^2 + \gamma_5 X_{1i}X_{2i} + u_i$$
+{\small $e_i^2 = \gamma_0 + \gamma_1 X_{1i} + \gamma_2 X_{2i} + \gamma_3 X_{1i}^2 + \gamma_4 X_{2i}^2 + \gamma_5 X_{1i}X_{2i} + u_i$}
+
 Detecta formas más complejas de heterocedasticidad, pero usa más grados de libertad.
 \end{block}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \small
 \textbf{Regla práctica}: comenzar con Breusch-Pagan. Si hay muchas variables, usar White.
 \end{frame}
@@ -645,21 +649,19 @@ Detecta formas más complejas de heterocedasticidad, pero usa más grados de lib
 
 \begin{frame}{El supuesto de no autocorrelación}
 \begin{block}{Definición}
-\textbf{No autocorrelación}: los errores de diferentes observaciones no están correlacionados.
-$$\text{Cor}(\varepsilon_i, \varepsilon_j) = 0 \quad \text{para todo } i \neq j$$
+\textbf{No autocorrelación}: los errores de diferentes observaciones no están correlacionados:
+$\text{Cor}(\varepsilon_i, \varepsilon_j) = 0$ para todo $i \neq j$.
+\textbf{Autocorrelación}: $\text{Cor}(\varepsilon_i, \varepsilon_{i-1}) \neq 0$.
 \end{block}
 
-\textbf{Autocorrelación}: los errores de observaciones cercanas están correlacionados.
-$$\text{Cor}(\varepsilon_i, \varepsilon_{i-1}) \neq 0$$
-
-\vspace{0.3cm}
+\vspace{0.1cm}
 \begin{columns}
 \begin{column}{0.48\textwidth}
 \begin{exampleblock}{¿Cuándo es común?}
 \begin{itemize}
 \item \textbf{Series de tiempo}: observaciones consecutivas (PIB mensual, ventas diarias)
-\item \textbf{Datos espaciales}: observaciones vecinas (zonas geográficas)
-\item Menos común en datos de corte transversal
+\item \textbf{Datos espaciales}: observaciones vecinas
+\item Menos común en corte transversal
 \end{itemize}
 \end{exampleblock}
 \end{column}
@@ -680,23 +682,21 @@ Similar a heterocedasticidad:
 
 \begin{frame}{Test de Durbin-Watson}
 \begin{block}{Hipótesis}
-$$H_0: \text{No hay autocorrelación de primer orden}$$
-$$H_1: \text{Hay autocorrelación de primer orden}$$
+$H_0$: No hay autocorrelación de primer orden \qquad $H_1$: Hay autocorrelación de primer orden
 \end{block}
 
 \textbf{Estadístico de Durbin-Watson:}
 $$DW = \frac{\sum_{i=2}^{n}(e_i - e_{i-1})^2}{\sum_{i=1}^{n}e_i^2}$$
 
-\vspace{0.3cm}
-\textbf{Interpretación:}
+\vspace{0.15cm}
+\textbf{Interpretación} (rango: $0 \leq DW \leq 4$):
 \begin{itemize}
 \item $DW \approx 2$: no autocorrelación
-\item $DW < 2$: autocorrelación positiva (errores consecutivos tienden a tener el mismo signo)
-\item $DW > 2$: autocorrelación negativa (errores consecutivos tienden a tener signos opuestos)
-\item Rango: $0 \leq DW \leq 4$
+\item $DW < 2$: autocorrelación positiva (errores consecutivos con mismo signo)
+\item $DW > 2$: autocorrelación negativa (errores consecutivos con signos opuestos)
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \small
 \textbf{Regla práctica}: si $1.5 < DW < 2.5$, probablemente no hay problema.
 \end{frame}
@@ -709,7 +709,7 @@ library(lmtest)
 dwtest(modelo)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{exampleblock}{Ejemplo de output}
 \small
 \begin{verbatim}
@@ -720,8 +720,10 @@ DW = 1.9823, p-value = 0.4521
 alternative hypothesis: true autocorrelation is greater than 0
 \end{verbatim}
 \end{exampleblock}
+\end{frame}
 
-\textbf{Interpretación:}
+\begin{frame}{Durbin-Watson: interpretación}
+\textbf{Interpretación del ejemplo:}
 \begin{itemize}
 \item $DW = 1.9823 \approx 2$ $\Rightarrow$ no hay autocorrelación
 \item $p = 0.4521 > 0.05$ $\Rightarrow$ no rechazamos $H_0$
@@ -729,8 +731,9 @@ alternative hypothesis: true autocorrelation is greater than 0
 \end{itemize}
 
 \vspace{0.3cm}
-\small
-\textbf{Nota}: En datos de corte transversal (como ICFES), la autocorrelación es rara. El test es más relevante para series de tiempo.
+\begin{alertblock}{Nota}
+En datos de corte transversal (como ICFES), la autocorrelación es rara. El test es más relevante para series de tiempo.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}{Visualización de autocorrelación}
@@ -786,38 +789,37 @@ Con autocorrelación positiva, el DW será significativamente menor que 2. En el
 % ============================================================================
 
 \begin{frame}{Conceptos: leverage y residuos}
+\begin{columns}
+\begin{column}{0.55\textwidth}
 \begin{block}{Leverage (apalancamiento)}
 Mide qué tan extremo es el valor de $X_i$ respecto al centro de los datos.
 $$h_{ii} = \text{diagonal de } H = X(X'X)^{-1}X'$$
 \begin{itemize}
-\item $0 \leq h_{ii} \leq 1$
-\item $\sum h_{ii} = k+1$ (número de parámetros)
-\item Promedio: $\bar{h} = \frac{k+1}{n}$
-\item Alto leverage: $h_{ii} > 2\bar{h} = \frac{2(k+1)}{n}$
+\item $0 \leq h_{ii} \leq 1$, \; $\sum h_{ii} = k+1$
+\item Promedio: $\bar{h} = (k+1)/n$
+\item Alto leverage: $h_{ii} > 2\bar{h}$
 \end{itemize}
 \end{block}
+\end{column}
 
+\begin{column}{0.42\textwidth}
 \begin{block}{Residuo}
-Mide qué tan lejos está $Y_i$ del valor predicho $\hat{Y}_i$.
+Mide qué tan lejos está $Y_i$ de $\hat{Y}_i$:
 $$e_i = Y_i - \hat{Y}_i$$
 Un residuo grande indica que el modelo no ajusta bien esa observación.
 \end{block}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Distancia de Cook}
 \begin{block}{Definición}
-La distancia de Cook mide cuánto cambiarían TODOS los coeficientes $\hat{\beta}$ si elimináramos la observación $i$.
+Mide cuánto cambiarían TODOS los coeficientes $\hat{\beta}$ si elimináramos la observación $i$.
 $$D_i = \frac{e_i^2}{p \cdot MSE} \cdot \frac{h_{ii}}{(1-h_{ii})^2}$$
-donde:
-\begin{itemize}
-\item $e_i$ = residuo de la observación $i$
-\item $p$ = número de parámetros (incluyendo intercepto)
-\item $MSE$ = error cuadrático medio del modelo
-\item $h_{ii}$ = leverage de la observación $i$
-\end{itemize}
+donde $e_i$ = residuo, $p$ = número de parámetros, $MSE$ = error cuadrático medio, $h_{ii}$ = leverage.
 \end{block}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \textbf{Interpretación:}
 \begin{itemize}
 \item $D_i$ combina residuo grande y leverage alto
@@ -889,12 +891,14 @@ n <- nrow(ni_data)
 umbral <- 4 / n
 influyentes <- which(cook_d > umbral)
 
-# Ver cuantas observaciones son influyentes
+# Ver cuantas y cuales observaciones son influyentes
 length(influyentes)
-
-# Ver los datos de las observaciones influyentes
 ni_data[influyentes, ]
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Graficando la distancia de Cook}
+\begin{lstlisting}
 # Graficar distancia de Cook
 plot(cook_d, type = "h", lwd = 2, col = "steelblue",
      main = "Distancia de Cook",
@@ -902,6 +906,11 @@ plot(cook_d, type = "h", lwd = 2, col = "steelblue",
 abline(h = umbral, col = "red", lty = 2, lwd = 2)
 text(x = n*0.8, y = umbral*1.5, labels = "Umbral 4/n", col = "red")
 \end{lstlisting}
+
+\vspace{0.3cm}
+\begin{alertblock}{Interpretación del gráfico}
+Las barras que sobrepasan la línea roja ($4/n$) corresponden a observaciones influyentes que merecen investigación.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}{¿Qué hacer con observaciones influyentes?}
@@ -912,45 +921,48 @@ Eliminar observaciones sin justificación es manipular los datos. Siempre invest
 \textbf{Pasos a seguir:}
 \begin{enumerate}
 \item \textbf{Verificar datos}: ¿Es un error de entrada de datos? ¿Valor imposible?
-\item \textbf{Contextualizar}: ¿Es un caso especial legítimo? (ej: estudiante indígena, programa especial)
+\item \textbf{Contextualizar}: ¿Es un caso especial legítimo?
 \item \textbf{Re-estimar sin la observación}: ¿Cambian las conclusiones?
-\item \textbf{Reportar sensibilidad}: "Los resultados son robustos a la exclusión de obs. influyentes" o "Las conclusiones cambian al excluir..."
+\item \textbf{Reportar sensibilidad}: ``Resultados robustos a exclusión de obs. influyentes'' o ``Las conclusiones cambian al excluir\ldots''
 \end{enumerate}
+\end{frame}
+
+\begin{frame}{Observaciones influyentes: ejemplo}
+\begin{exampleblock}{Ejemplo: error de datos}
+Si una observación tiene MOD\_INGLES\_PUNT = 300 (máximo 100), es claramente un error $\Rightarrow$ eliminar.
+\end{exampleblock}
 
 \vspace{0.3cm}
-\begin{exampleblock}{Ejemplo}
-Si una observación tiene MOD\_INGLES\_PUNT = 300 (máximo 100), es claramente un error $\Rightarrow$ eliminar.
-
+\begin{alertblock}{Ejemplo: caso legítimo}
 Si una observación es un estudiante con puntaje 95 en inglés pero estrato 1, es raro pero legítimo $\Rightarrow$ NO eliminar, pero reportar sensibilidad.
-\end{exampleblock}
+\end{alertblock}
 \end{frame}
 
 \begin{frame}[fragile]{Análisis de sensibilidad}
+\small
 \begin{lstlisting}
 # Modelo completo
 modelo_completo <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
                       ESTU_GENERO + PUNT_INGLES_S11, data = ni_data)
-summary(modelo_completo)
 
 # Identificar observaciones influyentes
 cook_d <- cooks.distance(modelo_completo)
 influyentes <- which(cook_d > 4 / nrow(ni_data))
 
 # Modelo sin observaciones influyentes
-ni_sin_influyentes <- ni_data[-influyentes, ]
-modelo_sin_influyentes <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
-                             ESTU_GENERO + PUNT_INGLES_S11,
-                             data = ni_sin_influyentes)
-summary(modelo_sin_influyentes)
+ni_sin_inf <- ni_data[-influyentes, ]
+modelo_sin_inf <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
+                     ESTU_GENERO + PUNT_INGLES_S11,
+                     data = ni_sin_inf)
 
 # Comparar coeficientes
 library(texreg)
-screenreg(list(modelo_completo, modelo_sin_influyentes),
+screenreg(list(modelo_completo, modelo_sin_inf),
           custom.model.names = c("Completo", "Sin influyentes"))
 \end{lstlisting}
 
 \small
-Si los coeficientes cambian mucho, los resultados son sensibles a esas observaciones. Reportar ambos modelos.
+Si los coeficientes cambian mucho, los resultados son sensibles a esas observaciones.
 \end{frame}
 
 % ============================================================================
@@ -967,24 +979,23 @@ Ante heterocedasticidad, podemos:
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
 \textbf{Ventajas de los errores robustos:}
 \begin{itemize}
 \item Los coeficientes $\hat{\beta}$ NO cambian (mismos valores que OLS estándar)
 \item Solo cambian los errores estándar (se corrigen)
-\item Los intervalos de confianza y pruebas $t$ se vuelven válidos
+\item Los IC y pruebas $t$ se vuelven válidos
 \item No requiere especificar la forma de heterocedasticidad
 \end{itemize}
 
-\vspace{0.3cm}
 \begin{alertblock}{Regla práctica}
-Si hay heterocedasticidad (Breusch-Pagan rechaza $H_0$), SIEMPRE reportar errores robustos.
+Si hay heterocedasticidad (BP rechaza $H_0$), SIEMPRE reportar errores robustos.
 \end{alertblock}
 \end{frame}
 
 \begin{frame}{Tipos de errores robustos}
 \begin{center}
-\renewcommand{\arraystretch}{1.4}
+\renewcommand{\arraystretch}{1.3}
+\small
 \begin{tabular}{lp{7cm}}
 \toprule
 \textbf{Tipo} & \textbf{Descripción} \\
@@ -992,16 +1003,16 @@ Si hay heterocedasticidad (Breusch-Pagan rechaza $H_0$), SIEMPRE reportar errore
 HC0 & Versión original de White. No corrige por grados de libertad. \\
 HC1 & Corrección por grados de libertad: $\frac{n}{n-k}$. Más común en econometría. \\
 HC2 & Usa leverage: $\frac{e_i^2}{1 - h_{ii}}$. Más robusto. \\
-HC3 & Versión más conservadora: $\frac{e_i^2}{(1 - h_{ii})^2}$. Recomendado para muestras pequeñas. \\
+HC3 & Versión más conservadora: $\frac{e_i^2}{(1 - h_{ii})^2}$. Recomendado para $n$ pequeño. \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\vspace{0.4cm}
+\vspace{0.15cm}
 \begin{block}{¿Cuál usar?}
 \begin{itemize}
 \item \textbf{HC1}: el más común, recomendado por defecto
-\item \textbf{HC3}: si la muestra es pequeña ($n < 250$) o hay observaciones con alto leverage
+\item \textbf{HC3}: si la muestra es pequeña ($n < 250$) o hay alto leverage
 \item En la práctica, los resultados suelen ser muy similares
 \end{itemize}
 \end{block}
@@ -1009,9 +1020,6 @@ HC3 & Versión más conservadora: $\frac{e_i^2}{(1 - h_{ii})^2}$. Recomendado pa
 
 \begin{frame}[fragile]{Errores robustos en R}
 \begin{lstlisting}
-# Instalar paquetes si no los tienes
-# install.packages(c("sandwich", "lmtest"))
-
 library(sandwich)  # para vcovHC
 library(lmtest)    # para coeftest
 
@@ -1029,15 +1037,14 @@ coeftest(modelo, vcov = vcovHC(modelo, type = "HC1"))
 coeftest(modelo, vcov = vcovHC(modelo, type = "HC3"))
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \small
 \textbf{Nota}: \code{vcovHC} calcula la matriz de varianza-covarianza robusta, y \code{coeftest} la usa para recalcular los errores estándar y las pruebas $t$.
 \end{frame}
 
-\begin{frame}[fragile]{Comparación: errores estándar vs robustos}
-\begin{exampleblock}{Ejemplo de output}
+\begin{frame}[fragile]{Comparación: errores estándar clásicos}
+\begin{exampleblock}{Errores estándar clásicos (OLS)}
 \small
-\textbf{Errores estándar clásicos (OLS):}
 \begin{verbatim}
                     Estimate Std. Error t value Pr(>|t|)
 (Intercept)         120.345      3.215  37.434  < 2e-16 ***
@@ -1046,9 +1053,12 @@ PRIVADA               8.765      1.234   7.103 1.56e-12 ***
 ESTU_GENERO          -1.543      0.987  -1.563    0.118
 PUNT_INGLES_S11       0.512      0.034  15.059  < 2e-16 ***
 \end{verbatim}
+\end{exampleblock}
+\end{frame}
 
-\vspace{0.2cm}
-\textbf{Errores estándar robustos (HC1):}
+\begin{frame}[fragile]{Comparación: errores estándar robustos}
+\begin{exampleblock}{Errores estándar robustos (HC1)}
+\small
 \begin{verbatim}
                     Estimate Std. Error t value Pr(>|t|)
 (Intercept)         120.345      3.654  32.936  < 2e-16 ***
@@ -1059,8 +1069,8 @@ PUNT_INGLES_S11       0.512      0.041  12.488  < 2e-16 ***
 \end{verbatim}
 \end{exampleblock}
 
-\small
-Observa: los coeficientes son idénticos, pero los SE aumentaron (especialmente para PRIVADA). Algunas variables pueden perder significancia.
+\vspace{0.3cm}
+Los coeficientes son idénticos, pero los SE aumentaron (especialmente para PRIVADA). Algunas variables pueden perder significancia.
 \end{frame}
 
 \begin{frame}[fragile]{Intervalos de confianza robustos}
@@ -1072,31 +1082,39 @@ confint(modelo)
 coefci(modelo, vcov = vcovHC(modelo, type = "HC1"))
 \end{lstlisting}
 
-\vspace{0.3cm}
-\begin{exampleblock}{Ejemplo de output}
+\vspace{0.15cm}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{IC clásicos (95\%)}
 \small
-\textbf{IC clásicos (95\%):}
 \begin{verbatim}
-                      2.5 %    97.5 %
-ESTU_ESTRATO       1.309      2.959
-PRIVADA            6.347     11.183
-\end{verbatim}
-
-\textbf{IC robustos (95\%):}
-\begin{verbatim}
-                      2.5 %    97.5 %
-ESTU_ESTRATO       1.130      3.138
-PRIVADA            5.740     11.790
+              2.5 %  97.5 %
+ESTU_ESTRATO  1.309   2.959
+PRIVADA       6.347  11.183
 \end{verbatim}
 \end{exampleblock}
+\end{column}
 
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{IC robustos (95\%)}
+\small
+\begin{verbatim}
+              2.5 %  97.5 %
+ESTU_ESTRATO  1.130   3.138
+PRIVADA       5.740  11.790
+\end{verbatim}
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{0.1cm}
 \small
 Los IC robustos son más amplios (reflejan la mayor incertidumbre por heterocedasticidad).
 \end{frame}
 
 \begin{frame}{¿Cuándo usar errores robustos?}
 \begin{center}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lcc}
 \toprule
 \textbf{Situación} & \textbf{Acción} & \textbf{Razón} \\
@@ -1109,12 +1127,13 @@ Publicación académica & Usar robustos & Estándar en econometría \\
 \end{tabular}
 \end{center}
 
-\vspace{0.4cm}
+\vspace{0.15cm}
 \begin{block}{Recomendación general}
-En econometría moderna, es estándar reportar \textbf{siempre} errores robustos, incluso si Breusch-Pagan no rechaza $H_0$. Es una forma de "asegurarse" contra heterocedasticidad no detectada.
+En econometría moderna, es estándar reportar \textbf{siempre} errores robustos, incluso si Breusch-Pagan no rechaza $H_0$.
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Limitaciones de los errores robustos}
 \begin{alertblock}{Importante}
 Los errores robustos NO corrigen sesgos. Si el modelo está mal especificado (variable omitida, no linealidad), los errores robustos no ayudan.
 \end{alertblock}
@@ -1141,33 +1160,23 @@ summary(modelo)
 par(mfrow = c(2, 2))
 plot(modelo)
 par(mfrow = c(1, 1))
-
-# Interpretacion visual:
-# - Residuals vs Fitted: ?patron? ?embudo?
-# - Q-Q: ?puntos siguen la linea?
-# - Scale-Location: ?linea horizontal?
-# - Residuals vs Leverage: ?puntos fuera de Cook?
+# Revisar: patron/embudo, Q-Q, Scale-Location, Cook
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo completo: tests formales}
 \small
 \begin{lstlisting}
-library(lmtest)
-library(car)
+library(lmtest); library(car)
 
-# 5. Test de heterocedasticidad
+# 5. Heterocedasticidad (p < 0.05 => heteroced.)
 bptest(modelo)
-# Si p < 0.05, hay heterocedasticidad
 
-# 6. Test de autocorrelacion (menos relevante en corte transversal)
+# 6. Autocorrelacion (DW ~ 2 => ok)
 dwtest(modelo)
-# Si DW muy diferente de 2, hay autocorrelacion
 
-# 7. Multicolinealidad
+# 7. Multicolinealidad (VIF > 10 => severa)
 vif(modelo)
-# Si VIF > 10, hay multicolinealidad severa
-# Si VIF > 5, moderada
 
 # 8. Observaciones influyentes
 cook_d <- cooks.distance(modelo)
@@ -1177,22 +1186,26 @@ ni_data[influyentes, ]
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo completo: corrección}
+\begin{frame}[fragile]{Ejemplo completo: corrección con errores robustos}
 \small
 \begin{lstlisting}
-library(sandwich)
+library(sandwich); library(texreg)
 
-# 9. Si hay heterocedasticidad, usar errores robustos
+# 9. Errores robustos
 coeftest(modelo, vcov = vcovHC(modelo, type = "HC1"))
 
-# 10. Comparar errores clasicos vs robustos
-library(texreg)
+# 10. Comparar clasicos vs robustos
 screenreg(list(modelo, modelo),
-          override.se = list(NULL, sqrt(diag(vcovHC(modelo, "HC1")))),
-          override.pvalues = list(NULL,
-            coeftest(modelo, vcovHC(modelo, "HC1"))[, 4]),
-          custom.model.names = c("OLS clasico", "OLS robusto"))
+  override.se = list(NULL, sqrt(diag(vcovHC(modelo, "HC1")))),
+  override.pvalues = list(NULL,
+    coeftest(modelo, vcovHC(modelo, "HC1"))[, 4]),
+  custom.model.names = c("OLS clasico", "OLS robusto"))
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Ejemplo completo: análisis de sensibilidad}
+\small
+\begin{lstlisting}
 # 11. Analisis de sensibilidad (sin influyentes)
 if (length(influyentes) > 0) {
   modelo_sin_inf <- lm(MOD_INGLES_PUNT ~ ESTU_ESTRATO + PRIVADA +
@@ -1206,27 +1219,11 @@ if (length(influyentes) > 0) {
 
 \begin{frame}{Interpretación del ejemplo}
 \textbf{Hallazgos esperados con datos ICFES de NI:}
-
 \begin{enumerate}
-\item \textbf{Heterocedasticidad}: Breusch-Pagan probablemente rechaza $H_0$
-  \begin{itemize}
-  \item Estudiantes de estratos bajos tienen mayor variabilidad en inglés
-  \item Solución: errores robustos HC1
-  \end{itemize}
-
-\item \textbf{Normalidad}: Q-Q plot probablemente muestra desviación leve en las colas
-  \begin{itemize}
-  \item No crítico con $n$ grande (TCL se encarga)
-  \end{itemize}
-
-\item \textbf{Observaciones influyentes}: probablemente hay algunas (5-10)
-  \begin{itemize}
-  \item Verificar si son errores de datos o casos legítimos
-  \item Reportar sensibilidad
-  \end{itemize}
-
+\item \textbf{Heterocedasticidad}: BP probablemente rechaza $H_0$. Estratos bajos tienen mayor variabilidad $\Rightarrow$ errores robustos HC1
+\item \textbf{Normalidad}: Q-Q con desviación leve en colas. No crítico con $n$ grande (TCL)
+\item \textbf{Obs.\ influyentes}: probablemente algunas (5-10). Verificar si son errores o casos legítimos; reportar sensibilidad
 \item \textbf{Autocorrelación}: DW $\approx 2$ (no hay problema en corte transversal)
-
 \item \textbf{Multicolinealidad}: VIF probablemente bajo (variables poco correlacionadas)
 \end{enumerate}
 \end{frame}
@@ -1236,50 +1233,45 @@ if (length(influyentes) > 0) {
 % ============================================================================
 
 \begin{frame}{Checklist de diagnósticos}
-\begin{block}{Protocolo estándar}
-\textbf{Después de estimar cualquier modelo OLS:}
+\begin{block}{Protocolo estándar -- después de estimar cualquier modelo OLS:}
 \begin{enumerate}
 \item Generar \code{plot(modelo)} y revisar los 4 gráficos
 \item Realizar \code{bptest(modelo)} para heterocedasticidad
-\item Si hay heterocedasticidad, usar errores robustos: \code{coeftest(modelo, vcovHC(...))}
-\item Verificar \code{vif(modelo)} para multicolinealidad (tema próxima sesión)
-\item Identificar observaciones influyentes con \code{cooks.distance(modelo)}
-\item Si hay obs. influyentes, investigar y reportar análisis de sensibilidad
+\item Si hay heterocedasticidad, usar \code{coeftest(modelo, vcovHC(...))}
+\item Verificar \code{vif(modelo)} para multicolinealidad
+\item Identificar obs.\ influyentes con \code{cooks.distance(modelo)}
+\item Investigar influyentes y reportar análisis de sensibilidad
 \item Reportar resultados con errores robustos si hay heterocedasticidad
 \end{enumerate}
 \end{block}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \begin{alertblock}{Importante}
 Nunca reportar resultados OLS sin verificar supuestos. Los diagnósticos son parte fundamental del análisis.
 \end{alertblock}
 \end{frame}
 
 \begin{frame}{Tabla resumen: problemas y soluciones}
-\small
+\footnotesize
 \begin{center}
-\renewcommand{\arraystretch}{1.4}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{llll}
 \toprule
 \textbf{Problema} & \textbf{Test} & \textbf{Detección} & \textbf{Solución} \\
 \midrule
-Heterocedasticidad & Breusch-Pagan & Embudo en residuos & Errores robustos \\
+Heterocedasticidad & Breusch-Pagan & Embudo en residuos, & Errores robustos \\
  &  & Scale-Location con pendiente & (HC1 o HC3) \\
 \midrule
-Autocorrelación & Durbin-Watson & Rachas en residuos & Errores robustos \\
+Autocorrelación & Durbin-Watson & Rachas en residuos, & Errores robustos \\
  &  & $DW \ll 2$ o $DW \gg 2$ & (HAC) \\
 \midrule
-No normalidad & Q-Q plot & Desviación de línea & Transformar Y, \\
- &  & Colas pesadas & o confiar TCL \\
+No normalidad & Q-Q plot & Desviación de línea, colas pesadas & Transformar Y / TCL \\
 \midrule
-No linealidad & Residuals vs Fitted & Patrón curvo & Transformar X o Y, \\
- &  & Línea roja curvada & o incluir $X^2$ \\
+No linealidad & Res. vs Fitted & Patrón curvo, línea roja curvada & Transformar X o Y \\
 \midrule
-Obs. influyentes & Cook's distance & $D_i > 4/n$ & Investigar, \\
- &  & Puntos extremos & reportar sensibilidad \\
+Obs. influyentes & Cook's D & $D_i > 4/n$, puntos extremos & Investigar, sensibilidad \\
 \midrule
-Multicolinealidad & VIF & $VIF > 10$ & Eliminar variable, \\
- &  &  & o usar PCA \\
+Multicolinealidad & VIF & $VIF > 10$ & Eliminar var. / PCA \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1296,7 +1288,7 @@ Aplicaremos TODO lo aprendido en el curso a un análisis completo con datos ICFE
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \begin{alertblock}{Para la próxima clase}
 \textbf{Traer:}
 \begin{itemize}
