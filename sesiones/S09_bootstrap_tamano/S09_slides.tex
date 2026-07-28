@@ -24,7 +24,7 @@
 Hemos estudiado la \textbf{correlación} $r$ entre dos variables numéricas, que mide la fuerza y dirección de la relación lineal.
 \end{block}
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \textbf{Limitaciones de la correlación:}
 \begin{itemize}
   \item Solo mide asociación, no permite predecir
@@ -32,11 +32,12 @@ Hemos estudiado la \textbf{correlación} $r$ entre dos variables numéricas, que
   \item No distingue variable dependiente de independiente
 \end{itemize}
 
-\vspace{0.3cm}
-\begin{exampleblock}{Pregunta de investigación}
-¿Podemos \textbf{predecir} el desempeño en inglés en Saber Pro (MOD\_INGLES\_PUNT) a partir del puntaje de inglés en Saber 11 (INGLES\_SABER11\_PUNT)?
+\vspace{0.1cm}
+\begin{exampleblock}{Pregunta de investigaci\'on}
+\small \textquestiondown Podemos \textbf{predecir} el desempe\~no en ingl\'es en Saber Pro a partir del puntaje de ingl\'es en Saber 11? Necesitamos un \textbf{modelo de regresi\'on}.
 
-Necesitamos un \textbf{modelo de regresión}.
+\smallskip
+\textbf{Analog\'ia:} Imaginen que quieren predecir su nota del parcial a partir de las horas de estudio. La regresi\'on es la herramienta que les permite hacer esa predicci\'on de forma sistem\'atica.
 \end{exampleblock}
 \end{frame}
 
@@ -55,13 +56,8 @@ donde:
   \item $\varepsilon_i$ = error aleatorio (desviación del modelo)
 \end{itemize}
 \end{block}
-
-\vspace{0.2cm}
-\textbf{Interpretación:}
-\begin{itemize}
-  \item $\beta_0$ y $\beta_1$ son \textbf{parámetros poblacionales} (desconocidos)
-  \item Los estimaremos con $\hat{\beta}_0$ y $\hat{\beta}_1$ usando los datos
-\end{itemize}
+\vspace{-2pt}
+{\small \textbf{Interpretaci\'on:} $\beta_0$ y $\beta_1$ son \textbf{par\'ametros poblacionales} (desconocidos). Los estimaremos con $\hat{\beta}_0$ y $\hat{\beta}_1$ usando los datos.}
 \end{frame}
 
 \begin{frame}{Ecuación estimada y valores ajustados}
@@ -70,13 +66,13 @@ La \textbf{ecuación estimada} (fitted line) es:
 \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i
 \]
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \begin{itemize}
   \item $\hat{Y}_i$ = valor \textbf{predicho} (ajustado) de $Y$ para la observación $i$
   \item $e_i = Y_i - \hat{Y}_i$ = \textbf{residuo} (error de predicción)
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \begin{exampleblock}{Ejemplo}
 Si $\hat{\beta}_0 = 45$ y $\hat{\beta}_1 = 1.8$, la ecuación es:
 \[
@@ -130,14 +126,18 @@ Queremos que los residuos $e_i = Y_i - \hat{Y}_i$ sean lo más pequeños posible
   \item Minimizar $\max |e_i|$ (error máximo)
   \item Minimizar $\sum e_i^2$ (suma de errores al cuadrado) $\leftarrow$ \textbf{OLS}
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-\begin{alertblock}{Método de Mínimos Cuadrados Ordinarios (OLS)}
-El método \textbf{OLS} (Ordinary Least Squares) elige $\hat{\beta}_0$ y $\hat{\beta}_1$ que minimizan:
+\begin{frame}{M\'etodo de M\'inimos Cuadrados Ordinarios (OLS)}
+\begin{alertblock}{Definici\'on}
+El m\'etodo \textbf{OLS} (Ordinary Least Squares) elige $\hat{\beta}_0$ y $\hat{\beta}_1$ que minimizan:
 \[
 \text{SSE} = \sum_{i=1}^{n} e_i^2 = \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2 = \sum_{i=1}^{n} (Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i)^2
 \]
 \end{alertblock}
+
+\vspace{0.3cm}
+En otras palabras: OLS busca la l\'inea que minimiza los errores de predicci\'on al cuadrado --- la l\'inea que mejor ``le pega'' a los datos.
 \end{frame}
 
 % ============================================================================
@@ -191,34 +191,31 @@ donde:
 \textbf{Propiedad importante:} La línea OLS \textbf{siempre} pasa por el punto $(\bar{X}, \bar{Y})$.
 \end{frame}
 
-\begin{frame}{Relación con la correlación}
+\begin{frame}{Relaci\'on con la correlaci\'on}
 El estimador OLS de la pendiente se puede escribir como:
 \[
 \hat{\beta}_1 = r \times \frac{s_Y}{s_X}
 \]
-donde:
-\begin{itemize}
-  \item $r$ = coeficiente de correlación de Pearson
-  \item $s_Y$ = desviación estándar de $Y$
-  \item $s_X$ = desviación estándar de $X$
-\end{itemize}
+\begin{small}
+donde $r$ = correlaci\'on de Pearson, $s_Y$ = desviaci\'on est\'andar de $Y$, $s_X$ = desviaci\'on est\'andar de $X$.
+\end{small}
 
-\vspace{0.3cm}
-\textbf{Interpretación:}
+\vspace{0.2cm}
+\textbf{Interpretaci\'on:}
 \begin{itemize}
-  \item Si $r = 0$ $\Rightarrow$ $\hat{\beta}_1 = 0$ (no hay relación lineal)
-  \item Si $s_X = s_Y$ y $r = 1$ $\Rightarrow$ $\hat{\beta}_1 = 1$ (relación 1 a 1)
+  \item Si $r = 0$ $\Rightarrow$ $\hat{\beta}_1 = 0$ (no hay relaci\'on lineal)
+  \item Si $s_X = s_Y$ y $r = 1$ $\Rightarrow$ $\hat{\beta}_1 = 1$ (relaci\'on 1 a 1)
   \item El signo de $\hat{\beta}_1$ es el mismo que el de $r$
 \end{itemize}
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \begin{exampleblock}{Nota}
-Aunque $\hat{\beta}_1$ depende de $r$, la regresión aporta más información: cuantifica el cambio esperado en $Y$ por unidad de cambio en $X$.
+\small Aunque $\hat{\beta}_1$ depende de $r$, la regresi\'on aporta m\'as informaci\'on: cuantifica el cambio esperado en $Y$ por unidad de cambio en $X$. Por ejemplo, no solo sabemos que horas de estudio y nota est\'an correlacionadas, sino que cada hora adicional sube la nota en $\hat{\beta}_1$ puntos.
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Aplicación en R: \texttt{lm()}}
-\begin{lstlisting}
+\begin{frame}[fragile]{Aplicaci\'on en R: \texttt{lm()}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Ajustar modelo de regresion lineal simple
 modelo1 <- lm(MOD_INGLES_PUNT ~ INGLES_SABER11_PUNT,
               data = icfes_ni)
@@ -242,7 +239,7 @@ $\hat{\beta}_0 = 45.23$ representa el intercepto teórico, pero en la práctica 
 \end{frame}
 
 \begin{frame}[fragile]{Valores ajustados y residuos}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,aboveskip=0pt,belowskip=0pt]
 # Valores ajustados (predicciones)
 y_hat <- fitted(modelo1)
 head(y_hat)
@@ -266,7 +263,7 @@ cor(icfes_ni$INGLES_SABER11_PUNT, residuos)
 # [1] -3.5e-17  (numericamente 0)
 \end{lstlisting}
 
-\textbf{Propiedades OLS:} $\sum e_i = 0$ y $\sum X_i e_i = 0$ (ortogonalidad).
+{\small \textbf{Propiedades OLS:} $\sum e_i = 0$ y $\sum X_i e_i = 0$ (ortogonalidad).}
 \end{frame}
 
 \begin{frame}[fragile]{Visualización de residuos}
@@ -332,7 +329,7 @@ $\Rightarrow$ Estimadores no eficientes, errores estándar sesgados. Solución: 
 \end{alertblock}
 
 \begin{alertblock}{Violación de normalidad}
-$\Rightarrow$ Inferencia (pruebas t, IC) no válida en muestras pequeñas. Solución: bootstrap, transformaciones, o confiar en TCL si $n$ es grande.
+\small $\Rightarrow$ Inferencia (pruebas t, IC) no válida en muestras pequeñas. Solución: bootstrap, transformaciones, o confiar en TCL si $n$ es grande.
 \end{alertblock}
 \end{frame}
 
@@ -391,34 +388,49 @@ Dividiendo por SST:
 \]
 \end{frame}
 
-\begin{frame}{Coeficiente de determinación $R^2$}
-\begin{block}{Definición}
+\begin{frame}{Coeficiente de determinaci\'on $R^2$}
+\begin{block}{Definici\'on}
 \[
 R^2 = \frac{\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
 \]
 \end{block}
 
 \vspace{0.2cm}
-\textbf{Interpretación:}
+\textbf{Interpretaci\'on:}
 \begin{itemize}
-  \item $R^2$ = proporción de la variabilidad de $Y$ \textbf{explicada} por $X$
+  \item $R^2$ = proporci\'on de la variabilidad de $Y$ \textbf{explicada} por $X$
   \item Rango: $R^2 \in [0, 1]$
   \item $R^2 = 0$ $\Rightarrow$ $X$ no explica nada de $Y$ (SSR = 0)
-  \item $R^2 = 1$ $\Rightarrow$ ajuste perfecto (SSE = 0, todos los puntos sobre la línea)
+  \item $R^2 = 1$ $\Rightarrow$ ajuste perfecto (SSE = 0, todos los puntos sobre la l\'inea)
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{exampleblock}{Ejemplo}
-Si $R^2 = 0.65$, decimos que el 65\% de la variabilidad del puntaje de inglés en Saber Pro se explica por el puntaje en Saber 11. El 35\% restante se debe a otros factores no incluidos en el modelo.
+Si $R^2 = 0.65$, el 65\% de la variabilidad del puntaje de ingl\'es en Saber Pro se explica por el puntaje en Saber 11. El 35\% restante se debe a otros factores.
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Relación entre $R^2$ y correlación}
-En regresión lineal simple (un solo predictor), se cumple:
+\begin{frame}{Coeficiente de determinaci\'on $R^2$ (cont.)}
+\begin{exampleblock}{Analog\'ia: $R^2$ en su vida}
+\textquestiondown Qu\'e porcentaje de la variaci\'on en sus notas se explica por horas de estudio?
+\begin{itemize}
+  \item Si $R^2 = 0.6$, el 60\% de las diferencias en notas se explican por cu\'anto estudian.
+  \item El 40\% restante depende de otros factores (sue\~no, m\'etodo de estudio, etc.).
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+\begin{alertblock}{Nota importante}
+$R^2$ es siempre positivo (es un cuadrado), pero $r$ puede ser negativo. El signo de la relaci\'on se ve en $\hat{\beta}_1$ (o en $r$), no en $R^2$.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Relaci\'on entre $R^2$ y correlaci\'on}
+En regresi\'on lineal simple (un solo predictor), se cumple:
 \[
 R^2 = r^2
 \]
-donde $r$ es el coeficiente de correlación de Pearson entre $X$ e $Y$.
+donde $r$ es el coeficiente de correlaci\'on de Pearson entre $X$ e $Y$.
 
 \vspace{0.3cm}
 \textbf{Ejemplo:}
@@ -426,15 +438,10 @@ donde $r$ es el coeficiente de correlación de Pearson entre $X$ e $Y$.
   \item Si $r = 0.8$ $\Rightarrow$ $R^2 = 0.64$ (64\% de variabilidad explicada)
   \item Si $r = -0.5$ $\Rightarrow$ $R^2 = 0.25$ (25\% de variabilidad explicada)
 \end{itemize}
-
-\vspace{0.3cm}
-\begin{alertblock}{Nota importante}
-$R^2$ es siempre positivo (es un cuadrado), pero $r$ puede ser negativo. El signo de la relación se ve en $\hat{\beta}_1$ (o en $r$), no en $R^2$.
-\end{alertblock}
 \end{frame}
 
 \begin{frame}[fragile]{Calculando $R^2$ en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,aboveskip=0pt,belowskip=0pt]
 # Obtener R^2 del modelo
 summary(modelo1)$r.squared
 
@@ -490,21 +497,18 @@ Para hacer inferencia sobre los parámetros, necesitamos estimar $\sigma^2 = \te
 \[
 s^2 = \text{MSE} = \frac{\text{SSE}}{n - 2}
 \]
-donde $n - 2$ son los grados de libertad ($n$ observaciones menos 2 parámetros estimados).
+donde $n - 2$ son los grados de libertad ($n$ observaciones menos 2 par\'ametros estimados).
 \end{block}
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \textbf{MSE} = Mean Squared Error (cuadrado medio del error residual).
 
-\vspace{0.2cm}
-La raíz cuadrada de MSE se llama \textbf{error estándar de la regresión}:
-\[
-s = \sqrt{\text{MSE}} = \text{residual standard error}
-\]
+\vspace{0.1cm}
+La ra\'iz cuadrada de MSE se llama \textbf{error est\'andar de la regresi\'on}: $s = \sqrt{\text{MSE}}$ = residual standard error.
 
-\vspace{0.2cm}
-\begin{exampleblock}{Interpretación}
-$s$ representa la desviación estándar típica de los residuos. Si $s = 12$, en promedio los valores observados se desvían $\pm 12$ puntos de la línea de regresión.
+\vspace{0.1cm}
+\begin{exampleblock}{Interpretaci\'on}
+\small $s$ representa la desviaci\'on est\'andar t\'ipica de los residuos. Si $s = 12$, en promedio los valores observados se desv\'ian $\pm 12$ puntos de la l\'inea de regresi\'on.
 \end{exampleblock}
 \end{frame}
 
@@ -531,29 +535,26 @@ Si los errores son normales:
 \end{frame}
 
 \begin{frame}{Prueba t para la pendiente}
-\begin{block}{Hipótesis más común}
+\begin{block}{Hip\'otesis m\'as com\'un}
 \begin{itemize}
-  \item $H_0: \beta_1 = 0$ (no hay relación lineal entre $X$ e $Y$)
-  \item $H_1: \beta_1 \neq 0$ (existe relación lineal)
+  \item $H_0: \beta_1 = 0$ (no hay relaci\'on lineal entre $X$ e $Y$)
+  \item $H_1: \beta_1 \neq 0$ (existe relaci\'on lineal)
 \end{itemize}
 \end{block}
 
-\vspace{0.2cm}
-\textbf{Estadístico de prueba:}
-\[
-t = \frac{\hat{\beta}_1}{\text{SE}(\hat{\beta}_1)} \sim t_{n-2} \quad \text{bajo } H_0
-\]
+\vspace{0.1cm}
+\textbf{Estad\'istico de prueba:}
+$t = \hat{\beta}_1 / \text{SE}(\hat{\beta}_1) \sim t_{n-2}$ bajo $H_0$.
 
-\vspace{0.2cm}
-\textbf{Regla de decisión:}
+\vspace{0.1cm}
+\textbf{Regla de decisi\'on:}
 \begin{itemize}
-  \item Rechazamos $H_0$ si $|t| > t_{\alpha/2, n-2}$
-  \item O equivalentemente, si p-valor $< \alpha$
+  \item Rechazamos $H_0$ si $|t| > t_{\alpha/2, n-2}$ o si p-valor $< \alpha$
 \end{itemize}
 
-\vspace{0.2cm}
-\begin{exampleblock}{Interpretación}
-Si rechazamos $H_0$, concluimos que la pendiente es \textbf{estadísticamente diferente de cero}, es decir, existe una relación lineal significativa entre $X$ e $Y$.
+\vspace{0.1cm}
+\begin{exampleblock}{Interpretaci\'on}
+Si rechazamos $H_0$, concluimos que la pendiente es \textbf{estad\'isticamente diferente de cero}, es decir, existe una relaci\'on lineal significativa entre $X$ e $Y$.
 \end{exampleblock}
 \end{frame}
 
@@ -580,8 +581,8 @@ IC 95\% para $\beta_1$: $[1.65, 1.99]$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Aplicación en R: \texttt{summary(lm())}}
-\begin{lstlisting}
+\begin{frame}[fragile]{Aplicaci\'on en R: \texttt{summary(lm())}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Resumen completo del modelo
 summary(modelo1)
 
@@ -614,18 +615,16 @@ summary(modelo1)
   \item \texttt{Pr(>|t|)}: p-valor $< 2 \times 10^{-16}$ (altamente significativo)
 \end{itemize}
 
-\vspace{0.2cm}
-\textbf{Residual standard error:} $s = 12.35$ (desviación típica de residuos)
+\vspace{0.1cm}
+{\small
+\textbf{Residual standard error:} $s = 12.35$ (desviaci\'on t\'ipica de residuos)\\
+\textbf{Multiple R-squared:} $R^2 = 0.6524$ (65.24\% de variabilidad explicada)\\
+\textbf{F-statistic:} $F = 8481$, p-valor $< 2.2 \times 10^{-16}$ (prueba global)
+}
 
-\vspace{0.2cm}
-\textbf{Multiple R-squared:} $R^2 = 0.6524$ (65.24\% de variabilidad explicada)
-
-\vspace{0.2cm}
-\textbf{F-statistic:} $F = 8481$ con p-valor $< 2.2 \times 10^{-16}$ (prueba global del modelo)
-
-\vspace{0.2cm}
-\begin{alertblock}{Conclusión}
-Existe una relación lineal \textbf{muy significativa} entre el inglés de Saber 11 y Saber Pro. Por cada punto adicional en Saber 11, esperamos 1.82 puntos más en Saber Pro.
+\vspace{0.1cm}
+\begin{alertblock}{Conclusi\'on}
+\small Existe una relaci\'on lineal \textbf{muy significativa} entre el ingl\'es de Saber 11 y Saber Pro. Por cada punto adicional en Saber 11, esperamos 1.82 puntos m\'as en Saber Pro.
 \end{alertblock}
 \end{frame}
 
@@ -684,36 +683,38 @@ En regresión simple, $F$ y $t$ dan la misma conclusión. En regresión múltipl
 % ============================================================================
 
 \begin{frame}{Variables dummy (indicadoras)}
-Una \textbf{variable dummy} es una variable binaria que toma valores 0 o 1 para representar categorías.
+Una \textbf{variable dummy} es una variable binaria que toma valores 0 o 1 para representar categor\'ias.
 
 \vspace{0.2cm}
 \begin{exampleblock}{Ejemplo}
-Queremos comparar el puntaje de inglés entre IES privadas y públicas:
+Queremos comparar el puntaje de ingl\'es entre IES privadas y p\'ublicas:
 \[
 \text{PRIVADA} = \begin{cases}
 1 & \text{si IES privada} \\
-0 & \text{si IES pública}
+0 & \text{si IES p\'ublica}
 \end{cases}
 \]
+Otro ejemplo cercano: una variable que vale 1 si usan iPad en clase y 0 si no, o 1 si trabajan y 0 si no.
 \end{exampleblock}
+\end{frame}
 
-\vspace{0.2cm}
+\begin{frame}{Variables dummy: modelo e interpretaci\'on}
 \textbf{Modelo:}
 \[
 \text{MOD\_INGLES\_PUNT}_i = \beta_0 + \beta_1 \times \text{PRIVADA}_i + \varepsilon_i
 \]
 
 \vspace{0.2cm}
-\textbf{Interpretación:}
+\textbf{Interpretaci\'on:}
 \begin{itemize}
-  \item $\beta_0$ = puntaje promedio en IES públicas (cuando PRIVADA = 0)
+  \item $\beta_0$ = puntaje promedio en IES p\'ublicas (cuando PRIVADA = 0)
   \item $\beta_0 + \beta_1$ = puntaje promedio en IES privadas (cuando PRIVADA = 1)
-  \item $\beta_1$ = diferencia promedio entre IES privadas y públicas
+  \item $\beta_1$ = diferencia promedio entre IES privadas y p\'ublicas
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Regresión con dummy en R}
-\begin{lstlisting}
+\begin{frame}[fragile]{Regresi\'on con dummy en R}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Crear variable dummy
 icfes_ni$PRIVADA <- ifelse(icfes_ni$TIPO_IES == "privada", 1, 0)
 
@@ -741,9 +742,9 @@ summary(modelo_dummy)
 \end{frame}
 
 \begin{frame}[fragile]{Equivalencia con prueba t de dos muestras}
-La regresión con una dummy es equivalente a una prueba t de dos muestras independientes:
+La regresi\'on con una dummy es equivalente a una prueba t de dos muestras independientes:
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,aboveskip=0pt,belowskip=0pt]
 # Prueba t tradicional
 t.test(MOD_INGLES_PUNT ~ TIPO_IES, data = icfes_ni,
        var.equal = TRUE)
@@ -759,9 +760,8 @@ t.test(MOD_INGLES_PUNT ~ TIPO_IES, data = icfes_ni,
 #              162.17              154.82
 \end{lstlisting}
 
-\vspace{0.2cm}
-\begin{block}{Observación}
-El estadístico $t$ de la regresión ($t = 12.67$) es idéntico (en valor absoluto) al de la prueba t de dos muestras. La regresión es una generalización poderosa.
+\begin{block}{Observaci\'on}
+\small El estad\'istico $t$ de la regresi\'on ($t = 12.67$) es id\'entico (en valor absoluto) al de la prueba t de dos muestras. La regresi\'on es una generalizaci\'on poderosa.
 \end{block}
 \end{frame}
 
@@ -813,7 +813,7 @@ cor(icfes_ni$INGLES_SABER11_PUNT,
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo integrador: ajuste del modelo}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # 3. Ajustar modelo de regresion
 modelo2 <- lm(MOD_RAZONA_CUANT_PUNT ~ INGLES_SABER11_PUNT,
               data = icfes_ni)
@@ -838,8 +838,8 @@ confint(modelo2)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo integrador: diagnóstico}
-\begin{lstlisting}
+\begin{frame}[fragile]{Ejemplo integrador: diagn\'ostico}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # 6. Graficos diagnosticos
 par(mfrow = c(2, 2))
 plot(modelo2)
@@ -863,8 +863,8 @@ bptest(modelo2)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo integrador: predicción}
-\begin{lstlisting}
+\begin{frame}[fragile]{Ejemplo integrador: predicci\'on}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # 8. Hacer predicciones
 # Prediccion puntual para Saber 11 = 70
 nuevo_dato <- data.frame(INGLES_SABER11_PUNT = 70)
@@ -908,13 +908,13 @@ ggplot(icfes_ni, aes(x = INGLES_SABER11_PUNT,
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Resumen de la sesión}
+\begin{frame}{Resumen de la sesi\'on}
 \begin{block}{Conceptos clave}
 \begin{itemize}
-  \item Modelo de regresión lineal simple: $Y = \beta_0 + \beta_1 X + \varepsilon$
+  \item Modelo de regresi\'on lineal simple: $Y = \beta_0 + \beta_1 X + \varepsilon$
   \item OLS minimiza $\sum e_i^2$ para estimar $\hat{\beta}_0$ y $\hat{\beta}_1$
-  \item La línea OLS pasa por $(\bar{X}, \bar{Y})$
-  \item $R^2$ mide la proporción de variabilidad explicada
+  \item La l\'inea OLS pasa por $(\bar{X}, \bar{Y})$
+  \item $R^2$ mide la proporci\'on de variabilidad explicada
   \item Supuestos de Gauss-Markov: linealidad, independencia, homocedasticidad, normalidad, exogeneidad
 \end{itemize}
 \end{block}
@@ -923,12 +923,14 @@ ggplot(icfes_ni, aes(x = INGLES_SABER11_PUNT,
 \begin{itemize}
   \item Prueba t para $H_0: \beta_1 = 0$
   \item IC para $\beta_1$: $\hat{\beta}_1 \pm t_{\alpha/2, n-2} \times \text{SE}(\hat{\beta}_1)$
-  \item Regresión con dummy $\equiv$ t-test de dos muestras
+  \item Regresi\'on con dummy $\equiv$ t-test de dos muestras
 \end{itemize}
 \end{block}
+\end{frame}
 
-\begin{exampleblock}{Próxima sesión}
-Regresión lineal múltiple: incorporar varios predictores simultáneamente.
+\begin{frame}{Pr\'oxima sesi\'on}
+\begin{exampleblock}{Regresi\'on lineal m\'ultiple}
+Incorporar varios predictores simult\'aneamente: por ejemplo, predecir su nota controlando por horas de estudio, screen time, y si trabajan.
 \end{exampleblock}
 \end{frame}
 

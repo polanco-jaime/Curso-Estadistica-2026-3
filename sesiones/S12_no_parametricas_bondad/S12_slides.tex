@@ -51,40 +51,41 @@
 \end{frame}
 
 \begin{frame}{El pipeline estadístico: proceso iterativo}
-\begin{block}{El análisis estadístico es un proceso iterativo}
+\begin{block}{El an\'alisis estad\'istico es un proceso iterativo}
 \begin{itemize}
 \item Cada paso informa el siguiente
-\item Los diagnósticos pueden llevarnos a re-especificar el modelo
+\item Los diagn\'osticos pueden llevarnos a re-especificar el modelo
 \item Las conclusiones pueden generar nuevas preguntas
-\item Los datos cuentan una historia — nuestro trabajo es descubrirla con rigor
+\item Los datos cuentan una historia --- nuestro trabajo es descubrirla con rigor
 \end{itemize}
 \end{block}
+
+\begin{exampleblock}{Analog\'ia: es como cocinar}
+\small
+Primero los ingredientes (datos), luego la preparaci\'on (limpieza), la cocci\'on (modelo), y la presentaci\'on del plato (conclusiones). Si queman algo en la cocci\'on (diagn\'osticos fallan), toca volver atr\'as y ajustar.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{¿Por qué importa el pipeline completo?}
 \begin{columns}
 \begin{column}{0.48\textwidth}
-\begin{alertblock}{Mal análisis}
+\begin{alertblock}{Mal an\'alisis}
 \begin{itemize}
-\item Saltar directamente a regresión
+\item Saltar directamente a regresi\'on
 \item No explorar los datos
 \item Ignorar supuestos
-\item No verificar diagnósticos
+\item No verificar diagn\'osticos
 \item Reportar solo p-valores
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Resultado:}
-\begin{itemize}
-\item Conclusiones incorrectas
-\item Modelos mal especificados
-\item Inferencia inválida
-\end{itemize}
+\vspace{0.1cm}
+\small
+Es como publicar un TikTok sin editar: sale cualquier cosa.
 \end{alertblock}
 \end{column}
 
 \begin{column}{0.48\textwidth}
-\begin{exampleblock}{Buen análisis}
+\begin{exampleblock}{Buen an\'alisis}
 \begin{itemize}
 \item Comenzar con una pregunta clara
 \item Explorar antes de modelar
@@ -93,13 +94,9 @@
 \item Reportar efecto + incertidumbre
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Resultado:}
-\begin{itemize}
-\item Conclusiones sólidas
-\item Modelos justificados
-\item Inferencia válida
-\end{itemize}
+\vspace{0.1cm}
+\small
+Es como un video bien producido: gui\'on, grabaci\'on, edici\'on, revisi\'on y publicaci\'on.
 \end{exampleblock}
 \end{column}
 \end{columns}
@@ -115,35 +112,38 @@
 Los programas de Negocios Internacionales requieren dominio del inglés como competencia clave. El examen Saber Pro evalúa esta competencia con la prueba de inglés (MOD\_INGLES\_PUNT, escala 0-300, convertible a niveles MCER: A-, A1, A2, B1, B2).
 \end{block}
 
-\vspace{0.3cm}
-\textbf{Pregunta de investigación:}
+\vspace{0.2cm}
+\textbf{Pregunta de investigaci\'on:}
 \begin{center}
 \large
-\textcolor{javeriana}{¿Qué factores socioeconómicos y académicos determinan\\el desempeño en inglés de estudiantes de Negocios Internacionales\\en Colombia?}
+\textcolor{javeriana}{?`Qu\'e factores socioecon\'omicos y acad\'emicos determinan\\el desempe\~no en ingl\'es de estudiantes de Negocios Internacionales\\en Colombia?}
 \end{center}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Relevancia:}
 \begin{itemize}
-\item Informar políticas de admisión y nivelación
+\item Informar pol\'iticas de admisi\'on y nivelaci\'on
 \item Identificar grupos vulnerables que requieren apoyo
-\item Evaluar la equidad en el acceso a formación en inglés
+\item Evaluar la equidad en el acceso a formaci\'on en ingl\'es
 \end{itemize}
 \end{frame}
 
 % ============================================================================
-\section{Paso 1: Pregunta de investigación}
+\section{Paso 1: Pregunta de investigaci\'on}
 % ============================================================================
 
 \begin{frame}{Formulando una buena pregunta de investigación}
-\begin{block}{Características de una buena pregunta}
+\begin{block}{Caracter\'isticas de una buena pregunta}
 \begin{itemize}\setlength{\itemsep}{0pt}
-\item \textbf{Clara}: términos bien definidos
+\item \textbf{Clara}: t\'erminos bien definidos
 \item \textbf{Medible}: variables observables
-\item \textbf{Relevante}: tiene implicaciones prácticas o teóricas
+\item \textbf{Relevante}: tiene implicaciones pr\'acticas o te\'oricas
 \item \textbf{Acotada}: no demasiado amplia ni demasiado estrecha
 \end{itemize}
 \end{block}
+
+\small
+Recuerden la sesi\'on de descriptiva (S01): primero hay que saber \textit{qu\'e} queremos medir antes de calcular medias y desviaciones. La pregunta es el GPS de todo el an\'alisis.
 \end{frame}
 
 \begin{frame}{Formulando una buena pregunta: ejemplo}
@@ -296,10 +296,13 @@ nrow(ni_data)
 \begin{frame}{Valores faltantes: consideraciones}
 \begin{alertblock}{Importante}
 \begin{itemize}
-\item \code{na.omit()} elimina TODAS las filas con algún NA (puede ser demasiado drástico)
+\item \code{na.omit()} elimina TODAS las filas con alg\'un NA (puede ser demasiado dr\'astico)
 \item Mejor: eliminar NA solo en variables clave
-\item Reportar cuántas observaciones se perdieron y por qué
+\item Reportar cu\'antas observaciones se perdieron y por qu\'e
 \end{itemize}
+
+\small
+Es como limpiar su playlist de Spotify: no borren todo, solo las canciones que realmente no sirven. Cada dato que eliminan es informaci\'on que pierden.
 \end{alertblock}
 \end{frame}
 
@@ -324,9 +327,8 @@ table(ni_data$REGION)
 table(ni_data$ESTU_GENERO)
 \end{lstlisting}
 
-\vspace{0.3cm}
-\small
-\textbf{Siempre verificar:} rangos válidos, categorías correctas, no haya valores imposibles.
+\footnotesize
+\textbf{Siempre verificar:} rangos v\'alidos, categor\'ias correctas, no haya valores imposibles.
 \end{frame}
 
 % ============================================================================
@@ -426,13 +428,17 @@ ni_data %>%
 
 \textbf{Observaciones:}
 \begin{itemize}\setlength{\itemsep}{0pt}
-\item Relación positiva entre estrato y puntaje (gradiente claro)
+\item Relaci\'on positiva entre estrato y puntaje (gradiente claro)
 \item La variabilidad (DE) disminuye al aumentar el estrato
-\item Estudiantes de estrato 6 puntúan 40 puntos más que estrato 1 (diferencia sustantiva)
+\item Estudiantes de estrato 6 punt\'uan 40 puntos m\'as que estrato 1 (diferencia sustantiva)
 \end{itemize}
+\end{frame}
 
-\small
-\textcolor{javeriana}{Pregunta}: ¿Esta diferencia es estadísticamente significativa? $\to$ necesitamos pruebas formales.
+\begin{frame}{EDA: hallazgos preliminares (cont.)}
+\textcolor{javeriana}{Pregunta}: ?`Esta diferencia es estad\'isticamente significativa? $\to$ necesitamos pruebas formales.
+
+\vspace{0.3cm}
+Recuerden S03 (muestreo): estas son estad\'isticas \textit{muestrales} --- necesitamos IC y pruebas para saber si reflejan la poblaci\'on.
 \end{frame}
 
 \begin{frame}[fragile]{EDA: visualizaciones}
@@ -796,13 +802,16 @@ $R^2$ & 0.134 & 0.428 \\
 \end{frame}
 
 \begin{frame}{OVB: explicación del cambio}
-\textbf{¿Por qué cambia el coeficiente de estrato?}
+\textbf{?`Por qu\'e cambia el coeficiente de estrato?}
 \begin{itemize}\setlength{\itemsep}{2pt}
 \item En modelo1, ESTU\_ESTRATO captura TANTO su efecto directo COMO el efecto indirecto de variables omitidas correlacionadas (PRIVADA, PUNT\_S11)
 \item Estudiantes de estrato alto tienden a ir a IES privadas y tener mejor Saber 11
 \item Al incluir estas variables en modelo2, el efecto de estrato se ``purifica''
 \item El efecto causal verdadero del estrato es \textasciitilde{}2.1 puntos (controlado)
 \end{itemize}
+
+\small
+Recuerden S06 (OLS m\'ultiple): controlar variables es como aislar el efecto de un solo ingrediente en una receta --- hay que mantener todo lo dem\'as constante para saber qu\'e aporta cada uno.
 \end{frame}
 
 \begin{frame}[fragile]{Interpretación de coeficientes}
@@ -866,7 +875,7 @@ library(lmtest)
 bptest(modelo2)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \begin{exampleblock}{Output esperado}
 \small
 \begin{verbatim}
@@ -877,11 +886,11 @@ BP = 38.472, df = 4, p-value = 8.741e-08
 \end{verbatim}
 \end{exampleblock}
 
-\textbf{Conclusión:}
-\begin{itemize}
+\textbf{Conclusi\'on:}
+\begin{itemize}\setlength{\itemsep}{0pt}
 \item $p < 0.001$ $\Rightarrow$ rechazamos $H_0$ de homocedasticidad
 \item Hay evidencia de heterocedasticidad
-\item Solución: usar errores estándar robustos
+\item Soluci\'on: usar errores est\'andar robustos
 \end{itemize}
 \end{frame}
 
@@ -905,9 +914,8 @@ plot(cook_d, type = "h", main = "Distancia de Cook")
 abline(h = umbral, col = "red", lty = 2)
 \end{lstlisting}
 
-\vspace{0.3cm}
-\small
-\textbf{Acción}: si hay observaciones con $D_i > 4/n$, investigar (¿error de datos? ¿caso especial?). Si son legítimas, reportar análisis de sensibilidad.
+\footnotesize
+\textbf{Acci\'on}: si hay observaciones con $D_i > 4/n$, investigar (?`error de datos? ?`caso especial?). Si son leg\'itimas, reportar an\'alisis de sensibilidad.
 \end{frame}
 
 % ============================================================================
@@ -923,7 +931,7 @@ abline(h = umbral, col = "red", lty = 2)
 
 \item \textbf{Brecha público-privada}: Estudiantes de IES privadas puntúan 5.4 puntos más que los de públicas (IC 95\%: [3.0, 7.8]), controlando por estrato y desempeño previo.
 
-\item \textbf{Persistencia del desempeño}: El puntaje en Saber 11 es el predictor más fuerte ($\beta = 0.88$, $t = 25.8$), lo que sugiere que las brechas se originan antes de la educación superior.
+\item \textbf{Persistencia del desempe\~no}: El puntaje en Saber 11 es el predictor m\'as fuerte ($\beta = 0.88$, $t = 25.8$). Las brechas vienen desde el colegio --- como cuando el algoritmo de una red social te encasilla desde el principio.
 
 \item \textbf{No se encontraron diferencias por género} ($p = 0.118$).
 \end{enumerate}
@@ -1022,12 +1030,11 @@ abline(h = umbral, col = "red", lty = 2)
 \end{itemize}
 \end{exampleblock}
 
-\vspace{0.3cm}
-\small
-\textcolor{javeriana}{Recordatorio}: El código es parte del informe. Debe ser legible y reproducible.
+\footnotesize
+\textcolor{javeriana}{Recordatorio}: El c\'odigo es parte del informe. Debe ser legible y reproducible.
 \end{frame}
 
-\begin{frame}{Rúbrica para el proyecto final}
+\begin{frame}{R\'ubrica para el proyecto final}
 \footnotesize
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
@@ -1092,7 +1099,7 @@ Código reproducible & Scripts claros, comentados, reproducibles & 5 \\
 
 \item \textbf{Controlar confundidores}: Un modelo simple puede ser engañoso (OVB).
 
-\item \textbf{Verificar supuestos}: OLS sin diagnósticos es como conducir sin frenos.
+\item \textbf{Verificar supuestos}: OLS sin diagn\'osticos es como postear sin revisar --- puede salir muy mal.
 
 \item \textbf{Reportar incertidumbre}: Un coeficiente sin IC o error estándar es incompleto.
 
@@ -1116,12 +1123,12 @@ Código reproducible & Scripts claros, comentados, reproducibles & 5 \\
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
-\begin{alertblock}{Para la próxima clase}
+\vspace{0.1cm}
+\begin{alertblock}{Para la pr\'oxima clase}
 \textbf{Traer:}
 \begin{itemize}
 \item Todas tus dudas del semestre
-\item Hoja de fórmulas (draft para el examen)
+\item Hoja de f\'ormulas (draft para el examen)
 \item Calculadora
 \end{itemize}
 \end{alertblock}
@@ -1129,12 +1136,12 @@ Código reproducible & Scripts claros, comentados, reproducibles & 5 \\
 
 \begin{frame}{}
 \begin{center}
-\Huge ¡Gracias!
+\Huge !`Gracias!
 
-\vspace{1cm}
-\Large Preguntas y discusión
+\vspace{0.8cm}
+\Large Preguntas y discusi\'on
 
-\vspace{1.5cm}
+\vspace{1.2cm}
 \normalsize
 \textbf{Contacto:}\\
 jaime.polanco@javeriana.edu.co\\

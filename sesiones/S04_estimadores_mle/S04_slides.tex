@@ -63,8 +63,16 @@ s &\text{ estima } \sigma \\
 \end{itemize}
 \end{columns}
 
-\vspace{0.3cm}
-\alert{Limitación}: un solo número no captura la incertidumbre de la estimación
+\alert{Limitaci\'on}: un solo n\'umero no captura la incertidumbre de la estimaci\'on
+\end{frame}
+
+\begin{frame}{Estimaci\'on puntual: ejemplo cotidiano}
+\begin{exampleblock}{Ejemplo: Spotify y la estimaci\'on}
+Spotify estima tu ``perfil musical'' con un conjunto de par\'ametros. Cada canci\'on que escuchas es un dato. $\hat{\theta}$ es la mejor aproximaci\'on de tus gustos basada en esos datos.
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Idea clave}: un estimador puntual nos da un solo n\'umero. Pero ?`qu\'e tan cerca est\'a del valor real? Para responder esa pregunta, necesitamos \alert{intervalos de confianza}.
 \end{frame}
 
 \begin{frame}{Propiedades Deseables de un Estimador}
@@ -86,8 +94,9 @@ s &\text{ estima } \sigma \\
 \vspace{0.3cm}
 \textbf{3. Consistencia}
 \begin{itemize}
-  \item A medida que $n \to \infty$, el estimador converge al parámetro
+  \item A medida que $n \to \infty$, el estimador converge al par\'ametro
   \item $\bar{x} \xrightarrow{p} \mu$ cuando $n \to \infty$
+  \item Ejemplo: entre m\'as canciones le das ``like'' en Spotify, mejor estima tus gustos musicales
 \end{itemize}
 \end{frame}
 
@@ -119,7 +128,7 @@ cat("\nEstimacion puntual de sigma:", round(sigma_estimado, 2))
 \begin{frame}{De Estimación Puntual a Intervalos}
 \begin{columns}[c]
 \column{0.48\textwidth}
-\textbf{Estimación puntual}:
+\textbf{Estimaci\'on puntual}:
 \begin{itemize}
   \item $\hat{\mu} = 162.5$ puntos
   \item Un solo valor
@@ -127,8 +136,8 @@ cat("\nEstimacion puntual de sigma:", round(sigma_estimado, 2))
 \end{itemize}
 
 \vspace{0.5cm}
-¿Es $\mu$ exactamente 162.5?\\
-\alert{No}, pero probablemente está cerca.
+?`Es $\mu$ exactamente 162.5?\\
+\alert{No}, pero probablemente est\'a cerca.
 
 \column{0.48\textwidth}
 \textbf{Intervalo de confianza}:
@@ -139,7 +148,10 @@ cat("\nEstimacion puntual de sigma:", round(sigma_estimado, 2))
 \end{itemize}
 
 \vspace{0.5cm}
-Estamos \alert{95\% confiados} de que $\mu$ está en ese intervalo.
+Estamos \alert{95\% confiados} de que $\mu$ est\'a en ese intervalo.
+
+\vspace{0.3cm}
+\small Ejemplo: ``el \emph{screen time} promedio del sal\'on est\'a entre 4.2 y 5.8 horas''.
 \end{columns}
 
 \vspace{0.5cm}
@@ -174,17 +186,17 @@ Un \textbf{intervalo de confianza (IC)} para un parámetro $\theta$ al nivel $(1
 \end{frame}
 
 \begin{frame}{Interpretación Correcta del IC}
-\begin{alertblock}{Interpretación CORRECTA}
-``Si tomáramos 100 muestras aleatorias diferentes y construyéramos un IC al 95\% con cada una, esperaríamos que aproximadamente \alert{95 de esos intervalos} contengan el parámetro verdadero $\mu$.''
+\begin{alertblock}{Interpretaci\'on CORRECTA}
+``Si tom\'aramos 100 muestras aleatorias diferentes y construy\'eramos un IC al 95\% con cada una, esperar\'iamos que aproximadamente \alert{95 de esos intervalos} contengan el par\'ametro verdadero $\mu$.''
 \end{alertblock}
 
-\vspace{0.3cm}
-\begin{exampleblock}{Interpretación alternativa correcta}
-``Estamos 95\% confiados de que el intervalo $(a, b)$ contiene a $\mu$.''
+\smallskip
+\begin{exampleblock}{Interpretaci\'on alternativa correcta}
+``Estamos 95\% confiados de que el \emph{screen time} promedio de los javerianos est\'a entre 4.2 y 5.8 horas.''
 \end{exampleblock}
 
-\vspace{0.3cm}
-\begin{block}{Interpretación INCORRECTA}
+\smallskip
+\begin{block}{Interpretaci\'on INCORRECTA}
 \textcolor{red}{\textbf{NO}}: ``Hay un 95\% de probabilidad de que $\mu$ esté en $(a, b)$''.
 
 \vspace{0.2cm}
@@ -240,18 +252,23 @@ E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
 \vspace{0.2cm}
 \textbf{Componentes}:
 \begin{itemize}
-  \item $z_{\alpha/2}$ = valor crítico de la distribución normal estándar
-  \item $\frac{\sigma}{\sqrt{n}}$ = error estándar de $\bar{x}$
+  \item $z_{\alpha/2}$ = valor cr\'itico de la distribuci\'on normal est\'andar
+  \item $\frac{\sigma}{\sqrt{n}}$ = error est\'andar de $\bar{x}$
   \item Mayor confianza $(1-\alpha)$ $\Rightarrow$ mayor $z_{\alpha/2}$ $\Rightarrow$ mayor $E$
   \item Mayor $n$ $\Rightarrow$ menor $E$
 \end{itemize}
+\end{frame}
 
-\vspace{0.2cm}
-\textbf{Trade-off}: Confianza vs Precisión
+\begin{frame}{Trade-off: Confianza vs Precisi\'on}
+\textbf{Trade-off}: Confianza vs Precisi\'on
 \begin{itemize}
-  \item Más confianza (ej. 99\%) $\Rightarrow$ intervalo más ancho
-  \item Menos confianza (ej. 90\%) $\Rightarrow$ intervalo más estrecho
+  \item M\'as confianza (ej.\ 99\%) $\Rightarrow$ intervalo m\'as ancho
+  \item Menos confianza (ej.\ 90\%) $\Rightarrow$ intervalo m\'as estrecho
 \end{itemize}
+
+\begin{exampleblock}{Analog\'ia}
+Predecir la hora exacta a la que un amigo llega a clase es dif\'icil. Pero decir ``llega entre 6:55 y 7:10'' es m\'as seguro. Entre m\'as amplio el rango, m\'as confianza, pero menos precisi\'on.
+\end{exampleblock}
 \end{frame}
 
 % ============================================================================
@@ -383,24 +400,37 @@ IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos, con margen de error $E = 3.22$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Interpretación del Resultado}
+\begin{frame}{Interpretaci\'on del Resultado}
 \begin{exampleblock}{Resultado}
 IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos
 \end{exampleblock}
 
 \vspace{0.3cm}
-\textbf{Interpretación correcta}:
+\textbf{Interpretaci\'on correcta}:
 \begin{itemize}
-  \item Estamos 95\% confiados de que la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI está entre 159.28 y 165.72 puntos.
-  \item Si repitiéramos el muestreo 100 veces, aproximadamente 95 de los intervalos construidos contendrían el verdadero valor de $\mu$.
+  \item Estamos 95\% confiados de que la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI est\'a entre 159.28 y 165.72 puntos.
+  \item Si repiti\'eramos el muestreo 100 veces, aproximadamente 95 de los intervalos construidos contendr\'ian el verdadero valor de $\mu$.
 \end{itemize}
 
 \vspace{0.3cm}
-\textbf{Implicación práctica}:
+\textbf{Implicaci\'on pr\'actica}:
 \begin{itemize}
   \item El margen de error es $E = 3.22$ puntos
-  \item ¿Es suficientemente preciso para nuestros propósitos?
-  \item Si necesitamos más precisión, podemos aumentar $n$
+  \item ?`Es suficientemente preciso para nuestros prop\'ositos?
+  \item Si necesitamos m\'as precisi\'on, podemos aumentar $n$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{El IC en la vida real}
+\begin{alertblock}{Ejemplo: encuestas electorales}
+Las encuestas electorales reportan ``el candidato A tiene 48\% $\pm$ 3\%''. Ese $\pm$ 3\% es el margen de error de un IC, igual al que acabamos de calcular.
+\end{alertblock}
+
+\vspace{0.5em}
+\textbf{Otros ejemplos cotidianos de IC}:
+\begin{itemize}
+  \item Reportes de salud: ``el consumo promedio de cafe\'ina de universitarios colombianos es 180 $\pm$ 25 mg/d\'ia''
+  \item Apps de delivery: ``tiempo estimado: 25--35 minutos'' (intervalo de confianza impl\'icito)
 \end{itemize}
 \end{frame}
 
@@ -409,22 +439,28 @@ IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos
 % ============================================================================
 
 \begin{frame}{El Problema: $\sigma$ Desconocida}
-\textbf{Situación real}: En la práctica, \alert{casi nunca} conocemos $\sigma$.
+\textbf{Situaci\'on real}: En la pr\'actica, \alert{casi nunca} conocemos $\sigma$.
 
-\vspace{0.3cm}
-\textbf{Solución}: Usar la desviación estándar muestral $s$ en lugar de $\sigma$.
+\vspace{0.2cm}
+\textbf{Soluci\'on}: Usar la desviaci\'on est\'andar muestral $s$ en lugar de $\sigma$.
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{block}{Consecuencia}
-Al reemplazar $\sigma$ por $s$, introducimos una fuente adicional de variabilidad. El estadístico
+Al reemplazar $\sigma$ por $s$, introducimos una fuente adicional de variabilidad. El estad\'istico
 \[
 t = \frac{\bar{x} - \mu}{s/\sqrt{n}}
 \]
-ya NO sigue una distribución normal estándar, sino una \alert{distribución $t$ de Student} con $n-1$ grados de libertad.
+ya NO sigue una distribuci\'on normal est\'andar, sino una \alert{distribuci\'on $t$ de Student} con $n-1$ grados de libertad.
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
-\textbf{Notación}: $t \sim t(n-1)$ o $t_{n-1}$
+\begin{frame}{$\sigma$ Desconocida: analog\'ia}
+\begin{exampleblock}{Analog\'ia}
+Imagina que quieres estimar el promedio de horas de sue\~no de tu sal\'on, pero no conoces qu\'e tan dispersos son los datos ($\sigma$). Solo tienes $s$ de tu muestra. Esa incertidumbre extra es la que captura la distribuci\'on $t$.
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Resumen}: Cuando $\sigma$ es desconocida, usamos $s$ y la distribuci\'on $t$ en lugar de la normal est\'andar $Z$. Esto produce intervalos m\'as anchos, especialmente con muestras peque\~nas.
 \end{frame}
 
 \begin{frame}{Distribución $t$ de Student}
@@ -620,24 +656,28 @@ mean of x
 % ============================================================================
 
 \begin{frame}{IC para la Varianza $\sigma^2$}
-\textbf{Motivación}: A veces queremos estimar la \alert{variabilidad} poblacional, no solo la media.
+\textbf{Motivaci\'on}: A veces queremos estimar la \alert{variabilidad} poblacional, no solo la media.
 
 \vspace{0.3cm}
 \textbf{Aplicaciones}:
 \begin{itemize}
-  \item Educación: ¿qué tan heterogéneo es el rendimiento en inglés entre estudiantes de NI?
-  \item Comercio internacional: volatilidad de la TRM (tasa de cambio) para planear importaciones
-  \item Logística: variabilidad en tiempos de entrega de MercadoLibre o Rappi
+  \item Educaci\'on: ?`qu\'e tan heterog\'eneo es el rendimiento en ingl\'es entre estudiantes de NI?
+  \item Comercio internacional: volatilidad de la TRM para planear importaciones
+  \item Log\'istica: variabilidad en tiempos de entrega de Rappi --- si la varianza es alta, no puedes confiar en la hora estimada
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-\begin{block}{Distribución muestral de $s^2$}
-Si la población es normal, entonces:
+\begin{frame}{Distribuci\'on muestral de $s^2$}
+\begin{block}{Distribuci\'on muestral de $s^2$}
+Si la poblaci\'on es normal, entonces:
 \[
 \frac{(n-1)s^2}{\sigma^2} \sim \chi^2(n-1)
 \]
-donde $\chi^2(n-1)$ es la distribución chi-cuadrado con $n-1$ grados de libertad.
+donde $\chi^2(n-1)$ es la distribuci\'on chi-cuadrado con $n-1$ grados de libertad.
 \end{block}
+
+\vspace{0.5em}
+Este resultado nos permite construir intervalos de confianza para $\sigma^2$ usando la distribuci\'on $\chi^2$.
 \end{frame}
 
 \begin{frame}{Distribución Chi-Cuadrado ($\chi^2$)}

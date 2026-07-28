@@ -27,9 +27,9 @@ Una \textbf{variable aleatoria} es una función que asigna un valor numérico a 
 
 \begin{exampleblock}{Ejemplos}
 \begin{itemize}
-\item X = puntaje de inglés en Saber Pro (valores entre 0 y 200)
-\item Y = número de estudiantes que aprueban (valores 0, 1, 2, \ldots, n)
-\item Z = tiempo de estudio en horas (valores $\geq 0$)
+\item X = puntaje de ingl\'es en Saber Pro (valores entre 0 y 200)
+\item Y = n\'umero de estudiantes que aprueban (valores 0, 1, 2, \ldots, n)
+\item Z = horas diarias de \emph{screen time} en el celular (valores $\geq 0$)
 \end{itemize}
 \end{exampleblock}
 
@@ -109,28 +109,30 @@ La \textbf{varianza} de X, denotada $\text{Var}(X)$ o $\sigma^2$, mide la disper
 \end{block}
 \end{frame}
 
-\begin{frame}{Parámetros vs estadísticos}
-\alert{Nota}: $\mu$ y $\sigma$ son \textbf{parámetros poblacionales} (fijos, desconocidos). $\bar{x}$ y $s$ son \textbf{estadísticos muestrales} (variables, observables).
+\begin{frame}{Par\'ametros vs estad\'isticos}
+\alert{Nota}: $\mu$ y $\sigma$ son \textbf{par\'ametros poblacionales} (fijos, desconocidos). $\bar{x}$ y $s$ son \textbf{estad\'isticos muestrales} (variables, observables).
 
 \vspace{0.5em}
-\begin{exampleblock}{Ejemplo: puntaje de inglés como variable aleatoria}
-Puntaje de inglés Saber Pro para NI como variable aleatoria continua X.
+\begin{exampleblock}{Ejemplo: puntaje de ingl\'es como variable aleatoria}
+Puntaje de ingl\'es Saber Pro para NI como variable aleatoria continua X. De la misma forma, el \emph{screen time} diario de cada estudiante del sal\'on es una variable aleatoria continua.
 \end{exampleblock}
 
-\textbf{Interpretación probabilística}:
+\textbf{Interpretaci\'on probabil\'istica}:
 \begin{itemize}
-\item X toma valores entre 0 y 200, con media $\mu$ y desviación estándar $\sigma$
-\item $P(X \leq 150)$ = proporción con puntaje $\leq$ 150
-\item $P(160 \leq X \leq 180)$ = proporción entre 160 y 180
+\item X toma valores entre 0 y 200, con media $\mu$ y desviaci\'on est\'andar $\sigma$
+\item $P(X \leq 150)$ = proporci\'on con puntaje $\leq$ 150
+\item $P(160 \leq X \leq 180)$ = proporci\'on entre 160 y 180
 \end{itemize}
+\end{frame}
 
-\textbf{Relación con estadística descriptiva}:
+\begin{frame}{Par\'ametros vs estad\'isticos (cont.)}
+\textbf{Relaci\'on con estad\'istica descriptiva}:
 \begin{itemize}
-\item \alert{Toda la población}: $\mu$ y $\sigma$ se calculan directamente
+\item \alert{Toda la poblaci\'on}: $\mu$ y $\sigma$ se calculan directamente
 \item \alert{Muestra}: estimamos $\mu$ con $\bar{x}$ y $\sigma$ con $s$
 \end{itemize}
 
-\alert{Pregunta clave}: ¿Cuál es la distribución de X? Esto determina cómo calculamos probabilidades.
+\alert{Pregunta clave}: ?`Cu\'al es la distribuci\'on de X? Esto determina c\'omo calculamos probabilidades.
 \end{frame}
 
 
@@ -138,27 +140,32 @@ Puntaje de inglés Saber Pro para NI como variable aleatoria continua X.
 \section{Distribución normal}
 % ============================================================================
 
-\begin{frame}{La distribución normal}
-\begin{block}{Definición}
-La \textbf{distribución normal} (o gaussiana) es la distribución de probabilidad continua más importante en estadística.
+\begin{frame}{La distribuci\'on normal}
+\begin{block}{Definici\'on}
+La \textbf{distribuci\'on normal} (o gaussiana) es la distribuci\'on de probabilidad continua m\'as importante en estad\'istica.
 \end{block}
 
-\textbf{Función de densidad}:
+\textbf{Funci\'on de densidad}:
 \[
 f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}, \quad -\infty < x < \infty
 \]
 
-\textbf{Notación}: $X \sim N(\mu, \sigma^2)$ (X sigue una distribución normal con media $\mu$ y varianza $\sigma^2$)
+\textbf{Notaci\'on}: $X \sim N(\mu, \sigma^2)$ (X sigue una distribuci\'on normal con media $\mu$ y varianza $\sigma^2$)
+
+\vspace{0.3em}
+\textbf{Par\'ametros}:
+\begin{itemize}
+\item $\mu$: media (centro de la distribuci\'on) \quad $\sigma$: desviaci\'on est\'andar (dispersi\'on) \quad $\sigma^2$: varianza
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La distribuci\'on normal: ejemplo e intuici\'on}
+\begin{exampleblock}{Ejemplo cotidiano}
+El \emph{screen time} diario de los estudiantes del sal\'on sigue aproximadamente una campana de Gauss: la mayor\'ia usa el celular entre 4 y 6 horas, y muy pocos est\'an en los extremos (menos de 1 h o m\'as de 9 h).
+\end{exampleblock}
 
 \vspace{0.5em}
-\textbf{Parámetros}:
-\begin{itemize}
-\item $\mu$: media (centro de la distribución)
-\item $\sigma$: desviación estándar (dispersión)
-\item $\sigma^2$: varianza
-\end{itemize}
-
-\alert{Importante}: La normal está completamente determinada por $\mu$ y $\sigma$. Conociendo estos dos parámetros, podemos calcular cualquier probabilidad.
+\alert{Importante}: La normal est\'a completamente determinada por $\mu$ y $\sigma$. Conociendo estos dos par\'ametros, podemos calcular cualquier probabilidad.
 \end{frame}
 
 \begin{frame}{Propiedades de la distribución normal}
@@ -198,19 +205,18 @@ f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\rig
 La \textbf{distribución normal estándar} es una normal con $\mu = 0$ y $\sigma = 1$: \ $Z \sim N(0, 1)$
 \end{block}
 
-\textbf{Función de densidad}: \ $f(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2}$
+\textbf{Funci\'on de densidad}: $f(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2}$
 
-\vspace{0.3em}
-\textbf{Estandarización}: Cualquier $X \sim N(\mu, \sigma^2)$ se transforma a:
+\textbf{Estandarizaci\'on}: Cualquier $X \sim N(\mu, \sigma^2)$ se transforma a:
 \[
 Z = \frac{X - \mu}{\sigma} \sim N(0, 1)
 \]
 
-\begin{alertblock}{¿Por qué es útil?}
+\begin{alertblock}{?`Por qu\'e es \'util?}
 \begin{itemize}
 \item Todas las probabilidades se calculan con una sola tabla (tabla Z)
-\item Permite comparar variables en diferentes escalas
-\item Simplifica cálculos teóricos
+\item Permite comparar variables en escalas distintas (ej: tu puntaje Saber Pro vs tu n\'umero de seguidores en Instagram)
+\item Simplifica c\'alculos te\'oricos
 \end{itemize}
 \end{alertblock}
 \end{frame}
@@ -494,30 +500,36 @@ $t = Z/\sqrt{V/k} \sim t(k)$.
 \end{columns}
 \end{frame}
 
-\begin{frame}{¿De dónde viene la distribución t?}
-\textbf{Motivación histórica}:
+\begin{frame}{?`De d\'onde viene la distribuci\'on t?}
+\textbf{Motivaci\'on hist\'orica}:
 
 Cuando queremos inferir sobre la media poblacional $\mu$:
 \begin{itemize}
 \item Si conocemos $\sigma$: $\frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)$
-\item Pero en la práctica, $\sigma$ es desconocido, usamos $s$
+\item Pero en la pr\'actica, $\sigma$ es desconocido, usamos $s$
 \item Reemplazar $\sigma$ por $s$ introduce incertidumbre adicional
-\item William Gosset (seudónimo "Student") descubrió en 1908 que:
+\item William Gosset (seud\'onimo ``Student'') descubri\'o en 1908 que:
 \end{itemize}
 
 \[
 \frac{\bar{X} - \mu}{s/\sqrt{n}} \sim t(n-1)
 \]
 
-\vspace{0.5em}
 \textbf{Consecuencias}:
 \begin{itemize}
-\item Para muestras pequeñas ($n < 30$), la distribución t tiene colas más pesadas
-\item Intervalos de confianza son más anchos (reflejan mayor incertidumbre)
+\item Para muestras peque\~nas ($n < 30$), la distribuci\'on t tiene colas m\'as pesadas
+\item Intervalos de confianza son m\'as anchos (reflejan mayor incertidumbre)
 \item A medida que $n$ crece, $s \to \sigma$ y $t \to N(0,1)$
 \end{itemize}
+\end{frame}
 
-\alert{Por eso usamos t en lugar de Z cuando estimamos $\sigma$ con $s$}
+\begin{frame}{Distribuci\'on t: muestra peque\~na vs grande}
+\begin{alertblock}{Ejemplo: muestra peque\~na vs grande}
+Si le preguntas a 5 amigos cu\'antas horas de Netflix ven, la variabilidad es alta y usas $t$. Si encuestas a 200 estudiantes, $s \approx \sigma$ y la $t$ se parece a la normal.
+\end{alertblock}
+
+\vspace{0.5em}
+\alert{Por eso usamos $t$ en lugar de $Z$ cuando estimamos $\sigma$ con $s$}
 \end{frame}
 
 \begin{frame}[fragile]{Distribución t en R (1/2)}
@@ -570,10 +582,11 @@ sigue una distribución F con $k_1$ y $k_2$ grados de libertad (numerador y deno
 \textbf{Propiedades}:
 \begin{itemize}
 \item Solo valores positivos ($F \geq 0$)
-\item Asimétrica (sesgada a la derecha)
-\item Depende de dos parámetros: $k_1$ (gl numerador) y $k_2$ (gl denominador)
+\item Asim\'etrica (sesgada a la derecha)
+\item Depende de dos par\'ametros: $k_1$ (gl numerador) y $k_2$ (gl denominador)
 \end{itemize}
 
+\vspace{-0.3em}
 \textbf{Usos principales}:
 \begin{itemize}
 \item Comparar varianzas de dos poblaciones: $\frac{s_1^2/\sigma_1^2}{s_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$
@@ -655,23 +668,26 @@ Usar estadísticos muestrales ($\bar{x}$, $s$, $\hat{p}$) para hacer inferencias
 \end{block}
 \end{frame}
 
-\begin{frame}{Población vs muestra: ejemplo}
+\begin{frame}{Poblaci\'on vs muestra: ejemplo}
 \begin{exampleblock}{Ejemplo concreto}
 \begin{itemize}
-\item \textbf{Población}: todos los estudiantes de NI en Colombia ($N \approx 50{,}000$)
+\item \textbf{Poblaci\'on}: todos los estudiantes de NI en Colombia ($N \approx 50{,}000$)
 \item \textbf{Muestra}: 500 estudiantes seleccionados aleatoriamente de la base ICFES
 \item Estimamos $\mu$ (puntaje medio poblacional) con $\bar{x}$ (puntaje medio muestral)
 \end{itemize}
 \end{exampleblock}
 
-\vspace{1em}
+\begin{alertblock}{Analog\'ia}
+Es como hacer una encuesta a 30 compa\~neros del sal\'on sobre cu\'antas horas de Netflix ven al mes, en lugar de preguntarle a toda la universidad.
+\end{alertblock}
+
 \begin{center}
 \begin{tikzpicture}[
   every node/.style={font=\small},
   box/.style={draw, rounded corners, minimum width=3cm, minimum height=1.2cm, align=center}
 ]
-\node[box, fill=javeriana!10] (pop) {Población\\$N \approx 50{,}000$\\Parámetro: $\mu$};
-\node[box, fill=javerianalight!15, right=3cm of pop] (samp) {Muestra\\$n = 500$\\Estadístico: $\bar{x}$};
+\node[box, fill=javeriana!10] (pop) {Poblaci\'on\\$N \approx 50{,}000$\\Par\'ametro: $\mu$};
+\node[box, fill=javerianalight!15, right=3cm of pop] (samp) {Muestra\\$n = 500$\\Estad\'istico: $\bar{x}$};
 \draw[-{Stealth}, thick] (pop) -- node[above] {muestreo} (samp);
 \draw[-{Stealth}, thick, dashed] (samp.south) -- ++(0,-0.5) -| node[below, pos=0.25] {inferencia} (pop.south);
 \end{tikzpicture}
@@ -679,27 +695,33 @@ Usar estadísticos muestrales ($\bar{x}$, $s$, $\hat{p}$) para hacer inferencias
 \end{frame}
 
 \begin{frame}{Muestreo aleatorio simple}
-\begin{block}{Definición}
-En el \textbf{muestreo aleatorio simple} (MAS), cada elemento de la población tiene la misma probabilidad de ser seleccionado, y cada muestra del mismo tamaño tiene igual probabilidad.
+\begin{block}{Definici\'on}
+En el \textbf{muestreo aleatorio simple} (MAS), cada elemento de la poblaci\'on tiene la misma probabilidad de ser seleccionado, y cada muestra del mismo tama\~no tiene igual probabilidad.
 \end{block}
 
 \textbf{Supuestos clave}:
 \begin{enumerate}
-\item Las observaciones son \alert{independientes} entre sí
-\item Cada observación proviene de la \alert{misma distribución} (población)
-\item Notación: $X_1, X_2, \ldots, X_n$ son i.i.d. (independientes e idénticamente distribuidas)
+\item Las observaciones son \alert{independientes} entre s\'i
+\item Cada observaci\'on proviene de la \alert{misma distribuci\'on} (poblaci\'on)
+\item Notaci\'on: $X_1, X_2, \ldots, X_n$ son i.i.d.\ (independientes e id\'enticamente distribuidas)
 \end{enumerate}
 
 \vspace{0.5em}
 \textbf{Consecuencias}:
 \begin{itemize}
-\item Evita sesgos de selección
-\item Permite generalizar de la muestra a la población
-\item Fundamento matemático de la inferencia estadística
+\item Evita sesgos de selecci\'on
+\item Permite generalizar de la muestra a la poblaci\'on
+\item Fundamento matem\'atico de la inferencia estad\'istica
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Muestreo aleatorio simple: ejemplo}
+\begin{exampleblock}{Ejemplo}
+Quieres saber cu\'antas horas semanales dedican los javerianos a TikTok. Si solo encuestas a tus amigos cercanos (sesgo de selecci\'on), el resultado no representa a toda la universidad. El MAS evita ese problema.
+\end{exampleblock}
 
 \vspace{0.5em}
-\alert{En la práctica}: muestreo aleatorio perfecto es difícil. A veces usamos muestreo estratificado, por conglomerados, etc., pero MAS es el punto de partida teórico.
+\alert{En la pr\'actica}: muestreo aleatorio perfecto es dif\'icil. A veces usamos muestreo estratificado, por conglomerados, etc., pero MAS es el punto de partida te\'orico.
 \end{frame}
 
 \begin{frame}{Distribución muestral de $\bar{X}$}
@@ -744,7 +766,10 @@ E(\bar{X}) = \mu
 
 \begin{exampleblock}{Ejemplo}
 Si $\sigma = 20$ puntos y $n=100$: $\text{SE} = 20/10 = 2$ puntos.\\
-La media muestral típicamente difiere de $\mu$ en $\approx 2$ puntos.
+La media muestral t\'ipicamente difiere de $\mu$ en $\approx 2$ puntos.
+
+\smallskip
+Encuestar a 100 compa\~neros sobre su \emph{screen time} da una estimaci\'on bastante precisa del promedio de toda la universidad.
 \end{exampleblock}
 \end{frame}
 
@@ -752,20 +777,29 @@ La media muestral típicamente difiere de $\mu$ en $\approx 2$ puntos.
 \section{Teorema Central del Límite}
 % ============================================================================
 
-\begin{frame}{Teorema Central del Límite (TCL)}
-\begin{block}{Teorema Central del Límite}
-Si $X_1, X_2, \ldots, X_n$ es una muestra aleatoria de una población con media $\mu$ y desviación estándar $\sigma$ (finitos), entonces para $n$ suficientemente grande:
+\begin{frame}{Teorema Central del L\'imite (TCL)}
+\begin{block}{Teorema Central del L\'imite}
+Si $X_1, X_2, \ldots, X_n$ es una muestra aleatoria de una poblaci\'on con media $\mu$ y desviaci\'on est\'andar $\sigma$ (finitos), entonces para $n$ suficientemente grande:
 \[
 \bar{X} \sim N\!\left(\mu, \frac{\sigma^2}{n}\right) \quad \text{aprox.} \qquad \Longleftrightarrow \qquad Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1) \quad \text{aprox.}
 \]
 \end{block}
 
-\vspace{0.5em}
+\vspace{0.3em}
 \textbf{Mensajes clave}:
 \begin{enumerate}
-\item \alert{No importa la forma de la distribución original}: sesgada, bimodal, uniforme, etc.
+\item \alert{No importa la forma de la distribuci\'on original}: sesgada, bimodal, uniforme, etc.
 \item \alert{Para $n$ grande, $\bar{X}$ es aproximadamente normal}
 \end{enumerate}
+\end{frame}
+
+\begin{frame}{TCL: ejemplo con TikTok}
+\begin{exampleblock}{Ejemplo: sesiones de TikTok}
+El tiempo por sesi\'on de TikTok NO es normal (muchas sesiones cortas, pocas muy largas). Pero si promedias el tiempo de 30 sesiones y repites muchas veces, esos promedios s\'i forman una campana. Eso es el TCL.
+\end{exampleblock}
+
+\vspace{0.5em}
+\textbf{Intuici\'on}: No importa que la distribuci\'on individual sea rara. Al promediar muchas observaciones, el resultado siempre converge a una forma de campana.
 \end{frame}
 
 \begin{frame}{TCL: ¿cuándo es $n$ ``suficientemente grande''?}
@@ -794,8 +828,8 @@ Muy sesgada & $\geq 50$ \\
 \end{center}
 \end{frame}
 
-\begin{frame}{¿Por qué el TCL es tan importante?}
-\begin{alertblock}{El TCL es el teorema más importante de la estadística}
+\begin{frame}{?`Por qu\'e el TCL es tan importante?}
+\begin{alertblock}{El TCL es el teorema m\'as importante de la estad\'istica}
 \end{alertblock}
 
 \textbf{Razones}:
@@ -803,17 +837,17 @@ Muy sesgada & $\geq 50$ \\
 \item \textbf{Fundamento de la inferencia}:
   \begin{itemize}
   \item Intervalos de confianza para medias
-  \item Pruebas de hipótesis sobre medias
-  \item Tamaño de muestra para precisión deseada
+  \item Pruebas de hip\'otesis sobre medias
+  \item Tama\~no de muestra para precisi\'on deseada
   \end{itemize}
 \item \textbf{Universalidad}:
   \begin{itemize}
-  \item Aplica a cualquier población (con media y varianza finitas)
-  \item No necesitamos conocer la distribución poblacional
+  \item Aplica a cualquier poblaci\'on (con media y varianza finitas)
+  \item No necesitamos conocer la distribuci\'on poblacional
   \end{itemize}
-\item \textbf{Justifica el uso de la distribución normal}:
+\item \textbf{Justifica el uso de la distribuci\'on normal}:
   \begin{itemize}
-  \item Muchos fenómenos naturales y sociales son sumas o promedios
+  \item Muchos fen\'omenos naturales y sociales son sumas o promedios
   \item Por el TCL, tienden a ser normales
   \end{itemize}
 \item \textbf{Permite aproximaciones}:
@@ -822,8 +856,14 @@ Muy sesgada & $\geq 50$ \\
   \item Poisson $\to$ Normal (para $\lambda$ grande)
   \end{itemize}
 \end{enumerate}
+\end{frame}
 
-\alert{Sin el TCL, la inferencia estadística sería muchísimo más complicada}
+\begin{frame}{El TCL en la vida real}
+\alert{Sin el TCL, la inferencia estad\'istica ser\'ia much\'isimo m\'as complicada.}
+
+\begin{exampleblock}{Ejemplo: Spotify y YouTube}
+Los algoritmos de recomendaci\'on de Spotify y YouTube promedian miles de interacciones de usuarios. Gracias al TCL, esos promedios se comportan como normales, lo que permite calcular intervalos de confianza y tomar decisiones.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}[fragile]{Simulación TCL paso 1: población no normal (1/2)}
@@ -1020,9 +1060,9 @@ Un \textbf{estimador} es una fórmula para aproximar un parámetro poblacional d
 
 \begin{exampleblock}{Ejemplos de estimadores}
 \begin{itemize}
-\item $\hat{\mu} = \bar{X} = \frac{1}{n}\sum X_i$
+\item $\hat{\mu} = \bar{X} = \frac{1}{n}\sum X_i$ \quad (ej: promedio de \emph{screen time} de 50 compa\~neros)
 \item $\hat{\sigma}^2 = s^2 = \frac{1}{n-1}\sum(X_i - \bar{X})^2$
-\item $\hat{p} = X/n$ \ (donde $X$ = número de éxitos)
+\item $\hat{p} = X/n$ \ (ej: proporci\'on de compa\~neros que usan Duolingo)
 \end{itemize}
 \end{exampleblock}
 
@@ -1057,16 +1097,16 @@ Entre dos estimadores insesgados de $\theta$, el más \textbf{eficiente} es el q
 \text{Si } E(\hat{\theta}_1) = E(\hat{\theta}_2) = \theta \text{ y } \text{Var}(\hat{\theta}_1) < \text{Var}(\hat{\theta}_2), \text{ entonces } \hat{\theta}_1 \text{ es más eficiente}
 \]
 
-\vspace{0.5em}
-\textbf{Interpretación}:
+\vspace{0.3em}
+\textbf{Interpretaci\'on}:
 \begin{itemize}
-\item Menor varianza = estimaciones más consistentes entre muestras
-\item Menor varianza = intervalos de confianza más estrechos
+\item Menor varianza = estimaciones m\'as consistentes entre muestras
+\item Menor varianza = intervalos de confianza m\'as estrechos
 \end{itemize}
 
-\vspace{0.5em}
+\vspace{0.3em}
 \begin{exampleblock}{Ejemplo}
-Para estimar $\mu$ de una distribución normal:
+Para estimar $\mu$ de una distribuci\'on normal:
 \begin{itemize}
 \item Media muestral: $\text{Var}(\bar{X}) = \sigma^2/n$
 \item Mediana muestral: $\text{Var}(\text{mediana}) \approx 1.57 \sigma^2/n$

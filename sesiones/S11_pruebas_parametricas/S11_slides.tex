@@ -41,25 +41,29 @@ Si además se cumple 5, las pruebas $t$ y $F$ son válidas.
 \end{frame}
 
 \begin{frame}{¿Qué pasa si se violan los supuestos?}
+\small
 \begin{center}
-\renewcommand{\arraystretch}{1.4}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lll}
 \toprule
 \textbf{Supuesto violado} & \textbf{Consecuencia} & \textbf{Síntoma} \\
 \midrule
-Linealidad & Estimadores sesgados & Patrón en residuos \\
+Linealidad & Estimadores sesgados & Patr\'on en residuos \\
 Exogeneidad & Estimadores sesgados & Variable omitida \\
 Homocedasticidad & EE incorrectos, ineficiente & Embudo en residuos \\
-No autocorrelación & EE incorrectos & Patrón temporal \\
-Normalidad & IC y pruebas inválidas & Q-Q desviado \\
+No autocorrelaci\'on & EE incorrectos & Patr\'on temporal \\
+Normalidad & IC y pruebas inv\'alidas & Q-Q desviado \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\vspace{0.15cm}
 \begin{exampleblock}{Ejemplo: heterocedasticidad}
-Los $\hat{\beta}$ siguen insesgados, pero los errores estándar son \textbf{incorrectos}
-$\Rightarrow$ los IC y las pruebas $t$ son \textbf{inválidas}.
+\small
+Los $\hat{\beta}$ siguen insesgados, pero los errores est\'andar son \textbf{incorrectos}
+$\Rightarrow$ los IC y las pruebas $t$ son \textbf{inv\'alidas}.
+
+\smallskip
+Piensen en las notas de ingl\'es: la variabilidad es mayor entre estudiantes que trabajan medio tiempo --- sus resultados son m\'as impredecibles que los de quienes se dedican solo a estudiar. Eso es heterocedasticidad.
 \end{exampleblock}
 \end{frame}
 
@@ -459,11 +463,14 @@ Residuals vs Leverage & Obs. influyentes & Investigar, quizás eliminar \\
 \begin{exampleblock}{Pasos a seguir}
 \begin{enumerate}
 \item Ajustar el modelo
-\item Generar los 4 gráficos con \code{plot(modelo)}
+\item Generar los 4 gr\'aficos con \code{plot(modelo)}
 \item Si se observan problemas, realizar tests formales (Breusch-Pagan, etc.)
-\item Aplicar correcciones según sea necesario
+\item Aplicar correcciones seg\'un sea necesario
 \item Re-estimar y verificar de nuevo
 \end{enumerate}
+
+\smallskip
+\small Es como cuando suben una foto a Instagram: primero la toman, luego revisan si sali\'o bien (diagn\'osticos), aplican filtros si es necesario (correcciones) y vuelven a revisar antes de publicar.
 \end{exampleblock}
 \end{frame}
 
@@ -472,25 +479,26 @@ Residuals vs Leverage & Obs. influyentes & Investigar, quizás eliminar \\
 % ============================================================================
 
 \begin{frame}{El supuesto de homocedasticidad}
-\begin{block}{Definición formal}
+\begin{block}{Definici\'on formal}
 \textbf{Homocedasticidad}: la varianza del error es constante para todas las observaciones.
 $$\text{Var}(\varepsilon_i | X_1, X_2, \ldots, X_k) = \sigma^2 \quad \text{para todo } i$$
 \end{block}
 
 \textbf{Heterocedasticidad}: la varianza del error NO es constante.
-$$\text{Var}(\varepsilon_i | X) = \sigma_i^2 \quad \text{(varía con } i \text{)}$$
+$$\text{Var}(\varepsilon_i | X) = \sigma_i^2 \quad \text{(var\'ia con } i \text{)}$$
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{El supuesto de homocedasticidad (cont.)}
 \begin{columns}
 \begin{column}{0.48\textwidth}
 \begin{exampleblock}{Ejemplo de homocedasticidad}
-Estudiantes de todos los estratos tienen la misma dispersión en inglés después de controlar por las $X$.
+Estudiantes de todos los estratos tienen la misma dispersi\'on en ingl\'es despu\'es de controlar por las $X$. Como si todos tuvieran el mismo nivel de incertidumbre en sus notas.
 \end{exampleblock}
 \end{column}
 
 \begin{column}{0.48\textwidth}
 \begin{alertblock}{Ejemplo de heterocedasticidad}
-Estudiantes de estratos bajos tienen mayor variabilidad en inglés que los de estratos altos (después de controlar).
+Estudiantes de estratos bajos tienen mayor variabilidad en ingl\'es que los de estratos altos (despu\'es de controlar). Es como el screen time: entre quienes pasan m\'as de 6 horas en redes, la variabilidad de notas es enorme --- algunos rinden bien y otros no.
 \end{alertblock}
 \end{column}
 \end{columns}
@@ -820,13 +828,16 @@ donde $e_i$ = residuo, $p$ = número de parámetros, $MSE$ = error cuadrático m
 \end{block}
 
 \vspace{0.15cm}
-\textbf{Interpretación:}
+\textbf{Interpretaci\'on:}
 \begin{itemize}
 \item $D_i$ combina residuo grande y leverage alto
-\item Observación con alto $D_i$ es \textbf{influyente}: afecta mucho los coeficientes
-\item Regla de pulgar: $D_i > \frac{4}{n}$ merece investigación
+\item Observaci\'on con alto $D_i$ es \textbf{influyente}: afecta mucho los coeficientes
+\item Regla de pulgar: $D_i > \frac{4}{n}$ merece investigaci\'on
 \item Valores $D_i > 1$ son muy influyentes
 \end{itemize}
+
+\smallskip
+\small Imaginen un estudiante que falt\'o a todos los parciales pero sac\'o 5.0 en el final --- ese caso distorsiona el modelo de predicci\'on de notas. Eso es una observaci\'on influyente.
 \end{frame}
 
 \begin{frame}{Tipos de observaciones}
@@ -929,12 +940,12 @@ Eliminar observaciones sin justificación es manipular los datos. Siempre invest
 
 \begin{frame}{Observaciones influyentes: ejemplo}
 \begin{exampleblock}{Ejemplo: error de datos}
-Si una observación tiene MOD\_INGLES\_PUNT = 300 (máximo 100), es claramente un error $\Rightarrow$ eliminar.
+Si una observaci\'on tiene MOD\_INGLES\_PUNT = 300 (m\'aximo 100), es claramente un error $\Rightarrow$ eliminar. Es como cuando alguien tiene 200 a\~nos en una base de datos --- obviamente algo sali\'o mal.
 \end{exampleblock}
 
 \vspace{0.3cm}
-\begin{alertblock}{Ejemplo: caso legítimo}
-Si una observación es un estudiante con puntaje 95 en inglés pero estrato 1, es raro pero legítimo $\Rightarrow$ NO eliminar, pero reportar sensibilidad.
+\begin{alertblock}{Ejemplo: caso leg\'itimo}
+Un estudiante de estrato 1 que sac\'o 95 en ingl\'es: es at\'ipico pero real, como alguien que aprendi\'o ingl\'es viendo series en Netflix sin subt\'itulos. NO eliminar, pero reportar sensibilidad.
 \end{alertblock}
 \end{frame}
 
@@ -960,56 +971,54 @@ library(texreg)
 screenreg(list(modelo_completo, modelo_sin_inf),
           custom.model.names = c("Completo", "Sin influyentes"))
 \end{lstlisting}
-
-\small
-Si los coeficientes cambian mucho, los resultados son sensibles a esas observaciones.
 \end{frame}
 
 % ============================================================================
-\section{Errores estándar robustos (Huber-White)}
+\section{Errores est\'andar robustos (Huber-White)}
 % ============================================================================
 
-\begin{frame}{La solución a la heterocedasticidad}
-\begin{block}{Errores estándar robustos (Huber-White)}
+\begin{frame}{La soluci\'on a la heterocedasticidad}
+\begin{block}{Errores est\'andar robustos (Huber-White)}
 Ante heterocedasticidad, podemos:
 \begin{itemize}
 \item Transformar las variables para reducir heterocedasticidad (ej: log)
 \item Usar WLS (Weighted Least Squares) si conocemos la estructura de $\sigma_i^2$
-\item O simplemente usar \textbf{errores estándar robustos}
+\item O simplemente usar \textbf{errores est\'andar robustos}
 \end{itemize}
 \end{block}
 
 \textbf{Ventajas de los errores robustos:}
 \begin{itemize}
-\item Los coeficientes $\hat{\beta}$ NO cambian (mismos valores que OLS estándar)
-\item Solo cambian los errores estándar (se corrigen)
-\item Los IC y pruebas $t$ se vuelven válidos
+\item Los coeficientes $\hat{\beta}$ NO cambian (mismos valores que OLS est\'andar)
+\item Solo cambian los errores est\'andar (se corrigen)
+\item Los IC y pruebas $t$ se vuelven v\'alidos
 \item No requiere especificar la forma de heterocedasticidad
 \end{itemize}
+\end{frame}
 
-\begin{alertblock}{Regla práctica}
-Si hay heterocedasticidad (BP rechaza $H_0$), SIEMPRE reportar errores robustos.
+\begin{frame}{La soluci\'on a la heterocedasticidad (cont.)}
+\begin{alertblock}{Regla pr\'actica}
+Si hay heterocedasticidad (BP rechaza $H_0$), SIEMPRE reportar errores robustos. Los errores robustos corrigen las estimaciones cuando la varianza no es constante --- como ponerle un filtro de correcci\'on a una foto que sali\'o sobreexpuesta.
 \end{alertblock}
 \end{frame}
 
 \begin{frame}{Tipos de errores robustos}
 \begin{center}
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.2}
 \small
 \begin{tabular}{lp{7cm}}
 \toprule
-\textbf{Tipo} & \textbf{Descripción} \\
+\textbf{Tipo} & \textbf{Descripci\'on} \\
 \midrule
-HC0 & Versión original de White. No corrige por grados de libertad. \\
-HC1 & Corrección por grados de libertad: $\frac{n}{n-k}$. Más común en econometría. \\
-HC2 & Usa leverage: $\frac{e_i^2}{1 - h_{ii}}$. Más robusto. \\
-HC3 & Versión más conservadora: $\frac{e_i^2}{(1 - h_{ii})^2}$. Recomendado para $n$ pequeño. \\
+HC0 & Versi\'on original de White. No corrige por grados de libertad. \\
+HC1 & Correcci\'on por grados de libertad: $\frac{n}{n-k}$. M\'as com\'un en econometr\'ia. \\
+HC2 & Usa leverage: $\frac{e_i^2}{1 - h_{ii}}$. M\'as robusto. \\
+HC3 & Versi\'on m\'as conservadora: $\frac{e_i^2}{(1 - h_{ii})^2}$. Recomendado para $n$ peque\~no. \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\vspace{0.15cm}
-\begin{block}{¿Cuál usar?}
+\begin{block}{?`Cu\'al usar?}
 \begin{itemize}
 \item \textbf{HC1}: el más común, recomendado por defecto
 \item \textbf{HC3}: si la muestra es pequeña ($n < 250$) o hay alto leverage
@@ -1277,40 +1286,39 @@ Multicolinealidad & VIF & $VIF > 10$ & Eliminar var. / PCA \\
 \end{center}
 \end{frame}
 
-\begin{frame}{Próxima sesión}
-\begin{block}{Sesión 12: Integración y Análisis Aplicado}
-Aplicaremos TODO lo aprendido en el curso a un análisis completo con datos ICFES:
+\begin{frame}{Pr\'oxima sesi\'on}
+\begin{block}{Sesi\'on 12: Integraci\'on y An\'alisis Aplicado}
+Aplicaremos TODO lo aprendido en el curso a un an\'alisis completo con datos ICFES:
 \begin{itemize}
-\item Pipeline estadístico completo: pregunta $\to$ datos $\to$ EDA $\to$ IC $\to$ pruebas $\to$ modelo $\to$ diagnósticos $\to$ conclusiones
-\item Análisis de NI: ¿qué determina el puntaje de inglés?
-\item Interpretación de resultados para política educativa
-\item Retroalimentación del Problem Set 8
+\item Pipeline estad\'istico completo
+\item An\'alisis de NI: ?`qu\'e determina el puntaje de ingl\'es?
+\item Interpretaci\'on de resultados para pol\'itica educativa
+\item Retroalimentaci\'on del Problem Set 8
 \end{itemize}
 \end{block}
 
-\vspace{0.1cm}
-\begin{alertblock}{Para la próxima clase}
+\begin{alertblock}{Para la pr\'oxima clase}
 \textbf{Traer:}
 \begin{itemize}
 \item Laptop con R y los paquetes: lmtest, sandwich, car, texreg
 \item Datos ICFES de NI (disponibles en Moodle)
-\item Dudas sobre diagnósticos de regresión
+\item Dudas sobre diagn\'osticos de regresi\'on
 \end{itemize}
 \end{alertblock}
 \end{frame}
 
 \begin{frame}{}
 \begin{center}
-\Huge ¡Gracias!
+\Huge !`Gracias!
+
+\vspace{0.8cm}
+\Large Preguntas y discusi\'on
 
 \vspace{1cm}
-\Large Preguntas y discusión
-
-\vspace{1.5cm}
 \normalsize
 \textbf{Contacto:}\\
 jaime.polanco@javeriana.edu.co\\
-Horario de atención: Miércoles 14:00-16:00
+Horario de atenci\'on: Mi\'ercoles 14:00-16:00
 \end{center}
 \end{frame}
 

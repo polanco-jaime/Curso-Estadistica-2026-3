@@ -21,24 +21,38 @@
 \begin{frame}{Muestras Independientes vs Dependientes}
 \textbf{Hasta ahora}: Prueba $t$ para dos muestras \alert{independientes}
 \begin{itemize}
-  \item Grupos completamente distintos (ej. públicas vs privadas)
-  \item Sin relación entre observaciones de un grupo y otro
+  \item Grupos completamente distintos (ej. p\'ublicas vs privadas)
+  \item Sin relaci\'on entre observaciones de un grupo y otro
 \end{itemize}
 
 \vspace{0.3cm}
 \textbf{Ahora}: Muestras \alert{dependientes (pareadas)}
 \begin{itemize}
-  \item Mismos sujetos medidos dos veces (antes/después)
+  \item Mismos sujetos medidos dos veces (antes/despu\'es)
   \item Sujetos emparejados naturalmente (hermanos, pares matched)
-  \item Cada observación en el grupo 1 tiene una contraparte específica en el grupo 2
+  \item Cada observaci\'on en el grupo 1 tiene una contraparte espec\'ifica en el grupo 2
 \end{itemize}
 
 \vspace{0.3cm}
 \textbf{Ejemplos}:
 \begin{itemize}
   \item Puntaje Saber 11 vs Saber Pro del \alert{mismo} estudiante
-  \item Rendimiento antes vs después de una intervención
-  \item Calificación de dos evaluadores sobre el \alert{mismo} trabajo
+  \item Rendimiento antes vs despu\'es de una intervenci\'on
+  \item Calificaci\'on de dos evaluadores sobre el \alert{mismo} trabajo
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Muestras Dependientes: ejemplo cotidiano}
+\begin{exampleblock}{Screen time antes y despu\'es}
+Medir tu \alert{screen time} ANTES y DESPU\'ES de instalar una app de bienestar digital (ej.\ Forest, One Sec). Cada persona es su propio control: se comparan sus dos mediciones.
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Caracter\'isticas clave}:
+\begin{itemize}
+  \item La misma persona se mide dos veces $\Rightarrow$ datos pareados
+  \item Cada par $(x_{antes}, x_{despu\'es})$ est\'a vinculado
+  \item Se analizan las \alert{diferencias} $d_i = x_{despu\'es} - x_{antes}$
 \end{itemize}
 \end{frame}
 
@@ -70,25 +84,21 @@
 \begin{frame}{Hipótesis y Estadístico de Prueba}
 \textbf{Enfoque}: Trabajar con las \alert{diferencias} $d_i = x_{1i} - x_{2i}$
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Hipótesis}:
 \[
 H_0: \mu_d = 0 \quad \text{vs} \quad H_1: \mu_d \neq 0
 \]
 donde $\mu_d$ = media poblacional de las diferencias.
 
-\vspace{0.3cm}
-\begin{block}{Estadístico de prueba}
+\vspace{0.15cm}
+\begin{block}{Estad\'istico de prueba}
+\vspace{-0.2cm}
 \[
 t = \frac{\bar{d}}{s_d / \sqrt{n}}
 \]
-donde:
-\begin{itemize}
-  \item $\bar{d} = \frac{1}{n} \sum_{i=1}^n d_i$ = media de las diferencias
-  \item $s_d$ = desviación estándar de las diferencias
-  \item $n$ = número de pares
-  \item $t \sim t(n-1)$ si $H_0$ es verdadera
-\end{itemize}
+\vspace{-0.3cm}
+donde $\bar{d} = \frac{1}{n} \sum d_i$ (media de las diferencias), $s_d$ = DE de las diferencias, $n$ = n\'umero de pares, y $t \sim t(n-1)$ si $H_0$ es verdadera.
 \end{block}
 \end{frame}
 
@@ -123,7 +133,7 @@ abline(v = 0, col = "red", lwd = 2, lty = 2)
 \end{frame}
 
 \begin{frame}[fragile]{Realizar la Prueba t Pareada}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Metodo 1: t.test con paired = TRUE
 resultado <- t.test(saber_pro, saber11, paired = TRUE)
 
@@ -148,7 +158,7 @@ if (resultado$p.value < 0.05) {
 \end{frame}
 
 \begin{frame}[fragile]{Visualización de Datos Pareados}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 library(ggplot2)
 
 # Crear data frame
@@ -176,31 +186,39 @@ ggplot(datos_pareados, aes(x = examen, y = puntaje, group = id)) +
 \section{ANOVA de Una Vía}
 % ============================================================================
 
-\begin{frame}{Motivación: Comparar Más de Dos Grupos}
-\textbf{Problema}: Queremos comparar inglés entre 5 regiones de Colombia.
+\begin{frame}{Motivaci\'on: Comparar M\'as de Dos Grupos}
+\textbf{Problema}: Queremos comparar ingl\'es entre 5 regiones de Colombia.
 
 \vspace{0.3cm}
-\textbf{Opción incorrecta}: Hacer múltiples pruebas $t$
+\textbf{Opci\'on incorrecta}: Hacer m\'ultiples pruebas $t$
 \begin{itemize}
-  \item Comparar Caribe vs Andina, Caribe vs Pacífico, ..., etc.
-  \item Con $k = 5$ grupos, tendríamos $\binom{5}{2} = 10$ comparaciones
-  \item Problema: \alert{inflación del error tipo I}
+  \item Comparar Caribe vs Andina, Caribe vs Pac\'ifico, \ldots, etc.
+  \item Con $k = 5$ grupos, tendr\'iamos $\binom{5}{2} = 10$ comparaciones
+  \item Problema: \alert{inflaci\'on del error tipo I}
 \end{itemize}
 
 \vspace{0.3cm}
-\begin{alertblock}{Inflación del error tipo I}
+\begin{alertblock}{Inflaci\'on del error tipo I}
 Si hacemos $m$ pruebas independientes al nivel $\alpha$:
 \[
 P(\text{al menos un error tipo I}) = 1 - (1-\alpha)^m
 \]
 Ejemplo: 10 pruebas con $\alpha = 0.05$:
-\[
-P(\text{al menos un error}) = 1 - 0.95^{10} = 0.40 \quad (40\%!)
-\]
+$P(\text{al menos un error}) = 1 - 0.95^{10} = 0.40$ \quad (40\%!)
 \end{alertblock}
+\end{frame}
+
+\begin{frame}{Motivaci\'on: Comparar M\'as de Dos Grupos (cont.)}
+\textbf{Soluci\'on}: ANOVA (Analysis of Variance)
+\begin{itemize}
+  \item Compara las medias de \alert{tres o m\'as} grupos simult\'aneamente
+  \item Controla el error tipo I global
+\end{itemize}
 
 \vspace{0.3cm}
-\textbf{Solución}: ANOVA (Analysis of Variance)
+\begin{exampleblock}{Ejemplo cotidiano}
+?`Hay diferencia en el promedio de notas entre estudiantes que usan TikTok $<$1\,h, 1--3\,h y $>$3\,h al d\'ia? Tres grupos, una variable num\'erica $\Rightarrow$ ANOVA.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{¿Qué es ANOVA?}
@@ -569,15 +587,11 @@ donde $\pi_i = n_i / N$ (proporción del grupo $i$), $\mu = \sum \pi_i \mu_i$ (m
 \end{frame}
 
 \begin{frame}[fragile]{Calcular Potencia para ANOVA}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 library(pwr)
 
 # Potencia para ANOVA de una via
-# Parametros:
-# k = numero de grupos
-# n = tamano de muestra POR GRUPO
-# f = f de Cohen
-# sig.level = alpha
+# k = numero de grupos, n = tamano por grupo, f = f de Cohen
 
 # Ejemplo: 5 grupos, n = 100 por grupo, f = 0.25, alpha = 0.05
 potencia_anova <- pwr.anova.test(k = 5, n = 100, f = 0.25,
@@ -595,7 +609,7 @@ cat("\nn requerido por grupo:", ceiling(n_requerido$n))
 \end{frame}
 
 \begin{frame}[fragile]{Explorar Diferentes Escenarios}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Tabla de n requerido para diferentes efectos
 efectos <- c(0.10, 0.25, 0.40)
 k_grupos <- c(3, 5, 10)
@@ -617,22 +631,22 @@ tabla_n <- resultados %>%
 print(tabla_n)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 \small
-\textbf{Observación}: Efectos pequeños requieren muestras MUCHO más grandes.
+\textbf{Observaci\'on}: Efectos peque\~nos requieren muestras MUCHO m\'as grandes.
 \end{frame}
 
 % ============================================================================
 \section{Pruebas No Paramétricas}
 % ============================================================================
 
-\begin{frame}{¿Cuándo Usar Pruebas No Paramétricas?}
+\begin{frame}{?`Cu\'ando Usar Pruebas No Param\'etricas?}
 \textbf{Situaciones}:
 \begin{enumerate}
-  \item \textbf{Datos ordinales} (ej. escala Likert: 1=malo, 2=regular, ..., 5=excelente)
+  \item \textbf{Datos ordinales} (ej.\ escala Likert: 1=malo, 2=regular, \ldots, 5=excelente)
   \item \textbf{Distribuciones muy sesgadas} o con outliers extremos
-  \item \textbf{Muestras pequeñas} donde no se puede verificar normalidad
-  \item \textbf{Violación de supuestos} de las pruebas paramétricas
+  \item \textbf{Muestras peque\~nas} donde no se puede verificar normalidad
+  \item \textbf{Violaci\'on de supuestos} de las pruebas param\'etricas
 \end{enumerate}
 
 \vspace{0.3cm}
@@ -640,14 +654,28 @@ print(tabla_n)
 \begin{itemize}
   \item Menos supuestos (no requieren normalidad)
   \item Robustas a outliers
-  \item Válidas para datos ordinales
+  \item V\'alidas para datos ordinales
 \end{itemize}
 
 \vspace{0.3cm}
 \textbf{Desventajas}:
 \begin{itemize}
-  \item \alert{Menos potentes} que las paramétricas si los supuestos se cumplen
-  \item Interpretación menos directa (trabajan con rangos, no con medias)
+  \item \alert{Menos potentes} que las param\'etricas si los supuestos se cumplen
+  \item Interpretaci\'on menos directa (trabajan con rangos, no con medias)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pruebas No Param\'etricas: ejemplo cotidiano}
+\begin{exampleblock}{Ratings de apps}
+Datos de rating en apps (1--5 estrellas) no siguen una distribuci\'on normal: son ordinales y discretos. Aqu\'i conviene usar Mann-Whitney o Kruskal-Wallis en lugar de $t$ o ANOVA.
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Regla pr\'actica}:
+\begin{itemize}
+  \item Si la variable es ordinal (escalas, rankings) $\Rightarrow$ no param\'etrica
+  \item Si hay outliers extremos o asimetr\'ia fuerte $\Rightarrow$ considerar no param\'etrica
+  \item Si $n$ es grande y la distribuci\'on es razonable $\Rightarrow$ param\'etrica (TLC)
 \end{itemize}
 \end{frame}
 
@@ -696,7 +724,7 @@ H_1: \text{Las distribuciones difieren en localización}
 \textbf{Interpretación}: Si rechazamos $H_0$, concluimos que un grupo tiende a tener valores \alert{mayores} (o menores) que el otro, pero NO necesariamente medias diferentes.
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo: Mann-Whitney en R}
+\begin{frame}[fragile]{Ejemplo: Mann-Whitney en R -- Parte 1}
 \begin{lstlisting}
 # Comparar ingles entre genero (si la distribucion no es normal)
 
@@ -712,7 +740,11 @@ mujeres <- icfes_ni %>%
 # Prueba de Mann-Whitney
 resultado_mw <- wilcox.test(hombres, mujeres,
                             alternative = "two.sided")
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Ejemplo: Mann-Whitney en R -- Parte 2}
+\begin{lstlisting}
 print(resultado_mw)
 
 cat("\nEstadistico W:", resultado_mw$statistic)
@@ -803,7 +835,7 @@ if (resultado_kw$p.value < 0.05) {
 \end{frame}
 
 \begin{frame}[fragile]{Comparaciones Post-hoc para Kruskal-Wallis}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Kruskal-Wallis no incluye comparaciones multiples automaticas
 # Opcion 1: Usar Dunn test (paquete dunn.test)
 library(dunn.test)
@@ -823,7 +855,7 @@ pairwise_resultado <- pairwise.wilcox.test(
 print(pairwise_resultado)
 \end{lstlisting}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 \small
 \textbf{Nota}: El ajuste de Bonferroni es conservador pero simple. Otras opciones: Holm, Hochberg, Benjamini-Hochberg (FDR).
 \end{frame}
@@ -886,26 +918,22 @@ $k$ proporciones & Categóricos & (Próxima sesión: $\chi^2$) & (Próxima sesi�
 \textbf{Próxima sesión (después del parcial)}: Pruebas $\chi^2$ para independencia y bondad de ajuste.
 \end{frame}
 
-\begin{frame}{Flujo de Decisión}
+\begin{frame}{Flujo de Decisi\'on}
 \begin{center}
 \begin{tikzpicture}[
-  node distance=1.2cm and 1.5cm,
-  decision/.style={diamond, draw, fill=blue!20, text width=2.5cm, align=center, inner sep=1pt, minimum height=0.8cm},
-  block/.style={rectangle, draw, fill=green!20, text width=3cm, align=center, rounded corners, minimum height=0.7cm},
-  line/.style={draw, -{Latex[length=2mm]}}
+  node distance=0.6cm and 1cm,
+  decision/.style={diamond, draw, fill=blue!20, text width=1.8cm, align=center, inner sep=0pt, font=\footnotesize},
+  block/.style={rectangle, draw, fill=green!20, text width=2.2cm, align=center, rounded corners, minimum height=0.4cm, font=\footnotesize},
+  line/.style={draw, -{Latex[length=1.5mm]}}
 ]
 
   \node [block] (inicio) {?`Cu\'antos grupos?};
-
-  \node [decision, below=1cm of inicio] (grupos) {1, 2, o $>$2?};
-
-  \node [block, below left=1.2cm and 2.5cm of grupos] (un_grupo) {1 grupo:\\ Prueba $t$ (1 muestra)};
-
-  \node [decision, below=1.8cm of grupos] (dos_grupos) {?`Independientes?};
-  \node [block, below left=1cm and 1.5cm of dos_grupos] (t_dos) {Prueba $t$\\ (2 muestras)};
-  \node [block, below right=1cm and 1.5cm of dos_grupos] (t_pareada) {Prueba $t$\\ pareada};
-
-  \node [block, below right=1.2cm and 2.5cm of grupos] (anova) {$>$2 grupos:\\ ANOVA};
+  \node [decision, below=0.4cm of inicio] (grupos) {1, 2, o $>$2?};
+  \node [block, below left=0.6cm and 1.8cm of grupos] (un_grupo) {1 grupo: $t$};
+  \node [decision, below=0.8cm of grupos] (dos_grupos) {?`Indep.?};
+  \node [block, below left=0.5cm and 0.8cm of dos_grupos] (t_dos) {$t$ (2 muest.)};
+  \node [block, below right=0.5cm and 0.8cm of dos_grupos] (t_pareada) {$t$ pareada};
+  \node [block, below right=0.6cm and 1.8cm of grupos] (anova) {$>$2: ANOVA};
 
   \path [line] (inicio) -- (grupos);
   \path [line] (grupos) -- node[left, sloped] {\tiny 1} (un_grupo);
@@ -916,10 +944,8 @@ $k$ proporciones & Categóricos & (Próxima sesión: $\chi^2$) & (Próxima sesi�
 
 \end{tikzpicture}
 \end{center}
-
-\vspace{0.3cm}
 \small
-Si los supuestos no se cumplen, cambiar a la prueba no paramétrica correspondiente.
+Si los supuestos no se cumplen, cambiar a la prueba no param\'etrica correspondiente.
 \end{frame}
 
 % ============================================================================

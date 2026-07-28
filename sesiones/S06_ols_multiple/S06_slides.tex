@@ -23,20 +23,20 @@
 Una \textbf{hipótesis estadística} es una afirmación sobre un parámetro poblacional que puede ser verdadera o falsa.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Ejemplos}:
 \begin{itemize}
-  \item La media de inglés en NI es 160 puntos ($\mu = 160$)
-  \item La proporción de estudiantes que superan B1 es mayor al 70\% ($p > 0.70$)
-  \item Las IES públicas y privadas tienen el mismo rendimiento promedio ($\mu_1 = \mu_2$)
+  \item La media de ingl\'es en NI es 160 puntos ($\mu = 160$)
+  \item La proporci\'on que supera B1 es mayor al 70\% ($p > 0.70$)
+  \item IES p\'ublicas y privadas tienen el mismo rendimiento ($\mu_1 = \mu_2$)
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Diferencia con intervalos de confianza}:
-\begin{itemize}
-  \item \textbf{IC}: ¿Cuál es el rango plausible de valores para $\mu$?
-  \item \textbf{Prueba de hipótesis}: ¿Hay evidencia suficiente para afirmar que $\mu \neq 160$?
-\end{itemize}
+\vspace{0.1cm}
+\textbf{Diferencia con IC}: el IC estima un rango plausible para $\mu$; la prueba de hip\'otesis pregunta si hay evidencia suficiente para afirmar que $\mu \neq 160$.
+
+\begin{exampleblock}{Ejemplo cercano}
+¿Los que escuchan lofi realmente estudian m\'as horas? $H_0$: no hay diferencia. $H_1$: s\'i hay diferencia.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Hipótesis Nula vs Hipótesis Alternativa}
@@ -196,23 +196,19 @@ Esto da lugar a 4 escenarios:
 Rechazar $H_0$ cuando en realidad es \alert{verdadera}.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{itemize}
   \item También llamado \textbf{falso positivo}
   \item Probabilidad: $P(\text{rechazar } H_0 \mid H_0 \text{ verdadera}) = \alpha$
   \item En la analogía jurídica: condenar a un inocente
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Ejemplo educativo}:
-\begin{itemize}
-  \item $H_0$: "El nuevo programa NO mejora el rendimiento"
-  \item Error tipo I: Concluir que el programa funciona cuando en realidad no tiene efecto
-  \item Consecuencia: Invertir recursos en un programa inefectivo
-\end{itemize}
+\vspace{0.2cm}
+\textbf{Ejemplo educativo}: $H_0$: ``El nuevo programa NO mejora el rendimiento''. Error tipo I: concluir que funciona cuando no tiene efecto. Consecuencia: invertir recursos en un programa inefectivo.
 
-\vspace{0.3cm}
-\textbf{Control}: Fijamos $\alpha$ antes del análisis (típicamente 0.05 o 0.01).
+\begin{exampleblock}{Ejemplo Gen Z}
+Declarar que un producto es \textit{viral} en TikTok cuando no lo es (falso positivo en marketing). Una marca invierte millones en algo que ``todos quieren'' pero nadie compra.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Error Tipo II ($\beta$)}
@@ -220,23 +216,19 @@ Rechazar $H_0$ cuando en realidad es \alert{verdadera}.
 \alert{No rechazar} $H_0$ cuando en realidad es \alert{falsa}.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{itemize}
   \item También llamado \textbf{falso negativo}
   \item Probabilidad: $P(\text{no rechazar } H_0 \mid H_0 \text{ falsa}) = \beta$
   \item En la analogía jurídica: absolver a un culpable
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Ejemplo educativo}:
-\begin{itemize}
-  \item $H_0$: "El nuevo programa NO mejora el rendimiento"
-  \item Error tipo II: Concluir que el programa no funciona cuando en realidad SÍ mejora el rendimiento
-  \item Consecuencia: Descartar un programa efectivo
-\end{itemize}
+\vspace{0.2cm}
+\textbf{Ejemplo educativo}: $H_0$: ``El programa NO mejora el rendimiento''. Error tipo II: concluir que no funciona cuando s\'i mejora. Consecuencia: descartar un programa efectivo.
 
-\vspace{0.3cm}
-\textbf{Control}: Más difícil. Depende del verdadero valor del parámetro (desconocido) y del tamaño de muestra $n$.
+\begin{exampleblock}{Ejemplo Gen Z}
+Tu emprendimiento lanza un anuncio en Instagram que realmente atrae clientes, pero con solo 15 respuestas concluyes que ``no sirve'' y lo cancelas (falso negativo).
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Tabla Resumen de Errores}
@@ -262,7 +254,7 @@ Rechazar $H_0$ cuando en realidad es \alert{verdadera}.
 El \textbf{nivel de significancia} $\alpha$ es la probabilidad máxima de cometer un error tipo I que estamos dispuestos a tolerar.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Valores comunes}:
 \begin{itemize}
   \item $\alpha = 0.05$ (5\%): estándar en ciencias sociales
@@ -270,10 +262,9 @@ El \textbf{nivel de significancia} $\alpha$ es la probabilidad máxima de comete
   \item $\alpha = 0.10$ (10\%): cuando el error tipo II es más costoso
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Interpretación}: Con $\alpha = 0.05$, aceptamos que en el 5\% de las pruebas (a largo plazo) rechazaremos $H_0$ incorrectamente.
 
-\vspace{0.3cm}
 \begin{alertblock}{Importante}
 $\alpha$ NO es la probabilidad de que $H_0$ sea verdadera. Es la probabilidad de rechazarla \alert{si} es verdadera.
 \end{alertblock}
@@ -314,24 +305,31 @@ $\alpha$ NO es la probabilidad de que $H_0$ sea verdadera. Es la probabilidad de
 El \textbf{p-valor} es la probabilidad de obtener un resultado tan extremo o más extremo que el observado, \alert{asumiendo que $H_0$ es verdadera}.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Fórmula conceptual}:
 \[
 \text{p-valor} = P(\text{estadístico tan extremo o más} \mid H_0 \text{ verdadera})
 \]
 
-\vspace{0.3cm}
 \textbf{Interpretación}:
 \begin{itemize}
-  \item p-valor \alert{pequeño} $\Rightarrow$ los datos son incompatibles con $H_0$ $\Rightarrow$ evidencia contra $H_0$
-  \item p-valor \alert{grande} $\Rightarrow$ los datos son compatibles con $H_0$ $\Rightarrow$ no hay evidencia contra $H_0$
+  \item p-valor \alert{pequeño} $\Rightarrow$ datos incompatibles con $H_0$ $\Rightarrow$ evidencia contra $H_0$
+  \item p-valor \alert{grande} $\Rightarrow$ datos compatibles con $H_0$ $\Rightarrow$ no hay evidencia contra $H_0$
 \end{itemize}
 
-\vspace{0.3cm}
 \begin{block}{Regla de decisión}
 Si p-valor $< \alpha$, rechazamos $H_0$.\\
 Si p-valor $\geq \alpha$, no rechazamos $H_0$.
 \end{block}
+\end{frame}
+
+\begin{frame}{El p-valor: ejemplo concreto}
+\begin{exampleblock}{Ejemplo}
+Si comparas horas de estudio entre quienes escuchan lofi y quienes no, y el p-valor es 0.03, hay solo un 3\% de probabilidad de ver una diferencia tan grande \alert{si realmente no hubiera diferencia}. Como $0.03 < 0.05$, rechazamos $H_0$.
+\end{exampleblock}
+
+\vspace{0.3cm}
+\textbf{Recordar}: El p-valor solo mide evidencia contra $H_0$, no prueba que $H_1$ sea verdadera.
 \end{frame}
 
 \begin{frame}{Errores Comunes de Interpretación del p-valor}
@@ -355,9 +353,6 @@ Si p-valor $\geq \alpha$, no rechazamos $H_0$.
   \item \textcolor{red}{\textbf{NO}} es la probabilidad de replicar el resultado
 \end{enumerate}
 \end{alertblock}
-
-\vspace{0.3cm}
-\textbf{Recordar}: El p-valor solo mide evidencia contra $H_0$, no prueba que $H_1$ sea verdadera.
 \end{frame}
 
 \begin{frame}{Escala Cualitativa del p-valor}
@@ -582,7 +577,7 @@ cat("\np-valor:", round(p_valor, 6))
 \end{frame}
 
 \begin{frame}[fragile]{Usar \code{t.test()} en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Metodo directo: t.test()
 resultado <- t.test(ingles, mu = 160, alternative = "greater")
 
@@ -677,9 +672,10 @@ $\text{gl} = \dfrac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo: Inglés en IES Públicas vs Privadas}
+\small
 \textbf{Pregunta}: ¿Difiere el puntaje promedio de inglés entre IES públicas y privadas en NI?
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Hipótesis}:
 \[
 H_0: \mu_{\text{púb}} = \mu_{\text{priv}} \quad \text{vs} \quad H_1: \mu_{\text{púb}} \neq \mu_{\text{priv}}
@@ -756,28 +752,22 @@ Necesitamos medir el \alert{tamaño del efecto}.
 \begin{definition}[d de Cohen]
 Una medida estandarizada del tamaño del efecto:
 \[
-d = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}}
-\]
-donde:
-\[
-s_{\text{pooled}} = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
+d = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}} \qquad \text{donde } s_{\text{pooled}} = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
 \]
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Interpretación (Cohen, 1988)}:
 \begin{itemize}
-  \item $|d| \approx 0.2$: efecto \alert{pequeño}
-  \item $|d| \approx 0.5$: efecto \alert{mediano}
-  \item $|d| \approx 0.8$: efecto \alert{grande}
+  \item $|d| \approx 0.2$: efecto \alert{pequeño} \quad $|d| \approx 0.5$: efecto \alert{mediano} \quad $|d| \approx 0.8$: efecto \alert{grande}
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Ventaja}: Independiente del tamaño de muestra y de las unidades de medida.
 \end{frame}
 
 \begin{frame}[fragile]{Calcular d de Cohen en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Opcion 1: Manual
 n1 <- length(publica)
 n2 <- length(privada)
@@ -853,19 +843,18 @@ d estimate: 0.35 (small)
 Es la probabilidad de \alert{detectar} un efecto cuando realmente existe.
 \end{definition}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \textbf{Interpretación}:
 \begin{itemize}
   \item Alta potencia (ej. 0.80 o 80\%) = buena capacidad de detectar efectos reales
   \item Baja potencia (ej. 0.30) = es probable que NO detectemos un efecto aunque exista
 \end{itemize}
 
-\vspace{0.3cm}
-\textbf{Convención}:
-\begin{itemize}
-  \item Potencia mínima aceptable: 0.80 (80\%)
-  \item Ideal: 0.90 o mayor
-\end{itemize}
+\vspace{0.2cm}
+\textbf{Convención}: Potencia m\'inima aceptable: 0.80 (80\%). Ideal: 0.90 o mayor.
+
+\smallskip
+\textit{Piens\'enlo as\'i}: la potencia es la capacidad de tu encuesta para detectar una diferencia real. Si encuestas a solo 10 personas sobre lofi y estudio, probablemente no detectar\'as nada aunque la diferencia exista.
 \end{frame}
 
 \begin{frame}{Factores que Afectan la Potencia}
@@ -938,7 +927,7 @@ cat("\nPotencia:", round(potencia$power, 3))
 \end{frame}
 
 \begin{frame}[fragile]{Calcular Tamaño de Muestra Requerido}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Pregunta: Cuantos estudiantes necesito por grupo para
 # detectar un efecto de d = 0.3 con potencia 0.80?
 

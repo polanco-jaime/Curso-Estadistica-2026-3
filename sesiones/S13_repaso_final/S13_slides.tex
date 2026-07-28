@@ -40,18 +40,18 @@
 \end{frame}
 
 \begin{frame}{Las 4 unidades del curso: conexiones}
-\begin{block}{Cómo se conectan las unidades}
+\begin{block}{C\'omo se conectan las unidades}
 \begin{itemize}
-\item \textbf{U1 (Descriptiva + Probabilidad)}: Fundamento — entender los datos y las distribuciones
-\item \textbf{U2 (IC)}: Cuantificar incertidumbre — ¿qué tan preciso es nuestro estimador?
-\item \textbf{U3 (Pruebas)}: Tomar decisiones con datos — ¿hay diferencia? ¿hay asociación?
-\item \textbf{U4 (Regresión)}: Modelar relaciones — ¿cómo se relaciona Y con X? ¿cuánto?
+\item \textbf{U1 (Descriptiva + Probabilidad)}: Fundamento --- recuerden el screen time para la media y la desviaci\'on est\'andar
+\item \textbf{U2 (IC)}: Cuantificar incertidumbre --- el margen de error de las encuestas electorales
+\item \textbf{U3 (Pruebas)}: Tomar decisiones con datos --- ?`hay diferencia real o es solo ruido?
+\item \textbf{U4 (Regresi\'on)}: Modelar relaciones --- ?`cu\'anto pesa cada factor en el puntaje de ingl\'es?
 \end{itemize}
 \end{block}
 
 \vspace{0.2cm}
 \small
-\textcolor{javeriana}{Todo se integra}: en un análisis completo usamos las 4 unidades (como vimos en S12).
+\textcolor{javeriana}{Todo se integra}: en un an\'alisis completo usamos las 4 unidades (como la receta completa de S12).
 \end{frame}
 
 \begin{frame}{Diagrama de conexiones conceptuales}
@@ -133,9 +133,9 @@ S13 & Repaso final & — & — \\
 \begin{frame}{U1: Medidas de tendencia central y dispersión}
 \begin{block}{Medidas de tendencia central}
 \begin{itemize}
-\item \textbf{Media}: $\bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i$ (sensible a valores extremos)
+\item \textbf{Media}: $\bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i$ (sensible a valores extremos --- recuerden: un millonario en el sal\'on sube el promedio de ingresos de todos)
 \item \textbf{Mediana}: valor que divide los datos en 50\%-50\% (robusta)
-\item \textbf{Moda}: valor más frecuente
+\item \textbf{Moda}: valor m\'as frecuente
 \end{itemize}
 \end{block}
 
@@ -202,7 +202,7 @@ Mujeres & 20/40 = 50\% & 10/30 = 33\% & A \\
 \bottomrule
 \end{tabular}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 Pero si solo miramos el total:
 \begin{tabular}{lcc}
 \toprule
@@ -235,7 +235,7 @@ Si $X_1, X_2, \ldots, X_n$ son iid con $E(X_i) = \mu$ y $\text{Var}(X_i) = \sigm
 $$\bar{X} \sim N\left(\mu, \frac{\sigma^2}{n}\right) \quad \text{cuando } n \to \infty$$
 O equivalentemente:
 $$\frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)$$
-\textbf{Implicación}: Podemos hacer inferencia sobre $\mu$ incluso si $X$ no es normal (con $n$ grande).
+\textbf{Implicaci\'on}: Podemos hacer inferencia sobre $\mu$ incluso si $X$ no es normal (con $n$ grande). Recuerden: aunque el screen time individual de cada uno sea bien raro, el promedio de 100 estudiantes se comporta ``normal''.
 \end{block}
 \end{frame}
 
@@ -287,6 +287,7 @@ $$IC_{1-\alpha}: \quad \bar{x} \pm t_{\alpha/2, n-1} \cdot \frac{s}{\sqrt{n}}$$
 \end{block}
 
 \begin{exampleblock}{Ejemplo}
+\small
 $n = 50$, $\bar{x} = 154.3$, $s = 18.7$. IC 95\% para $\mu$:
 $$154.3 \pm t_{0.025, 49} \cdot \frac{18.7}{\sqrt{50}} = 154.3 \pm 2.01 \cdot 2.64 = 154.3 \pm 5.31 = [149.0, 159.6]$$
 \end{exampleblock}
@@ -323,13 +324,12 @@ donde $\hat{p} = \frac{x}{n}$ (proporción muestral).
 
 \begin{exampleblock}{Ejemplo}
 \small
-$n = 200$, $x = 75$ estudiantes alcanzan B1. $\hat{p} = 75/200 = 0.375$. IC 95\%:
+$n = 200$, $x = 75$ alcanzan B1. $\hat{p} = 0.375$. IC 95\%:
 $$0.375 \pm 1.96 \cdot \sqrt{\frac{0.375 \cdot 0.625}{200}} = 0.375 \pm 0.067 = [0.308, 0.442]$$
-Interpretación: Entre 30.8\% y 44.2\% de estudiantes alcanzan B1 (95\% de confianza).
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{U2: Tamaño de muestra para $\mu$}
+\begin{frame}{U2: Tama\~no de muestra para $\mu$}
 \begin{block}{Tamaño de muestra para estimar $\mu$ con margen de error $E$}
 $$n = \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2$$
 \begin{itemize}
@@ -398,8 +398,8 @@ $\mu_1 - \mu_2$ & $(\bar{x}_1 - \bar{x}_2) \pm t_{\alpha/2, df} \sqrt{\frac{s_1^
 \begin{frame}{U3: Errores tipo I y II}
 \begin{block}{Errores tipo I y II}
 \begin{itemize}
-\item \textbf{Error tipo I}: Rechazar $H_0$ cuando es verdadera (falso positivo). Probabilidad = $\alpha$.
-\item \textbf{Error tipo II}: No rechazar $H_0$ cuando es falsa (falso negativo). Probabilidad = $\beta$.
+\item \textbf{Error tipo I}: Rechazar $H_0$ cuando es verdadera (falso positivo). Probabilidad = $\alpha$. \\ \small Recuerden: como cuando el filtro de spam bloquea un email importante.
+\item \textbf{Error tipo II}: No rechazar $H_0$ cuando es falsa (falso negativo). Probabilidad = $\beta$. \\ \small Como cuando el filtro deja pasar spam a la bandeja de entrada.
 \item \textbf{Potencia}: $1 - \beta$ = probabilidad de rechazar $H_0$ cuando es falsa (detectar el efecto).
 \end{itemize}
 \end{block}
@@ -600,10 +600,11 @@ donde:
 $$\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^{n}(X_i - \bar{X})^2} = \frac{Cov(X, Y)}{Var(X)} \qquad \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$$
 \end{block}
 
-\textbf{Interpretación}: $\hat{\beta}_1$ es el cambio en $Y$ asociado con un cambio unitario en $X$.
+\small
+\textbf{Interpretaci\'on}: $\hat{\beta}_1$ es el cambio en $Y$ asociado con un cambio unitario en $X$.
 \end{frame}
 
-\begin{frame}{U4: Modelo de regresión múltiple}
+\begin{frame}{U4: Modelo de regresi\'on m\'ultiple}
 \begin{block}{Modelo}
 $$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \varepsilon_i$$
 \end{block}
@@ -683,9 +684,9 @@ Entonces $\hat{\beta}_X$ estará \textbf{sesgado} (capturará parte del efecto d
 \small
 Modelo simple: $\text{INGLES} = \beta_0 + \beta_1 \text{ESTRATO} + \varepsilon$ $\Rightarrow$ $\hat{\beta}_1 = 7.2$
 
-Modelo múltiple: $\text{INGLES} = \beta_0 + \beta_1 \text{ESTRATO} + \beta_2 \text{PRIVADA} + \beta_3 \text{PUNT\_S11} + \varepsilon$ $\Rightarrow$ $\hat{\beta}_1 = 2.1$
+Modelo m\'ultiple: $\text{INGLES} = \beta_0 + \beta_1 \text{ESTRATO} + \beta_2 \text{PRIVADA} + \beta_3 \text{PUNT\_S11} + \varepsilon$ $\Rightarrow$ $\hat{\beta}_1 = 2.1$
 
-El efecto se reduce porque en el modelo simple capturaba TAMBIÉN el efecto de PRIVADA y PUNT\_S11.
+El efecto se reduce porque sin controles, el estrato cargaba con el efecto de otras variables --- como culpar solo al Wi-Fi cuando el problema real es que ten\'ian 20 pesta\~nas abiertas.
 \end{exampleblock}
 \end{frame}
 
@@ -733,7 +734,7 @@ donde $R_j^2$ es el $R^2$ de la regresión de $X_j$ contra las demás $X$.
   \item Si $p < 0.05$, usar errores robustos (HC1)
   \end{itemize}
 
-\item \textbf{Cook's distance}: observaciones influyentes ($D_i > 4/n$)
+\item \textbf{Cook's distance}: observaciones influyentes ($D_i > 4/n$) --- recuerden el ejemplo del estudiante que falt\'o a todo pero sac\'o 5.0 en el final
 
 \item \textbf{VIF}: multicolinealidad ($VIF > 10$ $\Rightarrow$ considerar eliminar variable)
 \end{enumerate}
@@ -988,7 +989,7 @@ El examen es \textbf{acumulativo}, pero con mayor peso en U2-U4 (inferencia y mo
 
 \item \textbf{Repasar interpretaciones}: Practica interpretar output de R (tablas de \code{summary()}, \code{confint()}, \code{bptest()}).
 
-\item \textbf{Estudiar en grupo}: Explica conceptos a tus compañeros (mejor forma de aprender).
+\item \textbf{Estudiar en grupo}: Explica conceptos a tus compa\~neros (si puedes explic\'arselo a alguien por WhatsApp, lo entendiste).
 
 \item \textbf{Hacer simulacros}: Cronométrate resolviendo problemas tipo examen.
 \end{enumerate}
@@ -1155,7 +1156,7 @@ Claridad y visualizaciones & — & 15\% \\
 \begin{block}{Habilidades conceptuales}
 \begin{itemize}
 \item Pensar críticamente sobre datos (¿de dónde vienen? ¿qué sesgos hay?)
-\item Distinguir correlación de causalidad
+\item Distinguir correlaci\'on de causalidad (recuerden: que el helado y los ahogamientos suban juntos no significa que uno cause el otro)
 \item Reconocer limitaciones de los métodos (supuestos, datos observacionales)
 \item Comunicar resultados a audiencias no técnicas
 \item Integrar múltiples técnicas en un análisis completo (pipeline estadístico)
@@ -1163,23 +1164,25 @@ Claridad y visualizaciones & — & 15\% \\
 \end{block}
 \end{frame}
 
-\begin{frame}{Más allá del curso}
-\begin{block}{¿Cómo usar estadística en tu carrera?}
-\begin{itemize}
-\item \textbf{Negocios Internacionales}: Análisis de mercados, evaluación de políticas comerciales, estudios de competitividad
-\item \textbf{Consultoría}: Diagnósticos basados en datos, evaluación de impacto
-\item \textbf{Política pública}: Diseño y evaluación de programas sociales
-\item \textbf{Investigación académica}: Tesis, artículos, proyectos de grado
-\end{itemize}
-\end{block}
-
-\begin{block}{Recursos para seguir aprendiendo}
+\begin{frame}{M\'as all\'a del curso}
+\begin{block}{?`C\'omo usar estad\'istica en tu carrera?}
 \small
 \begin{itemize}
-\item \textbf{Libros}: "The Effect" (Huntington-Klein), "Causal Inference: The Mixtape" (Cunningham)
+\item \textbf{Negocios Internacionales}: An\'alisis de mercados, evaluaci\'on de pol\'iticas comerciales, estudios de competitividad
+\item \textbf{Consultor\'ia}: Diagn\'osticos basados en datos, evaluaci\'on de impacto
+\item \textbf{Pol\'itica p\'ublica}: Dise\~no y evaluaci\'on de programas sociales
+\item \textbf{Investigaci\'on acad\'emica}: Tesis, art\'iculos, proyectos de grado
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Recursos para seguir aprendiendo}
+\begin{block}{Recursos}
+\begin{itemize}
+\item \textbf{Libros}: ``The Effect'' (Huntington-Klein), ``Causal Inference: The Mixtape'' (Cunningham)
 \item \textbf{Cursos online}: Coursera (Data Science Specialization), edX (Statistics and R)
 \item \textbf{Comunidades}: R-Ladies, Stack Overflow, Cross Validated
-\item \textbf{Práctica}: Kaggle, datos abiertos (DANE, Banco Mundial)
+\item \textbf{Pr\'actica}: Kaggle, datos abiertos (DANE, Banco Mundial)
 \end{itemize}
 \end{block}
 \end{frame}

@@ -98,7 +98,7 @@ prop.table(tabla_obs, 2)
 \end{frame}
 
 \begin{frame}[fragile]{Visualización: mosaico}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Grafico de mosaico
 mosaicplot(tabla_obs,
            main = "Nivel MCER x Tipo IES",
@@ -115,8 +115,8 @@ barplot(tabla_obs,
         ylab = "Frecuencia")
 \end{lstlisting}
 
-\begin{block}{Observación visual}
-Parece haber una diferencia: las IES privadas tienen mayor proporción de estudiantes en niveles B1 y B+. ¿Es estadísticamente significativa?
+\begin{block}{Observaci\'on visual}
+Parece haber una diferencia: las IES privadas tienen mayor proporci\'on en B1 y B+. ?`Es estad\'isticamente significativa?
 \end{block}
 \end{frame}
 
@@ -139,9 +139,9 @@ Parece haber una diferencia: las IES privadas tienen mayor proporción de estudi
 \end{itemize}
 
 \vspace{0.3cm}
-\begin{alertblock}{Nivel de significancia}
-Usaremos $\alpha = 0.05$ (estándar en ciencias sociales).
-\end{alertblock}
+\begin{exampleblock}{Ejemplo cotidiano}
+?`Hay asociaci\'on entre g\'enero y preferencia de red social (TikTok vs Instagram vs YouTube)? Si las variables fueran independientes, hombres y mujeres elegir\'ian las redes en la misma proporci\'on.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Frecuencias esperadas bajo independencia}
@@ -176,24 +176,19 @@ Si las variables fueran independientes, la proporción de A2 sería la misma en 
 \end{block}
 \end{frame}
 
-\begin{frame}{El estadístico $\chi^2$}
+\begin{frame}{El estad\'istico $\chi^2$}
 Medimos la \textbf{discrepancia total} entre frecuencias observadas y esperadas:
 
-\begin{block}{Estadístico de prueba}
+\begin{block}{Estad\'istico de prueba}
 \[
 \chi^2 = \sum_{i=1}^{r} \sum_{j=1}^{c} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
 \]
-donde:
-\begin{itemize}
-  \item $O_{ij}$ = frecuencia observada en celda $(i,j)$
-  \item $E_{ij}$ = frecuencia esperada en celda $(i,j)$
-  \item $r$ = número de filas
-  \item $c$ = número de columnas
-\end{itemize}
+\vspace{-0.2cm}
+donde $O_{ij}$ = frec.\ observada, $E_{ij}$ = frec.\ esperada, $r$ = filas, $c$ = columnas.
 \end{block}
 
-\vspace{0.2cm}
-\textbf{Interpretación:}
+\vspace{0.1cm}
+\textbf{Interpretaci\'on:}
 \begin{itemize}
   \item $\chi^2$ cercano a 0 $\Rightarrow$ observado $\approx$ esperado $\Rightarrow$ independencia plausible
   \item $\chi^2$ grande $\Rightarrow$ gran discrepancia $\Rightarrow$ evidencia contra independencia
@@ -318,7 +313,7 @@ residuos
 \end{frame}
 
 \begin{frame}[fragile]{Visualización gráfica de residuos}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Mapa de calor de residuos estandarizados
 library(ggplot2)
 library(reshape2)
@@ -447,53 +442,46 @@ V_est_reg
 \section{Prueba $\chi^2$ de bondad de ajuste}
 % ============================================================================
 
-\begin{frame}{¿Qué es bondad de ajuste?}
+\begin{frame}{?`Qu\'e es bondad de ajuste?}
 \begin{block}{Pregunta diferente}
-En la prueba de \textbf{independencia}, comparamos dos variables categóricas observadas.
-
-En la prueba de \textbf{bondad de ajuste}, comparamos una variable observada con una distribución teórica esperada.
+En la prueba de \textbf{independencia}, comparamos dos variables categ\'oricas observadas.
+En la prueba de \textbf{bondad de ajuste}, comparamos una variable observada con una distribuci\'on te\'orica esperada.
 \end{block}
 
-\vspace{0.3cm}
-\textbf{Hipótesis:}
+\vspace{0.2cm}
+\textbf{Hip\'otesis:}
 \begin{itemize}
-  \item $H_0$: Los datos provienen de la distribución especificada
-  \item $H_1$: Los datos NO provienen de esa distribución
+  \item $H_0$: Los datos provienen de la distribuci\'on especificada
+  \item $H_1$: Los datos NO provienen de esa distribuci\'on
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Bondad de ajuste: ejemplos}
 \begin{exampleblock}{Ejemplos de preguntas}
 \begin{itemize}
-  \item ¿Los niveles MCER se distribuyen uniformemente?
-  \item ¿El puntaje de inglés sigue una distribución normal?
-  \item ¿La proporción de estudiantes por región coincide con la distribución poblacional de Colombia?
+  \item ?`Los niveles MCER se distribuyen uniformemente?
+  \item ?`El puntaje de ingl\'es sigue una distribuci\'on normal?
+  \item ?`La proporci\'on de estudiantes por regi\'on coincide con la distribuci\'on poblacional de Colombia?
+  \item ?`Los sabores de helado se venden igual o hay preferencias? (Si $H_0$: distribuci\'on uniforme, cada sabor deber\'ia venderse en igual proporci\'on.)
 \end{itemize}
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Estadístico de bondad de ajuste}
-\begin{block}{Fórmula}
+\begin{frame}{Estad\'istico de bondad de ajuste}
+\begin{block}{F\'ormula}
 \[
 \chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}
 \]
-donde:
-\begin{itemize}
-  \item $O_i$ = frecuencia observada en la categoría $i$
-  \item $E_i$ = frecuencia esperada en la categoría $i$ (según la distribución teórica)
-  \item $k$ = número de categorías
-\end{itemize}
+\vspace{-0.2cm}
+donde $O_i$ = frec.\ observada en la categor\'ia $i$, $E_i$ = frec.\ esperada (seg\'un la distribuci\'on te\'orica), $k$ = n\'umero de categor\'ias.
 \end{block}
 
-\vspace{0.2cm}
+\vspace{0.1cm}
 \textbf{Grados de libertad:}
-\[
-\text{gl} = k - p - 1
-\]
-donde $p$ = número de parámetros estimados de los datos.
-
+$\text{gl} = k - p - 1$, donde $p$ = n\'umero de par\'ametros estimados de los datos.
 \begin{itemize}
-  \item Si la distribución teórica está completamente especificada: $p = 0$
-  \item Si estimamos la media y desviación estándar de los datos: $p = 2$
+  \item Distribuci\'on te\'orica completamente especificada: $p = 0$
+  \item Si estimamos $\mu$ y $\sigma$ de los datos: $p = 2$
 \end{itemize}
 \end{frame}
 
@@ -519,7 +507,7 @@ chisq.test(niveles, p = rep(1/5, 5))
 \end{frame}
 
 \begin{frame}[fragile]{Visualización: observado vs esperado (uniforme)}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Comparar graficamente
 library(ggplot2)
 df_comp <- data.frame(
@@ -551,8 +539,8 @@ Hay un pico en A2 y menor frecuencia en los extremos (A- y B+).
   \item Aplicar prueba $\chi^2$ de bondad de ajuste
 \end{enumerate}
 
-\vspace{0.2cm}
-\begin{lstlisting}
+\vspace{0.1cm}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Parametros muestrales
 media <- mean(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
 desv <- sd(icfes_ni$MOD_INGLES_PUNT, na.rm = TRUE)
@@ -648,7 +636,7 @@ En nuestro caso: las colas superiores se desvían, indicando asimetría negativa
 \begin{frame}[fragile]{Ejemplo 3: Distribución regional esperada}
 \textbf{Pregunta:} ¿La distribución regional de estudiantes NI refleja la distribución poblacional de Colombia?
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Frecuencias observadas
 obs_region <- table(icfes_ni$REGION)
 
