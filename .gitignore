@@ -1,6 +1,9 @@
 # Exámenes - contenido privado
 examenes/
 
+# Guías del profesor - contenido interno
+guia_profesor*.md
+
 # LaTeX auxiliares
 *.aux
 *.log
