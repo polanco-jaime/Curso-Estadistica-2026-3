@@ -332,24 +332,24 @@ La \textbf{mediana} es el valor que divide los datos ordenados en dos mitades ig
 \item Si $n$ es par: la mediana es el promedio de los dos valores centrales
 \end{enumerate}
 
-\vspace{0.5em}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Ejemplo (n impar):}\\
+\footnotesize
 Seguidores en IG de 5 amigos:\\
 280, 310, \alert{350}, 400, 520\\
 Mediana = 350
 
 \column{0.48\textwidth}
 \textbf{Ejemplo (n par):}\\
+\footnotesize
 Seguidores de 6 amigos:\\
 280, 310, \alert{350, 400}, 520, 610\\
 Mediana = (350+400)/2 = 375
 \end{columns}
 
-\vspace{1em}
 \begin{alertblock}{Propiedad clave}
-La mediana es \textbf{robusta a outliers}. Si un amigo tiene 50{,}000 seguidores porque se hizo viral, la media sube a locura, pero la mediana ni se entera.
+\small La mediana es \textbf{robusta a outliers}. Si un amigo tiene 50{,}000 seguidores porque se hizo viral, la media sube a locura, pero la mediana ni se entera.
 \end{alertblock}
 \end{frame}
 
@@ -403,7 +403,7 @@ Modas = 2 y 5 (3 veces c/u)
 \end{frame}
 
 \begin{frame}[fragile]{Moda en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # R no tiene una funcion integrada para moda
 # Opcion 1: usar table() para ver frecuencias
 puntajes <- c(150, 155, 155, 160, 155, 165, 170, 155)
@@ -443,7 +443,7 @@ Moda & Datos categóricos, distribuciones multimodales & Única para categorías
 \end{tabular}
 \end{table}
 
-\vspace{1em}
+\vspace{0.3em}
 \begin{alertblock}{Regla pr\'actica}
 \begin{itemize}
 \item Distribuci\'on sim\'etrica: media $\approx$ mediana $\approx$ moda
@@ -487,21 +487,22 @@ Rango = $9 - 0 = 9$\,h
 \end{columns}
 \end{frame}
 
-\begin{frame}{Rango intercuartílico (IQR)}
-\begin{block}{Definición}
-El \textbf{rango intercuartílico} (IQR) es la diferencia entre el tercer cuartil (Q3) y el primer cuartil (Q1). Contiene el 50\% central de los datos.
+\begin{frame}{Rango intercuart\'ilico (IQR)}
+\begin{block}{Definici\'on}
+El \textbf{rango intercuart\'ilico} (IQR) es la diferencia entre el tercer cuartil (Q3) y el primer cuartil (Q1). Contiene el 50\% central de los datos.
 \[
 \text{IQR} = Q_3 - Q_1
 \]
 \end{block}
 
 \begin{itemize}
-\item Robusto a outliers (ignora el 25\% más bajo y el 25\% más alto)
+\item Robusto a outliers (ignora el 25\% m\'as bajo y el 25\% m\'as alto)
 \item Usado en box plots para identificar outliers
 \item Outlier si: $x < Q_1 - 1.5 \times \text{IQR}$ o $x > Q_3 + 1.5 \times \text{IQR}$
 \end{itemize}
+\end{frame}
 
-\vspace{0.5em}
+\begin{frame}{Rango intercuart\'ilico (IQR) (cont.)}
 \begin{exampleblock}{Ejemplo: screen time diario (horas) de tu grupo}
 Si Q1 = 3\,h y Q3 = 7\,h:\\
 IQR = 7 - 3 = 4\,h\\
@@ -511,7 +512,7 @@ L\'imite superior outlier: $7 + 1.5(4) = 13$\,h $\;\Rightarrow\;$ $>$13\,h ser\'
 \end{frame}
 
 \begin{frame}[fragile]{Rango e IQR en R}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Rango
 puntajes <- c(145, 150, 155, 160, 165, 170)
 range(puntajes)
@@ -824,9 +825,9 @@ Para distribuciones \alert{aproximadamente normales} (en forma de campana):
 \alert{Importante}: Sólo aplica a distribuciones aproximadamente normales.
 \end{frame}
 
-\begin{frame}{Asimetría (skewness)}
-\begin{block}{Definición}
-La \textbf{asimetría} mide el grado de simetría de una distribución.
+\begin{frame}{Asimetr\'ia (skewness)}
+\begin{block}{Definici\'on}
+La \textbf{asimetr\'ia} mide el grado de simetr\'ia de una distribuci\'on.
 \[
 g_1 = \frac{1}{n} \sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^3
 \]
@@ -834,8 +835,8 @@ g_1 = \frac{1}{n} \sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^3
 
 \begin{columns}[T]
 \column{0.33\textwidth}
-\textbf{Simétrica} ($g_1 \approx 0$)\\
-\textit{Visualización generada en R con} \code{plot()} \textit{y} \code{hist()}\\
+\textbf{Sim\'etrica} ($g_1 \approx 0$)\\
+\textit{Visualizaci\'on generada en R con} \code{plot()} \textit{y} \code{hist()}\\
 Media = Mediana
 
 \column{0.33\textwidth}
@@ -845,17 +846,18 @@ Media > Mediana\\
 \textit{Ej: likes en posts --- la mayor\'ia recibe pocos}
 
 \column{0.33\textwidth}
-\textbf{Asimetría negativa} ($g_1 < 0$)\\
+\textbf{Asimetr\'ia negativa} ($g_1 < 0$)\\
 Cola larga a la izquierda\\
 Media < Mediana
 \end{columns}
+\end{frame}
 
-\vspace{1em}
-\alert{Interpretación}:
+\begin{frame}{Asimetr\'ia (skewness) (cont.)}
+\alert{Interpretaci\'on}:
 \begin{itemize}
-\item $|g_1| < 0.5$: aproximadamente simétrica
-\item $0.5 \leq |g_1| < 1$: asimetría moderada
-\item $|g_1| \geq 1$: asimetría pronunciada
+\item $|g_1| < 0.5$: aproximadamente sim\'etrica
+\item $0.5 \leq |g_1| < 1$: asimetr\'ia moderada
+\item $|g_1| \geq 1$: asimetr\'ia pronunciada
 \end{itemize}
 \end{frame}
 
@@ -1055,7 +1057,7 @@ summary(icfes$MOD_INGLES_PUNT)
 % ============================================================================
 
 \begin{frame}[fragile]{Ejemplo completo: cargar y explorar datos}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Cargar librerias
 library(tidyverse)
 
@@ -1113,8 +1115,8 @@ cat("Curtosis:", round(kurt_ingles, 2), "\n")
 \alert{Interpretación}: Si la asimetría es positiva, hay una cola larga hacia puntajes altos. Si la curtosis es positiva, hay más valores extremos de lo esperado bajo normalidad.
 \end{frame}
 
-\begin{frame}[fragile]{Desagregación por tipo de IES}
-\begin{lstlisting}
+\begin{frame}[fragile]{Desagregaci\'on por tipo de IES}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Comparar puntajes por tipo de institucion
 icfes %>%
   group_by(INST_CARACTER_ACADEMICO) %>%
