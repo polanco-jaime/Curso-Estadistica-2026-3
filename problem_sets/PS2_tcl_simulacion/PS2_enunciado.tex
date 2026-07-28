@@ -61,7 +61,6 @@ saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 \texttt{MOD\_RAZONA\_CUANTITAT\_PUNT} & Puntaje razonamiento cuantitativo  & Num\'erico \\
 \texttt{MOD\_LECTURA\_CRITICA\_PUNT}  & Puntaje lectura cr\'itica           & Num\'erico \\
 \texttt{MOD\_COMPETEN\_CIUDADA\_PUNT} & Puntaje competencias ciudadanas    & Num\'erico \\
-\texttt{MOD\_COMUNICA\_ESCRITA\_PUNT} & Puntaje comunicaci\'on escrita      & Num\'erico \\
 \texttt{MOD\_INGLES\_DESEM}           & Nivel MCER (A$-$, A1, A2, B1, B+) & Categ\'orico \\
 \texttt{ESTU\_GENERO}                & G\'enero del estudiante              & Categ\'orico \\
 \texttt{INST\_ORIGEN}                & Tipo de IES: Oficial / Privada     & Categ\'orico \\
@@ -74,13 +73,12 @@ saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 \begin{enumerate}[label=\alph*)]
   \item \textbf{Matriz de correlaciones:} usando los datos de Saber Pro,
         calcule la matriz de correlaciones de
-        Pearson y de Spearman para los 5 m\'odulos:
+        Pearson y de Spearman para los 4 m\'odulos gen\'ericos:
         \begin{itemize}
           \item \texttt{MOD\_INGLES\_PUNT}
           \item \texttt{MOD\_RAZONA\_CUANTITAT\_PUNT}
           \item \texttt{MOD\_LECTURA\_CRITICA\_PUNT}
           \item \texttt{MOD\_COMPETEN\_CIUDADA\_PUNT}
-          \item \texttt{MOD\_COMUNI\_ESCRITA\_PUNT}
         \end{itemize}
         Visualice ambas matrices con \texttt{corrplot} o un heatmap.
         ¿Qu\'e pares de m\'odulos tienen mayor y menor correlaci\'on?
