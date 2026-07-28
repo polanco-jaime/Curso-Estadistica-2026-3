@@ -245,13 +245,17 @@ donde $N$ = tamaño de la población
 
 \vspace{0.5em}
 \alert{Notación}: $\bar{x}$ (x-barra) para muestra, $\mu$ (mu) para población
+
+\begin{exampleblock}{Ejemplo: screen time semanal de 5 amigos}
+Horas diarias: 5, 7, 4, 8, 6 $\;\Rightarrow\;$ $\bar{x} = (5+7+4+8+6)/5 = 6$ horas
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Media aritmética: ejemplo}
-\begin{exampleblock}{Puntajes de inglés de 5 estudiantes NI}
-Puntajes Saber Pro: 145, 160, 155, 170, 150
+\begin{exampleblock}{Minutos de m\'usica en Spotify en 5 d\'ias}
+Minutos escuchados: 45, 60, 55, 70, 50
 \[
-\bar{x} = \frac{145 + 160 + 155 + 170 + 150}{5} = \frac{780}{5} = 156
+\bar{x} = \frac{45 + 60 + 55 + 70 + 50}{5} = \frac{280}{5} = 56 \text{ min}
 \]
 \end{exampleblock}
 
@@ -300,20 +304,20 @@ donde $w_i$ es el peso de la observación $i$
 \end{frame}
 
 \begin{frame}{Media ponderada: ejemplo}
-\begin{exampleblock}{Calificación final de Estadística I}
-Tres componentes con pesos distintos:
+\begin{exampleblock}{Tu Spotify Wrapped: top 3 artistas}
+Tus artistas m\'as escuchados con distinto \% de tu tiempo total:
 \begin{itemize}
-\item Talleres: 3.8 (peso 25\%)
-\item Parcial: 4.2 (peso 35\%)
-\item Proyecto final: 4.5 (peso 40\%)
+\item Bad Bunny: rating 9.2 (50\% de tu tiempo)
+\item Karol G: rating 8.5 (30\% de tu tiempo)
+\item Feid: rating 7.8 (20\% de tu tiempo)
 \end{itemize}
 \[
-\bar{x}_w = \frac{0.25(3.8) + 0.35(4.2) + 0.40(4.5)}{1} = 4.22
+\bar{x}_w = \frac{0.50(9.2) + 0.30(8.5) + 0.20(7.8)}{1} = 8.71
 \]
 \end{exampleblock}
 
 \vspace{0.5em}
-\alert{La media simple le daría a cada componente el mismo peso}: $(3.8 + 4.2 + 4.5)/3 = 4.17$
+\alert{La media simple dar\'ia}: $(9.2 + 8.5 + 7.8)/3 = 8.50$. La ponderada refleja que escuchas m\'as a Bad Bunny.
 \end{frame}
 
 \begin{frame}{Mediana}
@@ -332,18 +336,20 @@ La \textbf{mediana} es el valor que divide los datos ordenados en dos mitades ig
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Ejemplo (n impar):}\\
-Datos: 145, 150, \alert{155}, 160, 170\\
-Mediana = 155
+Seguidores en IG de 5 amigos:\\
+280, 310, \alert{350}, 400, 520\\
+Mediana = 350
 
 \column{0.48\textwidth}
 \textbf{Ejemplo (n par):}\\
-Datos: 145, 150, \alert{155, 160}, 165, 170\\
-Mediana = (155+160)/2 = 157.5
+Seguidores de 6 amigos:\\
+280, 310, \alert{350, 400}, 520, 610\\
+Mediana = (350+400)/2 = 375
 \end{columns}
 
 \vspace{1em}
 \begin{alertblock}{Propiedad clave}
-La mediana es \textbf{robusta a outliers} (valores extremos no la afectan mucho).
+La mediana es \textbf{robusta a outliers}. Si un amigo tiene 50{,}000 seguidores porque se hizo viral, la media sube a locura, pero la mediana ni se entera.
 \end{alertblock}
 \end{frame}
 
@@ -377,8 +383,8 @@ La \textbf{moda} es el valor que aparece con mayor frecuencia en los datos.
 
 \begin{itemize}
 \item Datos pueden ser \textbf{unimodales} (una moda), \textbf{bimodales} (dos modas), o \textbf{multimodales}
-\item Es la única medida de tendencia central aplicable a datos categóricos
-\item Para datos continuos, es más útil identificar la región con mayor concentración
+\item Es la \'unica medida de tendencia central aplicable a datos categ\'oricos
+\item La canci\'on m\'as escuchada de tu playlist este mes = la moda
 \end{itemize}
 
 \begin{columns}[T]
@@ -438,10 +444,10 @@ Moda & Datos categóricos, distribuciones multimodales & Única para categorías
 \end{table}
 
 \vspace{1em}
-\begin{alertblock}{Regla práctica}
+\begin{alertblock}{Regla pr\'actica}
 \begin{itemize}
-\item Distribución simétrica: media $\approx$ mediana $\approx$ moda
-\item Sesgada a la derecha: moda < mediana < media
+\item Distribuci\'on sim\'etrica: media $\approx$ mediana $\approx$ moda
+\item Sesgada a la derecha: moda < mediana < media (ej: likes en TikTok --- muchos posts con pocos likes, pocos virales)
 \item Sesgada a la izquierda: media < mediana < moda
 \end{itemize}
 \end{alertblock}
@@ -468,15 +474,15 @@ El \textbf{rango} es la diferencia entre el valor máximo y el valor mínimo.
 \vspace{0.5em}
 \begin{columns}[T]
 \column{0.48\textwidth}
-\begin{exampleblock}{Sin outlier}
-145, 150, 155, 160, 170\\
-Rango = $170 - 145 = 25$
+\begin{exampleblock}{Screen time del grupo}
+Horas: 2, 4, 5, 7, 9\\
+Rango = $9 - 2 = 7$\,h
 \end{exampleblock}
 
 \column{0.48\textwidth}
-\begin{exampleblock}{Con outlier}
-145, 150, 155, 160, \alert{250}\\
-Rango = $250 - 145 = 105$
+\begin{exampleblock}{Un amigo dej\'o el cel en casa}
+Horas: \alert{0}, 4, 5, 7, 9\\
+Rango = $9 - 0 = 9$\,h
 \end{exampleblock}
 \end{columns}
 \end{frame}
@@ -496,11 +502,11 @@ El \textbf{rango intercuartílico} (IQR) es la diferencia entre el tercer cuarti
 \end{itemize}
 
 \vspace{0.5em}
-\begin{exampleblock}{Ejemplo}
-Si Q1 = 150 y Q3 = 165:\\
-IQR = 165 - 150 = 15\\
-Límite inferior outlier: 150 - 1.5(15) = 127.5\\
-Límite superior outlier: 165 + 1.5(15) = 187.5
+\begin{exampleblock}{Ejemplo: screen time diario (horas) de tu grupo}
+Si Q1 = 3\,h y Q3 = 7\,h:\\
+IQR = 7 - 3 = 4\,h\\
+L\'imite inferior outlier: $3 - 1.5(4) = -3$ (no aplica)\\
+L\'imite superior outlier: $7 + 1.5(4) = 13$\,h $\;\Rightarrow\;$ $>$13\,h ser\'ia at\'ipico
 \end{exampleblock}
 \end{frame}
 
@@ -548,7 +554,11 @@ s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2
 \end{columns}
 
 \vspace{0.5em}
-\textbf{Propiedades}: siempre $s^2 \geq 0$; unidades en cuadrado de las originales (puntos$^2$).
+\textbf{Propiedades}: siempre $s^2 \geq 0$; unidades en cuadrado de las originales.
+
+\begin{exampleblock}{Intuici\'on}
+Un artista de Spotify con streams diarios estables (poca varianza) vs uno que tuvo un hit viral un d\'ia y nada al siguiente (mucha varianza).
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Varianza: grados de libertad}
@@ -588,10 +598,10 @@ s = \sqrt{s^2} = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2}
 \vspace{1em}
 \textbf{Interpretación}:
 \begin{itemize}
-\item Mide cuánto se desvían los datos de la media \alert{en promedio}
-\item $s$ pequeña: datos concentrados cerca de $\bar{x}$
-\item $s$ grande: datos dispersos, alejados de $\bar{x}$
-\item Mismas unidades que los datos originales (más interpretable que $s^2$)
+\item Mide cu\'anto se desv\'ian los datos de la media \alert{en promedio}
+\item $s$ peque\~na: datos concentrados cerca de $\bar{x}$ (screen time estable cada d\'ia)
+\item $s$ grande: datos dispersos, alejados de $\bar{x}$ (un d\'ia 1\,h, otro d\'ia 10\,h)
+\item Mismas unidades que los datos originales (m\'as interpretable que $s^2$)
 \end{itemize}
 \end{frame}
 
@@ -701,12 +711,12 @@ z_i = \frac{x_i - \bar{x}}{s}
 \end{frame}
 
 \begin{frame}{Z-scores: ejemplo}
-\begin{exampleblock}{Ejemplo con puntajes de inglés}
-Si $\bar{x} = 155$, $s = 15$, y un estudiante obtuvo $x = 185$:
+\begin{exampleblock}{Ejemplo: screen time diario entre tus amigos}
+Si $\bar{x} = 5$\,h, $s = 1.2$\,h, y tu screen time es $x = 8$\,h:
 \[
-z = \frac{185 - 155}{15} = 2
+z = \frac{8 - 5}{1.2} = 2.5
 \]
-Está 2 desviaciones estándar por encima de la media.
+Est\'as 2.5 desviaciones est\'andar por encima de tus amigos. Eres un outlier de celular.
 \end{exampleblock}
 
 \vspace{1em}
@@ -829,9 +839,10 @@ g_1 = \frac{1}{n} \sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^3
 Media = Mediana
 
 \column{0.33\textwidth}
-\textbf{Asimetría positiva} ($g_1 > 0$)\\
+\textbf{Asimetr\'ia positiva} ($g_1 > 0$)\\
 Cola larga a la derecha\\
-Media > Mediana
+Media > Mediana\\
+\textit{Ej: likes en posts --- la mayor\'ia recibe pocos}
 
 \column{0.33\textwidth}
 \textbf{Asimetría negativa} ($g_1 < 0$)\\
@@ -933,7 +944,7 @@ if (skewness(icfes$MOD_INGLES_PUNT, na.rm=T) > 0) {
 
 \vspace{1em}
 \begin{exampleblock}{Ejemplo}
-Si un estudiante de NI obtiene 250 puntos en inglés (puntaje máximo $\approx$ 200), probablemente es un error de digitación. Pero si obtiene 195, es un valor alto pero plausible.
+Ese post que se hizo viral con 50K likes cuando normalmente recibes 200. ?`Es un error? No, es un fen\'omeno real. Pero si tu dataset dice que un post tuvo $-30$ likes, eso s\'i es un error de datos.
 \end{exampleblock}
 \end{frame}
 
@@ -960,8 +971,8 @@ El \textbf{percentil $p$} es el valor tal que al menos el $p\%$ de las observaci
 \end{frame}
 
 \begin{frame}{Percentiles: interpretación}
-\begin{exampleblock}{Ejemplo}
-Si un estudiante está en el percentil 80 en inglés, significa que superó al 80\% de los estudiantes y el 20\% restante obtuvo puntajes mayores o iguales.
+\begin{exampleblock}{Ejemplo: Spotify Wrapped}
+Spotify Wrapped te dice que est\'as en el \textbf{top 1\% de oyentes de Bad Bunny}. Eso es el percentil 99: escuchaste m\'as que el 99\% de sus oyentes.
 \end{exampleblock}
 
 \vspace{1em}

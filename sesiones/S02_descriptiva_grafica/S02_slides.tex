@@ -20,8 +20,10 @@
 
 \begin{frame}{Distribución de frecuencias}
 \begin{block}{Definición}
-Una \textbf{distribución de frecuencias} es una tabla que organiza los datos en clases o categorías, mostrando cuántas observaciones caen en cada una.
+Una \textbf{distribución de frecuencias} es una tabla que organiza los datos en clases o categor\'ias, mostrando cu\'antas observaciones caen en cada una.
 \end{block}
+
+\textbf{Ejemplo}: si encuestan a 30 compa\~neros sobre cu\'antas horas de TikTok ven al d\'ia, la tabla de frecuencias organiza esas respuestas en categor\'ias (0--1h, 1--2h, 2--3h, ...) y cuenta cu\'antos caen en cada una.
 
 \textbf{Tipos de frecuencia}:
 \begin{itemize}
@@ -49,7 +51,7 @@ Clase & $f_i$ & $h_i$ & $F_i$ & $H_i$ \\
 \end{tabular}
 \end{exampleblock}
 
-\textbf{Lectura}: el 42\% de los estudiantes obtiene entre 140 y 159 puntos; el 64.5\% está por debajo de 160.
+\textbf{Lectura}: el 42\% de los estudiantes obtiene entre 140 y 159 puntos; el 64.5\% est\'a por debajo de 160. La misma l\'ogica aplica si agrupan el screen time diario del sal\'on en intervalos.
 \end{frame}
 
 \begin{frame}[fragile]{Tablas de frecuencia en R}
@@ -114,7 +116,7 @@ tibble(
 
 \begin{frame}{Histograma}
 \begin{block}{Definición}
-Un \textbf{histograma} muestra la distribución de frecuencias de una variable continua mediante barras contiguas.
+Un \textbf{histograma} muestra la distribuci\'on de frecuencias de una variable continua mediante barras contiguas. Imaginen un histograma del screen time diario de todos en el sal\'on: cada barra muestra cu\'antos caen en un rango de horas.
 \end{block}
 
 \begin{columns}[T]
@@ -224,7 +226,8 @@ Un \textbf{box plot} es un gráfico que muestra el five-number summary y los out
 \end{tikzpicture}
 \end{center}
 
-\textbf{Ventajas}: compacto, fácil comparar grupos, identifica outliers
+\textbf{Ventajas}: compacto, f\'acil comparar grupos, identifica outliers.
+Ej: comparar horas de sue\~no entre los que usan TikTok antes de dormir vs.\ los que no.
 \end{frame}
 
 \begin{frame}[fragile]{Box plot en R (1/2)}
@@ -338,7 +341,7 @@ icfes %>%
 \begin{itemize}
 \item Gráficos 3D innecesarios (distorsionan percepción)
 \item Demasiados colores (usar 3-5 máximo)
-\item Ejes truncados o escalas manipuladas para exagerar diferencias
+\item Ejes truncados o escalas manipuladas para exagerar diferencias (esos gr\'aficos enga\~nosos que ven en Twitter/X con ejes manipulados)
 \item Gráficos de pastel con muchas categorías (preferir barras)
 \item Falta de contexto o unidades
 \end{itemize}
@@ -350,10 +353,10 @@ icfes %>%
 
 \begin{frame}{Scatter plot (diagrama de dispersión)}
 \begin{block}{Definición}
-Un \textbf{scatter plot} muestra la relación entre dos variables cuantitativas, con cada punto representando una observación.
+Un \textbf{scatter plot} muestra la relaci\'on entre dos variables cuantitativas, con cada punto representando una observaci\'on. Ej: horas de estudio vs.\ nota del parcial --- cada punto es un compa\~nero del sal\'on.
 \end{block}
 
-\textbf{Qué buscar}:
+\textbf{Qu\'e buscar}:
 \begin{itemize}
 \item \textbf{Dirección}: positiva, negativa o ninguna
 \item \textbf{Forma}: lineal, curva, sin patrón
@@ -546,11 +549,12 @@ s_{xy} = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})
 \begin{itemize}
 \item $s_{xy} > 0$: relación positiva (cuando x aumenta, y tiende a aumentar)
 \item $s_{xy} < 0$: relación negativa (cuando x aumenta, y tiende a disminuir)
-\item $s_{xy} \approx 0$: no hay relación lineal
+\item $s_{xy} \approx 0$: no hay relaci\'on lineal
 \end{itemize}
 
-\vspace{0.5em}
-\begin{alertblock}{Limitación}
+\textbf{Ejemplo}: los likes y comentarios en un post de Instagram tienden a subir juntos $\to$ covarianza positiva.
+
+\begin{alertblock}{Limitaci\'on}
 La magnitud de $s_{xy}$ depende de las unidades de x e y. No se puede comparar entre pares de variables diferentes. \alert{Solución: usar correlación}.
 \end{alertblock}
 \end{frame}
@@ -591,7 +595,9 @@ $0.9 - 1.0$ & Muy fuerte \\
 \end{table}
 
 \vspace{0.3em}
-\textbf{Nota}: estos rangos son guías orientativas, no reglas absolutas.
+\textbf{Nota}: estos rangos son gu\'ias orientativas, no reglas absolutas.
+
+\textbf{Ejemplo}: $r = 0.8$ entre horas de estudio y nota del parcial indica una relaci\'on fuerte positiva: a m\'as horas, mejor nota (en promedio).
 \end{frame}
 
 \begin{frame}{Advertencias sobre la correlación}
@@ -604,7 +610,7 @@ $0.9 - 1.0$ & Muy fuerte \\
 \end{alertblock}
 
 \vspace{0.5em}
-\textbf{Ejemplo}: la correlación entre consumo de helados y ahogamientos es alta, pero la variable confusora es la temperatura.
+\textbf{Ejemplo}: la correlaci\'on entre consumo de caf\'e y buenas notas es alta, pero la variable confusora es que los que toman m\'as caf\'e tambi\'en estudian m\'as horas.
 \end{frame}
 
 \begin{frame}[fragile]{Correlación en R (1/2)}
@@ -654,8 +660,9 @@ La \textbf{correlación de Spearman} ($\rho$, rho) es la correlación de Pearson
 \textbf{Interpretación}: igual que Pearson ($-1$ a $1$), pero mide asociación monotónica.
 
 \vspace{0.3em}
-\begin{exampleblock}{Ejemplo}
-Estrato (ordinal: 1, ..., 6) vs puntaje de inglés: Spearman es más apropiado que Pearson porque estrato es ordinal.
+\begin{exampleblock}{Ejemplos}
+Estrato (ordinal: 1, ..., 6) vs puntaje de ingl\'es: Spearman es m\'as apropiado que Pearson porque estrato es ordinal.
+Rating de un restaurante en Rappi (1--5 estrellas, ordinal) vs.\ precio del plato $\to$ Spearman es m\'as apropiado que Pearson.
 \end{exampleblock}
 \end{frame}
 
@@ -729,7 +736,11 @@ La \textbf{Paradoja de Simpson} ocurre cuando una tendencia que aparece en vario
 \end{itemize}
 
 \vspace{0.5em}
-\begin{alertblock}{Lección clave}
+\begin{exampleblock}{Ejemplo cotidiano}
+Una app de delivery puede tener mejor rating \textbf{agregado} que otra, pero peor rating en cada categor\'ia individual (comida, rapidez, empaque) --- porque una app recibe m\'as rese\~nas en categor\'ias dif\'iciles.
+\end{exampleblock}
+
+\begin{alertblock}{Lecci\'on clave}
 \alert{Siempre explorar subgrupos antes de generalizar}. Lo que es verdad para el agregado puede no ser verdad para los componentes (y viceversa).
 \end{alertblock}
 \end{frame}
@@ -828,10 +839,10 @@ En sesiones 5--6 estudiaremos regresión lineal simple y múltiple.
 
 \begin{frame}{Flujo de trabajo EDA}
 \begin{block}{Análisis Exploratorio de Datos (EDA)}
-Proceso iterativo para entender la estructura, patrones y anomalías en los datos \alert{antes} de modelar.
+Proceso iterativo para entender la estructura, patrones y anomal\'ias en los datos \alert{antes} de modelar. Es como cuando stalkean un perfil de Instagram: primero ven el feed general, luego las fotos, luego los comments, luego los tagged\ldots\ El EDA hace lo mismo con datos.
 \end{block}
 
-\textbf{Pipeline típico}:
+\textbf{Pipeline t\'ipico}:
 \begin{enumerate}
 \item \textbf{Cargar}: importar datos, verificar dimensiones
 \item \textbf{Limpiar}: identificar y tratar valores faltantes, duplicados, errores
