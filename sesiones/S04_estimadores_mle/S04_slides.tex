@@ -24,7 +24,7 @@
   \item \textbf{Parámetro}: característica numérica de la \emph{población}
   \begin{itemize}
     \item Ejemplos: $\mu$ (media poblacional), $\sigma^2$ (varianza poblacional), $p$ (proporción poblacional)
-    \item Usualmente \alert{desconocidos} (¿cuál es la media verdadera de inglés de TODOS los estudiantes de NI en Colombia?)
+    \item Usualmente \alert{desconocidos} (¿cuál es la media verdadera de inglés de TODOS los estudiantes de Ciencias Econ\'omicas en Colombia?)
   \end{itemize}
   \item \textbf{Estadístico}: característica numérica de la \emph{muestra}
   \begin{itemize}
@@ -101,7 +101,7 @@ Spotify estima tu ``perfil musical'' con un conjunto de par\'ametros. Cada canci
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo: Estimación Puntual con Datos ICFES}
-\textbf{Contexto}: Queremos estimar la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI en Colombia.
+\textbf{Contexto}: Queremos estimar la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de Ciencias Econ\'omicas en Colombia.
 
 \vspace{0.15cm}
 \begin{lstlisting}
@@ -357,7 +357,7 @@ cat("\nz para 90%:", z_90)
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo Numérico: IC con $\sigma$ Conocida}
-\textbf{Escenario}: Supongamos que de censos anteriores sabemos que $\sigma = 18$ para \variable{MOD\_INGLES\_PUNT} en NI. Tenemos una muestra de $n = 120$ estudiantes con $\bar{x} = 162.5$.
+\textbf{Escenario}: Supongamos que de censos anteriores sabemos que $\sigma = 18$ para \variable{MOD\_INGLES\_PUNT} en Ciencias Econ\'omicas. Tenemos una muestra de $n = 120$ estudiantes con $\bar{x} = 162.5$.
 
 \vspace{0.2cm}
 \textbf{Calcular IC al 95\%} -- paso 1: datos y valor crítico.
@@ -408,7 +408,7 @@ IC al 95\% para $\mu$: $(159.28, 165.72)$ puntos
 \vspace{0.3cm}
 \textbf{Interpretaci\'on correcta}:
 \begin{itemize}
-  \item Estamos 95\% confiados de que la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de NI est\'a entre 159.28 y 165.72 puntos.
+  \item Estamos 95\% confiados de que la media poblacional de \variable{MOD\_INGLES\_PUNT} para estudiantes de Ciencias Econ\'omicas est\'a entre 159.28 y 165.72 puntos.
   \item Si repiti\'eramos el muestreo 100 veces, aproximadamente 95 de los intervalos construidos contendr\'ian el verdadero valor de $\mu$.
 \end{itemize}
 
@@ -566,8 +566,8 @@ print(round(resultados, 3))
 \textbf{Función clave}: \code{qt(p, df)} devuelve el cuantil $p$ de la distribución $t$ con \code{df} grados de libertad.
 \end{frame}
 
-\begin{frame}[fragile]{Ejemplo: IC para la Media de MOD\_INGLES\_PUNT en NI}
-\textbf{Datos reales}: Muestra de $n = 120$ estudiantes de NI.
+\begin{frame}[fragile]{Ejemplo: IC para la Media de MOD\_INGLES\_PUNT en Ciencias Econ\'omicas}
+\textbf{Datos reales}: Muestra de $n = 120$ estudiantes de Ciencias Econ\'omicas.
 
 \begin{lstlisting}
 # Cargar datos
@@ -661,7 +661,7 @@ mean of x
 \vspace{0.3cm}
 \textbf{Aplicaciones}:
 \begin{itemize}
-  \item Educaci\'on: ?`qu\'e tan heterog\'eneo es el rendimiento en ingl\'es entre estudiantes de NI?
+  \item Educaci\'on: ?`qu\'e tan heterog\'eneo es el rendimiento en ingl\'es entre estudiantes de Ciencias Econ\'omicas?
   \item Comercio internacional: volatilidad de la TRM para planear importaciones
   \item Log\'istica: variabilidad en tiempos de entrega de Rappi --- si la varianza es alta, no puedes confiar en la hora estimada
 \end{itemize}
@@ -863,7 +863,7 @@ ggplot(ic_deptos, aes(x = media, y = reorder(ESTU_DEPTO_RESIDE, media))) +
   labs(x = "Media de MOD_INGLES_PUNT (IC 95%)",
        y = "Departamento",
        title = "Intervalos de Confianza por Departamento",
-       subtitle = "Estudiantes de Negocios Internacionales") +
+       subtitle = "Estudiantes de Ciencias Economicas y Administrativas") +
   theme_minimal()
 \end{lstlisting}
 \end{frame}
@@ -1040,7 +1040,7 @@ IC para $\sigma^2$ ($\chi^2$) & Población \alert{normal} & \textbf{NO robusta}.
 \begin{frame}{Ejercicios para la Próxima Clase}
 \textbf{Con los datos de ICFES}:
 \begin{enumerate}
-  \item Calcular IC al 95\% y 99\% para la media de \variable{MOD\_RAZONA\_CUANTITAT} en NI
+  \item Calcular IC al 95\% y 99\% para la media de \variable{MOD\_RAZONA\_CUANTITAT} en Ciencias Econ\'omicas
   \item Calcular IC al 95\% para la desviación estándar de \variable{MOD\_INGLES\_PUNT}
   \item Crear un forest plot comparando IC de inglés entre tipo de IES (pública vs privada)
   \item Investigar: ¿Cuántos departamentos tienen IC que NO se solapan con Bogotá?

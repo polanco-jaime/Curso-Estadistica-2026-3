@@ -35,13 +35,13 @@ Una \textbf{tabla de contingencia} (o tabla cruzada) resume la distribución con
 
 \vspace{0.3cm}
 \begin{exampleblock}{Ejemplo en nuestro contexto}
-¿Cómo se relaciona el nivel de inglés MCER (A-, A1, A2, B1, B+) con el tipo de IES (pública/privada) entre estudiantes de Negocios Internacionales?
+¿Cómo se relaciona el nivel de inglés MCER (A-, A1, A2, B1, B+) con el tipo de IES (pública/privada) entre estudiantes de Ciencias Econ\'omicas y Administrativas?
 \end{exampleblock}
 \end{frame}
 
 \begin{frame}[fragile]{Construyendo una tabla de contingencia en R}
 \begin{lstlisting}
-# Cargar datos ICFES para Negocios Internacionales
+# Cargar datos ICFES para Ciencias Economicas
 icfes_ni <- read.csv("datos/icfes_ni_2025.csv")
 
 # Crear tabla de contingencia: nivel MCER x tipo IES
@@ -634,7 +634,7 @@ En nuestro caso: las colas superiores se desvían, indicando asimetría negativa
 \end{frame}
 
 \begin{frame}[fragile]{Ejemplo 3: Distribución regional esperada}
-\textbf{Pregunta:} ¿La distribución regional de estudiantes NI refleja la distribución poblacional de Colombia?
+\textbf{Pregunta:} ¿La distribución regional de estudiantes de Ciencias Econ\'omicas refleja la distribución poblacional de Colombia?
 
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Frecuencias observadas
@@ -653,7 +653,7 @@ chisq.test(obs_region, p = prop_poblacion)
 # X-squared = 128.56, df = 5, p-value < 2.2e-16
 \end{lstlisting}
 
-\textbf{Conclusión:} La distribución regional de estudiantes NI NO refleja la distribución poblacional (posiblemente por concentración de programas en ciertas regiones).
+\textbf{Conclusión:} La distribución regional de estudiantes de Ciencias Econ\'omicas NO refleja la distribución poblacional (posiblemente por concentración de programas en ciertas regiones).
 \end{frame}
 
 % ============================================================================

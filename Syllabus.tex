@@ -135,7 +135,7 @@ Segundo Parcial  & 25\% & Vie 9 oct 2026  &
   pruebas $t$, ANOVA, $\chi^2$, potencia estad\'istica. \\[3pt]
 Examen Final     & 30\% & Vie 27 nov 2026 &
   Integraci\'on de las 4 unidades. Incluye ensayo de recomendaci\'on de pol\'itica basada en
-  datos Saber Pro NI. \\[3pt]
+  datos Saber Pro. \\[3pt]
 Proyecto Estad\'istico & 20\% & 3 entregas + 27 nov &
   Proyecto grupal (3--4 personas) en R con datos ICFES. Tres fases progresivas y
   presentaci\'on oral final. \\[3pt]
@@ -232,7 +232,7 @@ E1 & Vie 4 sep &
 %
 5  & Vie 18 sep &
   \textbf{U2 --- IC para proporciones y tama\~no de muestra.}
-  IC para proporciones (proporci\'on de NI que supera B1 por departamento).
+  IC para proporciones (proporci\'on de Ciencias Econ\'omicas que supera B1 por departamento).
   Tama\~no de muestra \'optimo: f\'ormula de $n$ para medias y proporciones.
   Resumen pr\'actico: cu\'ando usar $z$, $t$ o $\chi^2$.
   \textit{(Anderson cap.\ 8.3--8.4)} &
@@ -242,7 +242,7 @@ E1 & Vie 4 sep &
   \textbf{U3 --- Fundamentos de pruebas de hip\'otesis.}
   $H_0$ y $H_1$, $p$-valor (errores frecuentes de interpretaci\'on).
   Error tipo I y II, potencia $= 1 - \beta$, $d$ de Cohen.
-  Prueba $z$ y $t$ para una muestra: ¿el ingl\'es promedio en NI supera B1?
+  Prueba $z$ y $t$ para una muestra: ¿el ingl\'es promedio en Ciencias Econ\'omicas supera B1?
   Prueba $t$ para dos muestras: p\'ublica vs.\ privada.
   \textit{(Anderson cap.\ 9.1--9.4)} &
   Entrega PS5. Asigna PS6. \\[3pt]
@@ -280,13 +280,13 @@ E2 & Vie 9 oct &
   Modelo de regresi\'on y supuestos Gauss-Markov.
   M\'etodo de m\'inimos cuadrados: derivaci\'on de $\hat{\beta}$.
   $R^2$, prueba $t$ para $\beta_1$ y prueba $F$ global.
-  OLS en R: razonamiento cuantitativo $\sim$ ingl\'es NI.
+  OLS en R: razonamiento cuantitativo $\sim$ ingl\'es Ciencias Econ\'omicas.
   Modelo con dummy \texttt{PRIVADA}.
   \textit{(Anderson cap.\ 14.1--14.7)} &  \\[3pt]
 %
 10 & Vie 30 oct &
   \textbf{U4 --- Regresi\'on lineal m\'ultiple.}
-  Modelo completo del ingl\'es en NI: \texttt{ESTRATO + PRIVADA + log(INGRESOS) + REGION}.
+  Modelo completo del ingl\'es en Ciencias Econ\'omicas: \texttt{ESTRATO + PRIVADA + log(INGRESOS) + REGION}.
   Interpretaci\'on de coeficientes y variables dummy.
   Sesgo por variable omitida (OVB). VIF y multicolinealidad.
   AIC/BIC para selecci\'on de modelos.
@@ -342,11 +342,11 @@ Entrega digital al inicio de la clase indicada. El c\'odigo R debe incluirse.
 \textbf{PS} & \textbf{Asignado} & \textbf{Entrega} & \textbf{Enunciado} \\
 \midrule
 1 & Jul 31 (Ses 1) & Ago 14 (Ses 2) &
-  An\'alisis descriptivo completo de \texttt{MOD\_INGLES\_PUNT} en NI: media, mediana, DE,
+  An\'alisis descriptivo completo de \texttt{MOD\_INGLES\_PUNT} en Ciencias Econ\'omicas: media, mediana, DE,
   asimetr\'ia, curtosis y cuartiles por departamento, tipo de IES y estrato. M\'inimo 5
   visualizaciones en R. \\[4pt]
 2 & Ago 14 (Ses 2) & Ago 21 (Ses 3) &
-  Matriz de correlaciones Pearson y Spearman de los 5 m\'odulos Saber Pro en NI.
+  Matriz de correlaciones Pearson y Spearman de los 5 m\'odulos Saber Pro en Ciencias Econ\'omicas.
   Tabla de contingencia g\'enero $\times$ nivel ingl\'es MCER.
   Demostraci\'on de la Paradoja de Simpson con datos ICFES. \\[4pt]
 3 & Ago 21 (Ses 3) & Sep 11 (Ses 4) &
@@ -357,25 +357,25 @@ Entrega digital al inicio de la clase indicada. El c\'odigo R debe incluirse.
   y comparar error est\'andar te\'orico vs.\ simulado.
   \textit{Plazo extendido: Semana de Reflexi\'on (28~ago) y Parcial~1 (4~sep).} \\[4pt]
 4 & Sep 11 (Ses 4) & Sep 18 (Ses 5) &
-  IC al 95\% para la media de \texttt{MOD\_INGLES\_PUNT} en NI con $t$ (global y por
+  IC al 95\% para la media de \texttt{MOD\_INGLES\_PUNT} en Ciencias Econ\'omicas con $t$ (global y por
   departamento). IC para la proporci\'on de estudiantes que superan B1.
   Forest plot con los 33 departamentos. Calcular el $n$ \'optimo para
   $E = \pm 2$ puntos al 95\%. \\[4pt]
 5 & Sep 18 (Ses 5) & Sep 25 (Ses 6) &
-  Prueba $t$ de una muestra: ¿el puntaje medio de ingl\'es en NI es
+  Prueba $t$ de una muestra: ¿el puntaje medio de ingl\'es en Ciencias Econ\'omicas es
   significativamente distinto de 160 (umbral B1)?
   Prueba $t$ de dos muestras: ¿difiere el ingl\'es entre IES p\'ublicas y privadas?
   Calcular $d$ de Cohen. Graficar la curva de potencia con \texttt{pwr::pwr.t.test()}. \\[4pt]
 6 & Sep 25 (Ses 6) & Oct 2 (Ses 7) &
-  (1) ANOVA de una v\'ia: ¿difiere el ingl\'es en NI entre macro-regiones?
-  Post hoc Tukey HSD. (2) Mann-Whitney: ¿difiere el ingl\'es por g\'enero en NI?
+  (1) ANOVA de una v\'ia: ¿difiere el ingl\'es en Ciencias Econ\'omicas entre macro-regiones?
+  Post hoc Tukey HSD. (2) Mann-Whitney: ¿difiere el ingl\'es por g\'enero en Ciencias Econ\'omicas?
   (3) $\chi^2$ de independencia: nivel ingl\'es MCER $\times$ tipo IES, con $V$ de Cram\'er. \\[4pt]
 7 & Oct 16 (Ses 8) & Oct 30 (Ses 10) &
-  (1) $\chi^2$ de bondad de ajuste: ¿es normal \texttt{MOD\_INGLES\_PUNT} en NI?
+  (1) $\chi^2$ de bondad de ajuste: ¿es normal \texttt{MOD\_INGLES\_PUNT} en Ciencias Econ\'omicas?
   (2) OLS simple: ¿predice el ingl\'es del Saber 11 el razonamiento cuantitativo
   del Saber Pro? Presentar \texttt{summary()}, $R^2$, scatter con l\'inea ajustada. \\[4pt]
 8 & Oct 30 (Ses 10) & Nov 13 (Ses 12) &
-  OLS m\'ultiple del ingl\'es en NI con al menos 4 regresores. Interpretar cada
+  OLS m\'ultiple del ingl\'es en Ciencias Econ\'omicas con al menos 4 regresores. Interpretar cada
   $\hat{\beta}$, VIF, OVB (comparar modelo simple vs.\ m\'ultiple).
   Diagn\'osticos: 4 gr\'aficos de residuos, Breusch-Pagan, Cook's $D$,
   errores est\'andar robustos. ¿Cambian las conclusiones? \\
@@ -405,18 +405,18 @@ Fase 2 --- IC + Pruebas & 35\% & \textbf{Oct 2} (Ses 7)\newline oral 3 min &
   $d$ de Cohen y an\'alisis de potencia. Visualizaci\'on de resultados. \\[4pt]
 Fase 3 --- Modelo + Informe & 45\% & \textbf{Nov 27} (Ses F)\newline oral 10 min &
   OLS m\'ultiple con diagn\'osticos completos (residuos, VIF, Breusch-Pagan,
-  errores robustos). S\'intesis de hallazgos e implicaciones para NI.
+  errores robustos). S\'intesis de hallazgos e implicaciones para Ciencias Econ\'omicas y Administrativas.
   Presentaci\'on oral 10~min $+$ informe escrito entregado al inicio de la sesi\'on. \\
 \bottomrule
 \end{tabularx}
 
 \vspace{6pt}
 \textbf{Preguntas de investigaci\'on sugeridas:}
-(1)~¿Qu\'e determina el nivel de ingl\'es al graduarse en NI?
-(2)~¿Ha cerrado la brecha de g\'enero en ingl\'es en NI entre 2014 y 2024?
+(1)~¿Qu\'e determina el nivel de ingl\'es al graduarse en Ciencias Econ\'omicas?
+(2)~¿Ha cerrado la brecha de g\'enero en ingl\'es en Ciencias Econ\'omicas entre 2014 y 2024?
 (3)~¿Cu\'anto valor agrega la universidad sobre el perfil de entrada del estudiante?
 (4)~¿Difieren significativamente los promedios de ingl\'es entre macro-regiones?
-(5)~¿Qu\'e factores socioecon\'omicos predicen el puntaje de ingl\'es en NI?
+(5)~¿Qu\'e factores socioecon\'omicos predicen el puntaje de ingl\'es en Ciencias Econ\'omicas?
 
 % ─── REGLAS ────────────────────────────────────────────────────────────
 \sechead{Reglas del Curso}

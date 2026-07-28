@@ -21,7 +21,7 @@
 \begin{frame}{Motivación: Estimar Proporciones}
 \textbf{Ejemplos de proporciones en educación}:
 \begin{itemize}
-  \item ¿Qué proporción de estudiantes de NI alcanza nivel B1 en inglés?
+  \item ¿Qué proporción de estudiantes de Ciencias Econ\'omicas alcanza nivel B1 en inglés?
   \item ¿Qué porcentaje de estudiantes aprueba el examen ICFES con más de 300 puntos globales?
   \item ¿Cuál es la tasa de deserción en el primer año?
 \end{itemize}
@@ -56,14 +56,12 @@ donde:
 \end{itemize}
 \end{definition}
 
-\vspace{0.2cm}
-\textbf{Ejemplo}: En una muestra de $n = 200$ estudiantes de NI, 140 superan B1 en inglés.
+\textbf{Ejemplo}: En una muestra de $n = 200$ estudiantes de Ciencias Econ\'omicas, 140 superan B1 en inglés.
 \[
 \hat{p} = \frac{140}{200} = 0.70 = 70\%
 \]
 
-\vspace{0.1cm}
-\textbf{Conexión con Bernoulli}: Cada estudiante es un ensayo Bernoulli con probabilidad $p$ de éxito. Entonces $x \sim \text{Binomial}(n, p)$.
+{\small\textbf{Conexión con Bernoulli}: Cada estudiante es un ensayo Bernoulli con probabilidad $p$ de éxito. Entonces $x \sim \text{Binomial}(n, p)$.}
 \end{frame}
 
 \begin{frame}{Distribución Muestral de $\hat{p}$}
@@ -219,7 +217,7 @@ IC al 95\%: $(0.680, 0.760)$ o $(68.0\%, 76.0\%)$
 
 \vspace{0.3cm}
 \begin{exampleblock}{Interpretación}
-Estamos 95\% confiados de que la proporción poblacional de estudiantes de NI que superan el nivel B1 en inglés está entre 68\% y 76\%.
+Estamos 95\% confiados de que la proporción poblacional de estudiantes de Ciencias Econ\'omicas que superan el nivel B1 en inglés está entre 68\% y 76\%.
 
 \smallskip
 \textit{Pensemos en el ejemplo del sal\'on}: si 18 de 30 usan iPhone ($\hat{p} = 0.60$), el IC al 95\% ser\'ia aproximadamente $(0.42, 0.78)$. Es decir, la verdadera proporci\'on de usuarios de iPhone en la uni podr\'ia estar entre 42\% y 78\%.
@@ -271,7 +269,7 @@ ggplot(ic_prop_depto,
   scale_x_continuous(labels = scales::percent) +
   labs(x = "Proporcion que supera B1 (IC 95%)",
        y = "Departamento",
-       title = "Proporcion Estudiantes NI Superan B1 en Ingles") +
+       title = "Proporcion Estudiantes Ciencias Economicas Superan B1 en Ingles") +
   theme_minimal()
 \end{lstlisting}
 \end{frame}
@@ -311,7 +309,7 @@ cat("\nIC privada:", round(ic_privada$conf.int, 4))
 \vspace{0.3cm}
 \textbf{Aplicaciones}:
 \begin{itemize}
-  \item Encuesta de satisfacción: ¿cuántos estudiantes de NI encuestar para estimar el salario inicial promedio con error $\pm \$300{,}000$ COP?
+  \item Encuesta de satisfacción: ¿cuántos estudiantes de Ciencias Econ\'omicas encuestar para estimar el salario inicial promedio con error $\pm \$300{,}000$ COP?
   \item Estudio de mercado: ¿cuántos usuarios de Rappi necesito para estimar el tiempo promedio de entrega con precisión de $\pm 2$ minutos?
   \item Asignar presupuesto: más $n$ $\Rightarrow$ mayor costo de recolección
 \end{itemize}
@@ -348,7 +346,7 @@ donde:
 
 \begin{frame}[fragile]{Ejemplo: Tamaño de Muestra para MOD\_INGLES\_PUNT}
 \small
-\textbf{Escenario}: Queremos estimar la media de \variable{MOD\_INGLES\_PUNT} en NI con un margen de error de $\pm 2$ puntos al 95\% de confianza. De estudios previos, $\sigma \approx 18$.
+\textbf{Escenario}: Queremos estimar la media de \variable{MOD\_INGLES\_PUNT} en Ciencias Econ\'omicas con un margen de error de $\pm 2$ puntos al 95\% de confianza. De estudios previos, $\sigma \approx 18$.
 
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Parametros
@@ -500,7 +498,7 @@ n = \frac{z_{\alpha/2}^2 \cdot 0.25}{E^2} = \frac{z_{\alpha/2}^2}{4E^2}
 
 \begin{frame}[fragile]{Ejemplo: Tamaño de Muestra para Proporción}
 \small
-\textbf{Escenario}: Queremos estimar la proporción de estudiantes de NI que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$) con margen de error $\pm 3\%$ al 95\%.
+\textbf{Escenario}: Queremos estimar la proporción de estudiantes de Ciencias Econ\'omicas que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$) con margen de error $\pm 3\%$ al 95\%.
 
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 # Parametros
@@ -582,7 +580,7 @@ cat("\nn para E=0.03, conf=95%, p*=0.20:",
 \end{itemize}
 
 \vspace{0.2cm}
-\textbf{Ejemplo}: Seleccionar 500 estudiantes de NI al azar de toda Colombia.
+\textbf{Ejemplo}: Seleccionar 500 estudiantes de Ciencias Econ\'omicas al azar de toda Colombia.
 
 \column{0.48\textwidth}
 \textbf{Muestreo Estratificado}:
@@ -641,7 +639,7 @@ n_i = n \cdot \frac{N_i}{N}
 donde $N_i$ = tamaño del estrato $i$, $N$ = tamaño poblacional total.
 
 \vspace{0.3cm}
-\textbf{Ejemplo}: Si el 15\% de los estudiantes de NI están en Antioquia, asignamos el 15\% de la muestra a Antioquia.
+\textbf{Ejemplo}: Si el 15\% de los estudiantes de Ciencias Econ\'omicas están en Antioquia, asignamos el 15\% de la muestra a Antioquia.
 
 \vspace{0.3cm}
 \textbf{Asignación óptima (Neyman)}:
@@ -658,7 +656,7 @@ La asignación óptima requiere conocer $\sigma_i$ de antemano (estudios piloto 
 
 \begin{frame}[fragile]{Ejemplo: Asignación Proporcional por Departamento}
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
-# Supongamos que queremos n = 1000 estudiantes de NI
+# Supongamos que queremos n = 1000 estudiantes de Ciencias Economicas
 
 # Paso 1: Conocer la distribucion poblacional
 poblacion_depto <- icfes_ni %>%
@@ -823,7 +821,7 @@ Si un IC al $(1-\alpha) \times 100\%$ NO contiene un valor $\theta_0$, entonces 
 \begin{frame}{Ejercicios para la Próxima Clase}
 \textbf{Con los datos de ICFES}:
 \begin{enumerate}
-  \item Calcular IC al 95\% para la proporción de estudiantes de NI que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$)
+  \item Calcular IC al 95\% para la proporción de estudiantes de Ciencias Econ\'omicas que superan B2 en inglés (\variable{MOD\_INGLES\_PUNT} $\geq 180$)
   \item Crear forest plot de proporciones por región (Caribe, Andina, Pacífico, etc.)
   \item Determinar el tamaño de muestra necesario para estimar la media de \variable{MOD\_RAZONA\_CUANTITAT} con error $\pm 3$ puntos al 99\% de confianza
   \item Comparar IC de proporción de aprobación (puntaje global $\geq 300$) entre IES públicas y privadas

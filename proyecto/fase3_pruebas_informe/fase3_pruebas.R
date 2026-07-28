@@ -23,9 +23,9 @@ library(sandwich)   # Errores estandar robustos (HC1)
 # TODO: Cargar el dataset cruzado Saber11-SaberPro desde BigQuery o CSV
 # datos <- read.csv("../../datos/cruce_saber11_saberpro.csv")
 
-# TODO: Filtrar por programa Negocios Internacionales
+# TODO: Filtrar por programa Ciencias Economicas y Administrativas
 # datos <- datos %>%
-#   filter(PROGRAMA == "Negocios Internacionales")
+#   filter(PROGRAMA == "CIENCIAS ECONOMICAS Y ADMINISTRATIVAS")
 
 # TODO: Verificar estructura de datos
 # glimpse(datos)
@@ -349,7 +349,7 @@ library(sandwich)   # Errores estandar robustos (HC1)
 # 4. Errores robustos:
 #    - [RESULTADO CON ERRORES HC1]
 #
-# 5. Implicaciones para Negocios Internacionales:
+# 5. Implicaciones para Ciencias Economicas y Administrativas:
 #    - [DISCUSION]
 #
 # =============================================================================

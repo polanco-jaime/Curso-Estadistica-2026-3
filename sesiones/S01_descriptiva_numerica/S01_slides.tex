@@ -60,18 +60,18 @@ Instituto Colombiano para la Evaluación de la Educación. Realiza exámenes est
 \item \textbf{Saber Pro}: examen al finalizar la educación superior (último año de pregrado)
   \begin{itemize}
   \item Módulos genéricos: Lectura Crítica, Razonamiento Cuantitativo, Competencias Ciudadanas, Comunicación Escrita, Inglés
-  \item Módulos específicos por programa (ej: Gestión Financiera para NI)
+  \item Módulos específicos por programa (ej: Gestión Financiera para Ciencias Econ\'omicas)
   \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Datos ICFES: enfoque del curso}
-\alert{En este curso trabajaremos con datos reales de estudiantes del programa de Negocios Internacionales (NI)}
+\alert{En este curso trabajaremos con datos reales de estudiantes del programa de Ciencias Econ\'omicas y Administrativas}
 
 \vspace{1em}
 \begin{exampleblock}{Nuestros datos}
 \begin{itemize}
-\item Saber Pro 2023 y 2024 --- programa de Negocios Internacionales
+\item Saber Pro 2023 y 2024 --- programa de Ciencias Econ\'omicas y Administrativas
 \item Saber 11 enlazado para los mismos estudiantes
 \item Almacenados en Google BigQuery (proyecto \texttt{ph-jabri})
 \end{itemize}
@@ -80,7 +80,7 @@ Instituto Colombiano para la Evaluación de la Educación. Realiza exámenes est
 
 \begin{frame}{Variable central: MOD\_INGLES\_PUNT}
 \begin{exampleblock}{¿Por qué el puntaje de inglés?}
-Para estudiantes de Negocios Internacionales, la competencia en inglés es un \textbf{proxy de competitividad internacional}:
+Para estudiantes de Ciencias Econ\'omicas y Administrativas, la competencia en inglés es un \textbf{proxy de competitividad internacional}:
 \begin{itemize}
 \item Comunicación con clientes y proveedores internacionales
 \item Acceso a información y literatura de negocios global
@@ -94,7 +94,7 @@ Para estudiantes de Negocios Internacionales, la competencia en inglés es un \t
 \textbf{A lo largo del curso, usaremos \variable{MOD\_INGLES\_PUNT} para responder:}
 
 \begin{enumerate}
-\item ¿Cuál es el puntaje promedio en inglés de estudiantes de NI?
+\item ¿Cuál es el puntaje promedio en inglés de estudiantes de Ciencias Econ\'omicas?
 \item ¿Cómo varía según tipo de institución (pública vs privada)?
 \item ¿Cómo varía según estrato socioeconómico?
 \item ¿Está relacionado con el desempeño en Saber 11?
@@ -199,7 +199,7 @@ Representan cantidades medibles.
 \textbf{Corte transversal (cross-section)}
 \begin{itemize}
 \item Observaciones de múltiples unidades en un \alert{único momento en el tiempo}
-\item Ejemplo: puntajes Saber Pro 2024 de todos los estudiantes de NI
+\item Ejemplo: puntajes Saber Pro 2024 de todos los estudiantes de Ciencias Econ\'omicas
 \item Nos permite comparar entre individuos, instituciones, regiones
 \end{itemize}
 
@@ -207,14 +207,14 @@ Representan cantidades medibles.
 \textbf{Series de tiempo (time series)}
 \begin{itemize}
 \item Observaciones de una unidad a lo largo del \alert{tiempo}
-\item Ejemplo: puntaje promedio en inglés de NI entre 2015 y 2025
+\item Ejemplo: puntaje promedio en inglés de Ciencias Econ\'omicas entre 2015 y 2025
 \item Nos permite identificar tendencias, estacionalidad
 \end{itemize}
 \end{columns}
 
 \vspace{1em}
 \begin{exampleblock}{En este curso}
-Trabajaremos principalmente con \textbf{datos de corte transversal}: estudiantes de NI en Saber Pro 2023 y 2024.
+Trabajaremos principalmente con \textbf{datos de corte transversal}: estudiantes de Ciencias Econ\'omicas en Saber Pro 2023 y 2024.
 \end{exampleblock}
 \end{frame}
 

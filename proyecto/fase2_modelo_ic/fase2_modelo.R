@@ -23,9 +23,9 @@ library(effsize)    # Tamano del efecto (d de Cohen)
 # TODO: Cargar el dataset cruzado Saber11-SaberPro desde BigQuery o CSV
 # datos <- read.csv("../../datos/cruce_saber11_saberpro.csv")
 
-# TODO: Filtrar por programa Negocios Internacionales
+# TODO: Filtrar por programa Ciencias Economicas y Administrativas
 # datos <- datos %>%
-#   filter(PROGRAMA == "Negocios Internacionales")
+#   filter(PROGRAMA == "CIENCIAS ECONOMICAS Y ADMINISTRATIVAS")
 
 # TODO: Verificar estructura de datos
 # glimpse(datos)
@@ -282,6 +282,6 @@ library(effsize)    # Tamano del efecto (d de Cohen)
 # 5. Tukey HSD: [PARES SIGNIFICATIVOS]
 # 6. d de Cohen: [VALOR] ([pequeno/mediano/grande])
 # 7. Potencia estadistica: [VALOR]
-# 8. Implicaciones para Negocios Internacionales: [DISCUSION]
+# 8. Implicaciones para Ciencias Economicas y Administrativas: [DISCUSION]
 #
 # =============================================================================

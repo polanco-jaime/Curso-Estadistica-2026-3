@@ -1,4 +1,4 @@
-# Estadistica para Negocios Internacionales — 2026-III
+# Estad\'istica — Ciencias Econ\'omicas y Administrativas — 2026-III
 
 **Pontificia Universidad Javeriana**
 Facultad de Ciencias Economicas y Administrativas
@@ -6,7 +6,7 @@ Profesor: Jaime Polanco Jimenez — jaime.polanco@javeriana.edu.co
 
 ## Contenido del curso
 
-El curso cubre estadistica aplicada usando datos reales del ICFES (Saber 11 y Saber Pro), con enfasis en el programa de Negocios Internacionales.
+El curso cubre estadistica aplicada usando datos reales del ICFES (Saber 11 y Saber Pro).
 
 ### Unidades
 

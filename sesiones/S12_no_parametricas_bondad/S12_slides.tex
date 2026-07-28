@@ -103,20 +103,20 @@ Es como un video bien producido: gui\'on, grabaci\'on, edici\'on, revisi\'on y p
 
 \vspace{0.3cm}
 \begin{center}
-\textbf{Objetivo de hoy}: aplicar el pipeline completo a datos ICFES de Negocios Internacionales.
+\textbf{Objetivo de hoy}: aplicar el pipeline completo a datos ICFES de Ciencias Econ\'omicas y Administrativas.
 \end{center}
 \end{frame}
 
-\begin{frame}{Caso de estudio: competencia en inglés en NI}
+\begin{frame}{Caso de estudio: competencia en inglés en Ciencias Econ\'omicas}
 \begin{block}{Contexto}
-Los programas de Negocios Internacionales requieren dominio del inglés como competencia clave. El examen Saber Pro evalúa esta competencia con la prueba de inglés (MOD\_INGLES\_PUNT, escala 0-300, convertible a niveles MCER: A-, A1, A2, B1, B2).
+Los programas de Ciencias Econ\'omicas y Administrativas requieren dominio del inglés como competencia clave. El examen Saber Pro evalúa esta competencia con la prueba de inglés (MOD\_INGLES\_PUNT, escala 0-300, convertible a niveles MCER: A-, A1, A2, B1, B2).
 \end{block}
 
 \vspace{0.2cm}
 \textbf{Pregunta de investigaci\'on:}
 \begin{center}
 \large
-\textcolor{javeriana}{?`Qu\'e factores socioecon\'omicos y acad\'emicos determinan\\el desempe\~no en ingl\'es de estudiantes de Negocios Internacionales\\en Colombia?}
+\textcolor{javeriana}{?`Qu\'e factores socioecon\'omicos y acad\'emicos determinan\\el desempe\~no en ingl\'es de estudiantes de Ciencias Econ\'omicas y Administrativas\\en Colombia?}
 \end{center}
 
 \vspace{0.2cm}
@@ -165,7 +165,7 @@ Recuerden la sesi\'on de descriptiva (S01): primero hay que saber \textit{qu\'e}
 
 \begin{column}{0.48\textwidth}
 \begin{exampleblock}{Pregunta específica}
-"¿Cuál es el efecto del estrato socioeconómico y del tipo de IES en el puntaje de inglés en Saber Pro para estudiantes de NI?"
+"¿Cuál es el efecto del estrato socioeconómico y del tipo de IES en el puntaje de inglés en Saber Pro para estudiantes de Ciencias Econ\'omicas?"
 
 \vspace{0.1cm}
 \small
@@ -173,7 +173,7 @@ Recuerden la sesi\'on de descriptiva (S01): primero hay que saber \textit{qu\'e}
 \begin{itemize}\setlength{\itemsep}{0pt}
 \item Variable dependiente: puntaje inglés
 \item Variables independientes: estrato, tipo IES
-\item Población: estudiantes NI
+\item Población: estudiantes Ciencias Econ\'omicas
 \end{itemize}
 \end{exampleblock}
 \end{column}
@@ -246,9 +246,9 @@ summary(icfes)
 \begin{lstlisting}
 library(dplyr)
 
-# Filtrar solo estudiantes de Negocios Internacionales
+# Filtrar solo estudiantes de Ciencias Economicas
 ni_data <- icfes %>%
-  filter(PROGRAMA == "NEGOCIOS INTERNACIONALES")
+  filter(PROGRAMA == "CIENCIAS ECONOMICAS Y ADMINISTRATIVAS")
 
 # Ver cuantos estudiantes quedaron
 nrow(ni_data)
@@ -448,7 +448,7 @@ library(ggplot2)
 # Histograma de puntaje de ingles
 ggplot(ni_data, aes(x = MOD_INGLES_PUNT)) +
   geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
-  labs(title = "Distribucion del puntaje de ingles en NI",
+  labs(title = "Distribucion del puntaje de ingles en Ciencias Economicas",
        x = "Puntaje ingles", y = "Frecuencia") +
   theme_minimal()
 
@@ -925,7 +925,7 @@ abline(h = umbral, col = "red", lty = 2)
 \begin{frame}{Síntesis de hallazgos}
 \begin{block}{Principales resultados del análisis}
 \begin{enumerate}
-\item \textbf{Desempeño general}: El puntaje promedio de inglés en NI es 154.3 (DE = 18.7), equivalente a nivel A2/B1 en el MCER.
+\item \textbf{Desempeño general}: El puntaje promedio de inglés en Ciencias Econ\'omicas es 154.3 (DE = 18.7), equivalente a nivel A2/B1 en el MCER.
 
 \item \textbf{Gradiente socioeconómico}: Existe una relación positiva entre estrato y puntaje. Controlando por otras variables, cada estrato adicional se asocia con 2.1 puntos más (IC 95\%: [1.3, 2.9]).
 
@@ -963,7 +963,7 @@ abline(h = umbral, col = "red", lty = 2)
 
 \item \textbf{Heterocedasticidad}: Aunque usamos errores robustos, la heterocedasticidad indica que el modelo ajusta mejor a algunos grupos que a otros.
 
-\item \textbf{Generalización}: Los resultados son específicos para NI en Colombia en 2023. Pueden no aplicar a otros programas o países.
+\item \textbf{Generalización}: Los resultados son específicos para Ciencias Econ\'omicas en Colombia en 2023. Pueden no aplicar a otros programas o países.
 \end{itemize}
 \end{block}
 \end{frame}
@@ -1024,7 +1024,7 @@ abline(h = umbral, col = "red", lty = 2)
 
 \item \textbf{Visualizaciones efectivas}: Forest plots, boxplots comparativos, scatterplots con línea de regresión.
 
-\item \textbf{Interpretación contextualizada}: Conectar resultados estadísticos con implicaciones para NI (ej: "Esta brecha equivale a medio nivel MCER").
+\item \textbf{Interpretación contextualizada}: Conectar resultados estadísticos con implicaciones para Ciencias Econ\'omicas (ej: "Esta brecha equivale a medio nivel MCER").
 
 \item \textbf{Código reproducible}: Scripts bien comentados, con estructura clara (carga $\to$ limpieza $\to$ EDA $\to$ modelos).
 \end{itemize}

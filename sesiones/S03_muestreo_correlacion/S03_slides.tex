@@ -114,7 +114,7 @@ La \textbf{varianza} de X, denotada $\text{Var}(X)$ o $\sigma^2$, mide la disper
 
 \vspace{0.5em}
 \begin{exampleblock}{Ejemplo: puntaje de ingl\'es como variable aleatoria}
-Puntaje de ingl\'es Saber Pro para NI como variable aleatoria continua X. De la misma forma, el \emph{screen time} diario de cada estudiante del sal\'on es una variable aleatoria continua.
+Puntaje de ingl\'es Saber Pro para Ciencias Econ\'omicas como variable aleatoria continua X. De la misma forma, el \emph{screen time} diario de cada estudiante del sal\'on es una variable aleatoria continua.
 \end{exampleblock}
 
 \textbf{Interpretaci\'on probabil\'istica}:
@@ -250,7 +250,7 @@ Z = \frac{X - \mu}{\sigma} \sim N(0, 1)
 
 \begin{frame}{Ejemplo: probabilidades con puntaje de inglés}
 \begin{exampleblock}{Problema}
-$X$ = puntaje de inglés Saber Pro NI $\sim N(155, 20^2)$.
+$X$ = puntaje de inglés Saber Pro Ciencias Econ\'omicas $\sim N(155, 20^2)$.
 \end{exampleblock}
 
 \textbf{a)} ¿Proporción con puntaje $\leq 150$?
@@ -671,25 +671,23 @@ Usar estadísticos muestrales ($\bar{x}$, $s$, $\hat{p}$) para hacer inferencias
 \begin{frame}{Poblaci\'on vs muestra: ejemplo}
 \begin{exampleblock}{Ejemplo concreto}
 \begin{itemize}
-\item \textbf{Poblaci\'on}: todos los estudiantes de NI en Colombia ($N \approx 50{,}000$)
+\item \textbf{Poblaci\'on}: todos los estudiantes de Ciencias Econ\'omicas en Colombia ($N \approx 50{,}000$)
 \item \textbf{Muestra}: 500 estudiantes seleccionados aleatoriamente de la base ICFES
 \item Estimamos $\mu$ (puntaje medio poblacional) con $\bar{x}$ (puntaje medio muestral)
 \end{itemize}
 \end{exampleblock}
 
 \begin{alertblock}{Analog\'ia}
-Es como hacer una encuesta a 30 compa\~neros del sal\'on sobre cu\'antas horas de Netflix ven al mes, en lugar de preguntarle a toda la universidad.
+{\small Es como encuestar a 30 compa\~neros del sal\'on sobre cu\'antas horas de Netflix ven al mes, en lugar de preguntarle a toda la universidad.}
 \end{alertblock}
 
 \begin{center}
-\begin{tikzpicture}[
-  every node/.style={font=\small},
-  box/.style={draw, rounded corners, minimum width=3cm, minimum height=1.2cm, align=center}
-]
-\node[box, fill=javeriana!10] (pop) {Poblaci\'on\\$N \approx 50{,}000$\\Par\'ametro: $\mu$};
-\node[box, fill=javerianalight!15, right=3cm of pop] (samp) {Muestra\\$n = 500$\\Estad\'istico: $\bar{x}$};
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\footnotesize},
+  box/.style={draw, rounded corners, minimum width=2.6cm, minimum height=1cm, align=center}]
+\node[box, fill=javeriana!10] (pop) {Poblaci\'on\\$N \approx 50{,}000$, $\mu$};
+\node[box, fill=javerianalight!15, right=2.5cm of pop] (samp) {Muestra\\$n = 500$, $\bar{x}$};
 \draw[-{Stealth}, thick] (pop) -- node[above] {muestreo} (samp);
-\draw[-{Stealth}, thick, dashed] (samp.south) -- ++(0,-0.5) -| node[below, pos=0.25] {inferencia} (pop.south);
+\draw[-{Stealth}, thick, dashed] (samp.south) -- ++(0,-0.4) -| node[below, pos=0.25] {inferencia} (pop.south);
 \end{tikzpicture}
 \end{center}
 \end{frame}

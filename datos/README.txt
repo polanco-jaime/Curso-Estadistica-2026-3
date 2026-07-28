@@ -47,4 +47,4 @@ NOTAS
   - Formato Parquet: compresion columnar, mas liviano y rapido que CSV.
   - Requiere paquete arrow en R: install.packages("arrow")
   - Fuente oficial: https://icfes.gov.co/resultados-saber
-  - Foco del curso: programa Negocios Internacionales (NI).
+  - Foco del curso: Ciencias Economicas y Administrativas.
