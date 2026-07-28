@@ -8,29 +8,17 @@
 library(tidyverse)
 
 # --- Cargar datos ------------------------------------------------------------
-# Opcion 1: Leer desde CSV local
-# datos <- read.csv("../../datos/saber11_saberpro_ni.csv")
+library(arrow)
 
-# Opcion 2: Conectar a BigQuery (proyecto ph-jabri)
-# library(bigrquery)
-# bq_auth()
-# sql <- "SELECT MOD_INGLES_PUNT, MOD_INGLES_DESEM_MCER,
-#                PUNT_INGLES
-#         FROM `ph-jabri.ICFES.Saber11_SaberPro`
-#         WHERE ESTU_PRGM_ACADEMICO LIKE '%NEGOCIOS INTERNACIONALES%'
-#         AND MOD_INGLES_PUNT IS NOT NULL
-#         AND PUNT_INGLES IS NOT NULL"
-# datos <- bq_project_query("ph-jabri", sql) %>% bq_table_download()
-
-# Filtrar datos completos
-# ni <- datos %>%
-#   filter(!is.na(MOD_INGLES_PUNT), !is.na(PUNT_INGLES), !is.na(MOD_INGLES_DESEM_MCER))
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
+cruce     <- read_parquet("datos/cruce/cruce_saber11_saberpro.parquet")
 
 
 # --- 1) Prueba chi-cuadrado de bondad de ajuste -----------------------------
 
 # TODO: Construir tabla de frecuencias observadas para niveles MCER
-# tabla_mcer <- table(ni$MOD_INGLES_DESEM_MCER)
+# tabla_mcer <- table(ni$MOD_INGLES_DESEM)
 # print(tabla_mcer)
 
 
@@ -57,13 +45,13 @@ library(tidyverse)
 # --- 2) Regresion lineal simple (OLS) ----------------------------------------
 
 # TODO: Preparar datos: cruzar Saber 11 y Saber Pro
-# Filtrar estudiantes de NI con datos completos en ambas pruebas
+# Filtrar estudiantes con datos completos en ambas pruebas
 
 
 # TODO: Graficar scatterplot de PUNT_INGLES (x) vs. MOD_INGLES_PUNT (y)
 # ggplot(ni, aes(x = PUNT_INGLES, y = MOD_INGLES_PUNT)) +
 #   geom_point(alpha = 0.3) +
-#   labs(title = "Relacion entre Saber 11 y Saber Pro en Ingles (NI)",
+#   labs(title = "Relacion entre Saber 11 y Saber Pro en Ingles",
 #        x = "Puntaje Ingles Saber 11",
 #        y = "Puntaje Ingles Saber Pro") +
 #   theme_minimal()
@@ -143,7 +131,7 @@ library(tidyverse)
 # --- 6) Conclusiones ---------------------------------------------------------
 
 # TODO: Sintetizar hallazgos:
-# - ¿La distribucion de niveles MCER es uniforme en NI?
+# - ¿La distribucion de niveles MCER es uniforme?
 # - ¿El puntaje de Saber 11 es buen predictor de Saber Pro en ingles?
 # - ¿Que limitaciones tiene el modelo OLS simple?
 

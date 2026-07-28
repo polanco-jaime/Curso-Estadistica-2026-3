@@ -7,15 +7,14 @@
 # --- Cargar paquetes y datos -------------------------------------------------
 library(tidyverse)
 library(corrplot)
+library(arrow)
 
-# datos <- read.csv("../../datos/saber_pro/ARCHIVO.csv")
-# ni <- datos %>% filter(PROGRAMA == "NEGOCIOS INTERNACIONALES")
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 
 # --- a) Matriz de correlaciones Pearson y Spearman ---------------------------
 # Variables: MOD_INGLES_PUNT, MOD_RAZONA_CUANTITAT_PUNT,
-#            MOD_LECTURA_CRITICA_PUNT, MOD_COMPETEN_CIUDADA_PUNT,
-#            MOD_COMUNI_ESCRITA_PUNT
-# TODO: Seleccionar las 5 variables
+#            MOD_LECTURA_CRITICA_PUNT, MOD_COMPETEN_CIUDADA_PUNT
+# TODO: Seleccionar las 4 variables de modulos genericos
 # TODO: cor(..., method = "pearson")
 # TODO: cor(..., method = "spearman")
 # TODO: corrplot() o heatmap para visualizar

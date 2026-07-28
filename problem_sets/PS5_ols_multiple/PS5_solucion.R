@@ -9,19 +9,9 @@ library(tidyverse)
 library(effsize)
 
 # --- Cargar datos ------------------------------------------------------------
-# Opcion 1: Leer desde CSV local
-# datos <- read.csv("../../datos/saber_pro_ni.csv")
+library(arrow)
 
-# Opcion 2: Conectar a BigQuery (proyecto ph-jabri)
-# library(bigrquery)
-# bq_auth()
-# sql <- "SELECT MOD_INGLES_PUNT, ESTU_INST_NATURALEZA
-#         FROM `ph-jabri.ICFES.Saber11_SaberPro`
-#         WHERE ESTU_PRGM_ACADEMICO LIKE '%NEGOCIOS INTERNACIONALES%'"
-# datos <- bq_project_query("ph-jabri", sql) %>% bq_table_download()
-
-# Filtrar estudiantes de Negocios Internacionales (NI)
-# ni <- datos %>% filter(!is.na(MOD_INGLES_PUNT))
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 
 
 # --- 1) Prueba t de una muestra ----------------------------------------------
@@ -41,7 +31,7 @@ library(effsize)
 # H0: mu_publica = mu_privada vs. H1: mu_publica != mu_privada
 
 # TODO: Separar datos por tipo de institucion (publica vs. privada)
-# Sugerencia: usar la variable ESTU_INST_NATURALEZA
+# Sugerencia: usar la variable INST_ORIGEN
 
 
 # TODO: Aplicar t.test() de dos muestras (Welch, varianzas desiguales)
@@ -90,7 +80,7 @@ library(effsize)
 # --- 5) Conclusiones ---------------------------------------------------------
 
 # TODO: Sintetizar hallazgos:
-# - ¿El puntaje promedio de NI difiere de 160 puntos?
+# - ¿El puntaje promedio difiere de 160 puntos?
 # - ¿Existe brecha publico-privado en ingles? ¿Es grande?
 # - ¿El tamano de muestra actual es adecuado?
 

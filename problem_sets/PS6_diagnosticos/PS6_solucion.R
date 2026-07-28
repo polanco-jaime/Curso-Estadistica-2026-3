@@ -9,21 +9,9 @@ library(tidyverse)
 library(car)       # para leveneTest()
 
 # --- Cargar datos ------------------------------------------------------------
-# Opcion 1: Leer desde CSV local
-# datos <- read.csv("../../datos/saber_pro_ni.csv")
+library(arrow)
 
-# Opcion 2: Conectar a BigQuery (proyecto ph-jabri)
-# library(bigrquery)
-# bq_auth()
-# sql <- "SELECT MOD_INGLES_PUNT, ESTU_NSE_ESTRATO, ESTU_GENERO,
-#                MOD_INGLES_DESEM_MCER
-#         FROM `ph-jabri.ICFES.Saber11_SaberPro`
-#         WHERE ESTU_PRGM_ACADEMICO LIKE '%NEGOCIOS INTERNACIONALES%'"
-# datos <- bq_project_query("ph-jabri", sql) %>% bq_table_download()
-
-# Filtrar y preparar datos
-# ni <- datos %>%
-#   filter(!is.na(MOD_INGLES_PUNT), !is.na(ESTU_NSE_ESTRATO))
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 
 
 # --- 1) ANOVA de una via por estrato socioeconomico -------------------------
@@ -38,11 +26,11 @@ library(car)       # para leveneTest()
 
 
 # b) Homocedasticidad (prueba de Levene)
-# leveneTest(MOD_INGLES_PUNT ~ factor(ESTRATO), data = ni)
+# leveneTest(MOD_INGLES_PUNT ~ factor(FAMI_ESTRATOVIVIENDA), data = ni)
 
 
 # TODO: Aplicar ANOVA
-# modelo_anova <- aov(MOD_INGLES_PUNT ~ factor(ESTRATO), data = ni)
+# modelo_anova <- aov(MOD_INGLES_PUNT ~ factor(FAMI_ESTRATOVIVIENDA), data = ni)
 # summary(modelo_anova)
 
 
@@ -78,7 +66,7 @@ library(car)       # para leveneTest()
 
 
 # TODO: Aplicar wilcox.test()
-# wilcox.test(MOD_INGLES_PUNT ~ GENERO, data = ni)
+# wilcox.test(MOD_INGLES_PUNT ~ ESTU_GENERO, data = ni)
 
 
 # TODO: Interpretar: ¿Rechaza H0? ¿Que grupo tiene mayor puntaje mediano?
@@ -88,7 +76,7 @@ library(car)       # para leveneTest()
 # --- 4) Prueba chi-cuadrado de independencia: genero x nivel MCER -----------
 
 # TODO: Construir tabla de contingencia
-# tabla_contingencia <- table(ni$GENERO, ni$MOD_INGLES_DESEM_MCER)
+# tabla_contingencia <- table(ni$ESTU_GENERO, ni$MOD_INGLES_DESEM)
 # print(tabla_contingencia)
 
 

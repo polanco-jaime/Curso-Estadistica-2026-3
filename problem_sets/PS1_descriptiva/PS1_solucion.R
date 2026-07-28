@@ -7,9 +7,9 @@
 # --- Cargar paquetes y datos -------------------------------------------------
 library(tidyverse)
 library(moments)
+library(arrow)
 
-# datos <- read.csv("../../datos/saber_pro/ARCHIVO.csv")
-# ni <- datos %>% filter(PROGRAMA == "NEGOCIOS INTERNACIONALES")  # ajustar filtro
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 
 # --- a) Medidas de tendencia central -----------------------------------------
 # Calcular media, mediana y moda de MOD_INGLES_PUNT

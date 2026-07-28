@@ -11,35 +11,18 @@ library(lmtest)    # para bptest(), coeftest()
 library(sandwich)  # para vcovHC()
 
 # --- Cargar datos ------------------------------------------------------------
-# Opcion 1: Leer desde CSV local
-# datos <- read.csv("../../datos/saber11_saberpro_ni.csv")
+library(arrow)
 
-# Opcion 2: Conectar a BigQuery (proyecto ph-jabri)
-# library(bigrquery)
-# bq_auth()
-# sql <- "SELECT MOD_INGLES_PUNT,
-#                PUNT_INGLES, PUNT_MATEMATICAS, PUNT_LECTURA_CRITICA,
-#                PUNT_SOCIALES_CIUDADANAS, PUNT_CIENCIAS_NATURALES
-#         FROM `ph-jabri.ICFES.Saber11_SaberPro`
-#         WHERE ESTU_PRGM_ACADEMICO LIKE '%NEGOCIOS INTERNACIONALES%'
-#         AND MOD_INGLES_PUNT IS NOT NULL
-#         AND PUNT_INGLES IS NOT NULL"
-# datos <- bq_project_query("ph-jabri", sql) %>% bq_table_download()
-
-# Filtrar datos completos
-# ni <- datos %>%
-#   filter(!is.na(MOD_INGLES_PUNT),
-#          !is.na(PUNT_INGLES),
-#          !is.na(PUNT_MATEMATICAS),
-#          !is.na(PUNT_LECTURA_CRITICA),
-#          !is.na(PUNT_SOCIALES_CIUDADANAS))
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
+cruce     <- read_parquet("datos/cruce/cruce_saber11_saberpro.parquet")
 
 
 # --- 1) Modelo OLS multiple con 4+ regresores de Saber 11 -------------------
 
 # TODO: Seleccionar 4 o mas regresores de Saber 11
 # Sugerencias: PUNT_INGLES, PUNT_MATEMATICAS, PUNT_LECTURA_CRITICA,
-#              PUNT_SOCIALES_CIUDADANAS, PUNT_CIENCIAS_NATURALES
+#              PUNT_SOCIALES_CIUDADANAS, PUNT_C_NATURALES
 
 
 # TODO: Estimar modelo OLS multiple
@@ -190,7 +173,7 @@ library(sandwich)  # para vcovHC()
 # TODO: Sintetizar el analisis completo:
 
 # a) ¿Cuales son los principales determinantes del puntaje de ingles en
-#    Saber Pro para estudiantes de NI?
+#    Saber Pro para estudiantes?
 
 
 # b) ¿El modelo cumple razonablemente los supuestos de Gauss-Markov?
@@ -203,7 +186,7 @@ library(sandwich)  # para vcovHC()
 
 
 # d) ¿El modelo tiene utilidad practica para predecir el rendimiento en
-#    Saber Pro de futuros estudiantes de NI?
+#    Saber Pro de futuros estudiantes?
 
 
 # ============================================================================

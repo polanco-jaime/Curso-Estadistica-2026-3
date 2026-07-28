@@ -6,11 +6,10 @@
 
 # --- Cargar paquetes y datos -------------------------------------------------
 library(tidyverse)
+library(arrow)
 
-# datos_pro <- read.csv("../../datos/saber_pro/ARCHIVO.csv")
-# ni <- datos_pro %>% filter(PROGRAMA == "NEGOCIOS INTERNACIONALES")
-
-# saber11 <- read.csv("../../datos/saber11/ARCHIVO.csv")
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+saber11   <- read_parquet("datos/saber11/saber11.parquet")
 
 # ============================================================================
 # PARTE 1: Ejercicios con la Distribucion Normal

@@ -6,9 +6,9 @@
 
 # --- Cargar paquetes y datos -------------------------------------------------
 library(tidyverse)
+library(arrow)
 
-# datos <- read.csv("../../datos/saber_pro/ARCHIVO.csv")
-# ni <- datos %>% filter(PROGRAMA == "NEGOCIOS INTERNACIONALES")
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
 
 # --- a) IC para la media global (95%, distribucion t) -----------------------
 # TODO: t.test(ni$MOD_INGLES_PUNT, conf.level = 0.95)
