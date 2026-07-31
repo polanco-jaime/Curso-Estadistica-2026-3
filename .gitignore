@@ -1,8 +1,9 @@
-# Exámenes - contenido privado
+# Exámenes y Guías del profesor - contenido privado / interno
 examenes/
-
-# Guías del profesor - contenido interno
 guia_profesor*.md
+
+# LaTeX fuentes (solo se publican los PDF)
+*.tex
 
 # LaTeX auxiliares
 *.aux
@@ -21,4 +22,29 @@ David_R*.pdf
 
 # macOS
 .DS_Store
-.DS_Store
+
+# Sesiones futuras (Solo S00 y S01 publicadas)
+sesiones/S02_*
+sesiones/S03_*
+sesiones/S04_*
+sesiones/S05_*
+sesiones/S06_*
+sesiones/S07_*
+sesiones/S08_*
+sesiones/S09_*
+sesiones/S10_*
+sesiones/S11_*
+sesiones/S12_*
+sesiones/S13_*
+
+# Problem Sets futuros (Solo PS1 publicado)
+problem_sets/PS2_*
+problem_sets/PS3_*
+problem_sets/PS4_*
+problem_sets/PS5_*
+problem_sets/PS6_*
+problem_sets/PS7_*
+problem_sets/PS8_*
+
+# Proyecto
+proyecto/

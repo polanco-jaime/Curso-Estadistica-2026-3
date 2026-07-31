@@ -9,7 +9,9 @@ library(tidyverse)
 library(moments)
 library(arrow)
 
-saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+## Leer Archivos
+url_datos <- "https://raw.githubusercontent.com/polanco-jaime/Curso-Estadistica-2026-3/main/datos/saber_pro/saber_pro.parquet"
+saber_pro <- read_parquet(url_datos)
 
 # --- a) Medidas de tendencia central -----------------------------------------
 # Calcular media, mediana y moda de MOD_INGLES_PUNT
