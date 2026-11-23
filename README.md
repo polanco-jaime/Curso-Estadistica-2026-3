@@ -36,7 +36,6 @@ Syllabus.pdf       Programa oficial del curso
 sesiones/          Slides (.tex/.pdf), código R y notebooks de cada sesión (S00–S13)
 problem_sets/      Enunciados de los talleres (PS1–PS8)
 proyecto/          Asignación de grupos, guías de Fase 1–2 y slides de Fase 3 (Video-Podcast)
-examenes/          Guías de repaso e instrucciones públicas del examen final (RCT)
 datos/             Datos ICFES en formato Parquet + script de extracción
 utils/             Scripts auxiliares (paquetes R)
 ```
