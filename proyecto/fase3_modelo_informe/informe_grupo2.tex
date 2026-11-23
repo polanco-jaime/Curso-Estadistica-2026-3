@@ -1,0 +1,119 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{La trampa del estrato: ?`el estrato socioeconomico determina el techo academico?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 2}\\[0.3cm]
+Carreno Cardenas Juan Jose\\
+Gaitan Arias Santiago\\
+Herrera Pulido Andres Felipe\\
+Garavito Ortiz Isabela\\
+Bonilla Martinez Mariana Alejandra\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: estratificacion socioeconomica en Colombia y su relacion con
+% resultados educativos.
+% Pregunta: el estrato condiciona el desempeno en SBPro incluso controlando
+% por habilidad previa (SB11)?
+% Concepto de trampa de pobreza y reproduccion de desigualdad.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Variable dependiente: PUNT\_GLOBAL\_sbpro.
+% Predictores: PUNT\_GLOBAL\_sb11, FAMI\_ESTRATOVIVIENDA\_sb11, INST\_ORIGEN\_sbpro,
+%   FAMI\_EDUCACIONMADRE\_sb11, ESTU\_DEPTO\_RESIDE\_sbpro.
+% Modelo 1 (aditivo), Modelo 2 (interaccion SB11 * estrato),
+%   Modelo 3 (subsample carreras econ/admin).
+% Justificacion de la interaccion: el efecto del estrato depende del nivel SB11?
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Distribucion de PUNT\_GLOBAL\_sbpro por estrato.
+% Scatter SB11 vs SBPro coloreado por estrato.
+% Estadisticas descriptivas por estrato y educacion de la madre.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de PUNT\_GLOBAL\_sbpro por estrato.
+% Prueba ANOVA o Kruskal-Wallis para diferencias entre estratos.
+% Prueba chi-cuadrado para asociacion estrato e INST\_ORIGEN\_sbpro.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo 1: aditivo (SB11 + estrato + inst\_origen + educ\_madre).
+% Modelo 2: interaccion SB11 * estrato + inst\_origen + depto.
+% Modelo 3: misma especificacion de M2 pero filtrado para carreras econ/admin.
+% Tabla de coeficientes con IC al 95\%.
+% Comparacion de modelos: R2 ajustado, AIC, BIC.
+% Predicciones: estrato 1 vs estrato 5 al mismo percentil 50 de SB11.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Diagnosticos para cada modelo: residuales vs ajustados, QQ-plot.
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad, incluyendo manejo de interacciones).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1: comparacion con errores estandar clasicos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% La interaccion es significativa? Que implica para la nocion de trampa?
+% Comparacion de predicciones estrato 1 vs 5.
+% Graficos de interaccion y coeficientes.
+% Reflexion sobre reproduccion de desigualdad a traves del sistema educativo.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para politica de equidad y acceso a educacion superior.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, literatura sobre estratificacion y desigualdad educativa en Colombia.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo2.R) o referenciarlo.
+
+\end{document}

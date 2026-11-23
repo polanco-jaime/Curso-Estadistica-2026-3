@@ -1,0 +1,1325 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\input{../preambulo_beamer.tex}
+
+\title{Sesión 10: Regresión Lineal Múltiple --- OLS}
+\subtitle{Anatomía de una investigación económica con datos experimentales}
+\author{Prof.\ Jaime Polanco Jimenez}
+\date{2026-II}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+\small
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+\section{Motivación: Una investigación real}
+% ============================================================================
+
+\begin{frame}{¿Por qué necesitan regresión múltiple?}
+\begin{exampleblock}{Porque un solo predictor no basta}
+\small
+Tenemos datos de un experimento real (AI-Driven Mentorship, KU Leuven, 2024):
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item 148 estudiantes, 4 grupos: Control, Friendly, Mentor, Narrative
+  \item Queremos saber si el tipo de mentor IA afecta la intención de inscripción universitaria
+  \item Pero esa intención también depende de la intención \textit{previa}, autoeficacia, origen migrante\ldots
+  \item Si no controlamos por estos factores, nuestras conclusiones serán erróneas
+\end{itemize}
+\end{exampleblock}
+
+\begin{block}{La frase clave del curso}
+\small
+``Manteniendo constantes las demás variables'' (ceteris paribus). Esto es lo que distingue un análisis serio de uno superficial.
+\end{block}
+\end{frame}
+
+\begin{frame}{La pregunta de investigación}
+\begin{block}{Contexto}
+\small
+En Flandes (Bélgica), estudiantes de origen migrante tienen menor probabilidad de acceder a educación superior, \textbf{incluso controlando por desempeño académico previo}. ¿Por qué? Fallas de información: no conocen los programas, sobreestiman costos, subestiman retornos.
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Pregunta}
+\small
+¿Puede un chatbot con IA corregir estas fallas de información? Y más importante: ¿importa \textbf{cómo} se entrega la información? ¿Un tono ``cálido'' es mejor que uno puramente factual?
+\end{exampleblock}
+
+\vspace{0.2cm}
+\textbf{La tensión central:}
+\begin{itemize}
+  \item Mecanismo \textbf{informacional}: la IA provee datos sobre costos, becas, programas
+  \item Mecanismo \textbf{relacional}: la IA simula empatía, motivación, narrativas inspiradoras
+  \item ¿Cuál domina? ¿Depende del tipo de estudiante?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Asimetría de información y capital humano}
+\begin{block}{Modelo de Capital Humano (HCM)}
+Un estudiante se inscribe en educación superior si los beneficios esperados superan los costos:
+\[
+\sum_{t=1}^{T} \frac{\mathbb{E}[B_t \mid \mathcal{I}_i]}{(1+r)^t} \;>\; \sum_{t=0}^{T} \frac{\mathbb{E}[C_t \mid \mathcal{I}_i]}{(1+r)^t}
+\]
+donde $\mathcal{I}_i$ es la \textbf{información disponible} y $r$ es la tasa de descuento (paciencia).
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Pregunta clave:} ¿Qué pasa cuando $\mathcal{I}_i$ es incompleta?
+
+Si las familias no tienen toda la información, sus decisiones educativas pueden ser \textbf{subóptimas} --- incluso cuando ir a la universidad les convendría.
+\end{frame}
+
+\begin{frame}{La cuña informacional}
+\begin{alertblock}{Cuando $\mathcal{I}_i \subset \mathcal{I}^*$ (información incompleta)}
+\small
+Las familias migrantes enfrentan 4 fricciones informacionales:
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item \textbf{Subestiman retornos} ($\mathbb{E}[B_t \mid \mathcal{I}_i] < B_t$): no observan graduados exitosos
+  \item \textbf{Sobreestiman costos} ($\mathbb{E}[C_t \mid \mathcal{I}_i] > C_t$): desconocen becas y ayudas
+  \item \textbf{Desajuste percibido}: no entienden el sistema de tracks (ASO, TSO, BSO)
+  \item \textbf{Baja autoeficacia}: creen que no pueden tener éxito académico
+\end{enumerate}
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{Resultado:} \textbf{no-inscripción subóptima} incluso cuando el retorno neto es positivo.
+
+\vspace{0.2cm}
+{\small Nuestro experimento ataca estas fricciones con 4 chatbots de IA, cada uno con un mecanismo distinto.}
+\end{frame}
+
+\begin{frame}{Diseño experimental: el RCT}
+\begin{block}{4 personas IA, cada una ataca una falla distinta}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{T0 --- Control}: Información factual, tono neutral. Corrige directamente las fallas de información
+  \item \textbf{T1 --- Friendly Guide}: Calidez conversacional, lenguaje informal. Reduce el costo psicológico de la interacción
+  \item \textbf{T2 --- Empathetic Mentor}: Andamiaje psicológico, validación emocional. Ataca la baja autoeficacia
+  \item \textbf{T3 --- Inspiring Storyteller}: Narrativas de éxito, modelos a seguir. Eleva los retornos esperados
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Flujo del experimento (3 etapas):}
+
+\medskip
+\centering
+\begin{tikzpicture}[node distance=2.5cm, auto, >=Stealth,
+    box/.style={rectangle, draw=javeriana, thick, fill=javeriana!5, text width=3cm, align=center, minimum height=1cm, font=\small}]
+  \node[box] (pre) {1. Encuesta pre\\(baseline, paciencia,\\autoeficacia)};
+  \node[box, right of=pre, node distance=4.2cm] (chat) {2. Chat con IA\\(10--15 min,\\persona aleatoria)};
+  \node[box, right of=chat, node distance=4.2cm] (post) {3. Encuesta post\\(intención,\\percepciones)};
+  \draw[->, thick, javeriana] (pre) -- (chat);
+  \draw[->, thick, javeriana] (chat) -- (post);
+\end{tikzpicture}
+
+\vspace{0.2cm}
+{\small $N = 263$ aleatorizados $\rightarrow$ $n = 148$ completaron (attrición $\approx 44\%$)}
+\end{frame}
+
+% ============================================================================
+\section{Los datos: Exploración}
+% ============================================================================
+
+\begin{frame}[fragile]{Cargar y explorar los datos}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Cargar el dataset de-identificado del experimento
+datos <- read.csv("datos/rct_student_sample.csv")
+
+# Dimensiones y primeras variables
+dim(datos)        # 148 observaciones, 23 variables
+names(datos)[1:12]
+# "student_id"  "treatment"  "T1"  "T2"  "T3"
+# "assigned_group"  "high_patience"  "migrant"
+# "parents_college"  "female"  "age"  "gender"
+
+# Muestra por brazo de tratamiento
+table(datos$treatment)
+# T0_control T1_friendly   T2_mentor T3_narrative
+#         37          36          42           33
+\end{lstlisting}
+
+\vspace{0.1cm}
+\begin{alertblock}{Nota}
+\small
+Los datos están \textbf{de-identificados}: los IDs son hashes criptográficos (SHA-256), no hay nombres ni emails. Esto es obligatorio en investigación con sujetos humanos.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Estadísticas descriptivas}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Intención de inscripción (variable principal, escala 0-100)
+mean(datos$enrollment_likelihood)  # Baseline: 79.8
+sd(datos$enrollment_likelihood)    # SD: 23.0
+mean(datos$pt_enrollment_likelihood)  # Post: 82.5
+
+# Intención baseline por brazo de tratamiento
+tapply(datos$enrollment_likelihood, datos$treatment, mean)
+# T0_control T1_friendly   T2_mentor T3_narrative
+#      76.6        78.2        80.0         84.7
+
+# Características de la muestra
+mean(datos$female, na.rm = TRUE)          # 51.4% mujeres
+mean(datos$migrant, na.rm = TRUE)         # 33.1% migrantes
+mean(datos$high_patience, na.rm = TRUE)   # 87.8% pacientes
+mean(datos$parents_college, na.rm = TRUE) # 60.8% padres con u.
+\end{lstlisting}
+
+\vspace{0.1cm}
+{\small \textbf{Observación:} El baseline del grupo T3 (84.7) es más alto que el de T0 (76.6). Diferencia de $\sim$8 puntos \textbf{por azar}. Con solo 148 estudiantes, la aleatorización no garantiza balance perfecto. Por eso necesitamos controles.}
+\end{frame}
+
+\begin{frame}[fragile]{Balance: ¿la aleatorización funcionó?}
+\begin{exampleblock}{¿Por qué verificar el balance?}
+\small
+La aleatorización garantiza que, \textit{en expectativa}, los grupos son iguales. Pero con muestras pequeñas puede haber \textbf{desbalance aleatorio}. Verificamos con pruebas F conjuntas.
+\end{exampleblock}
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+library(fixest)
+# Prueba F: cada covariable regresada sobre las dummies
+feols(enrollment_likelihood ~ T1 + T2 + T3, data = datos)
+# F-test conjunto: F = 0.781, p = 0.507
+
+feols(high_patience ~ T1 + T2 + T3, data = datos)
+# F-test conjunto: F = 1.897, p = 0.133
+\end{lstlisting}
+
+\vspace{0.1cm}
+\textbf{Resultado:} Todas las pruebas F con $p > 0.10$. La aleatorización es válida.
+
+\vspace{0.1cm}
+\begin{alertblock}{Diferencias normalizadas (Imbens \& Rubin, 2015)}
+\small
+Se calculan $d = \frac{\bar{X}_T - \bar{X}_C}{\sqrt{(S_T^2 + S_C^2)/2}}$. El umbral es $|d| < 0.25$. Algunas lo exceden (Storyteller vs Control en baseline: $d = 0.36$), lo que refuerza la necesidad de \textbf{controlar por el baseline}.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Visualización: medias crudas por grupo}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Medias post-tratamiento por grupo
+medias <- tapply(datos$pt_enrollment_likelihood,
+                 datos$treatment, mean)
+sds    <- tapply(datos$pt_enrollment_likelihood,
+                 datos$treatment, sd)
+ns     <- tapply(datos$pt_enrollment_likelihood,
+                 datos$treatment, length)
+se     <- sds / sqrt(ns)
+
+# Grafico de barras con IC 95%
+bp <- barplot(medias, col = c("gray70","steelblue","coral","gold"),
+              ylim = c(0, 100), ylab = "Intención post (%)",
+              main = "Medias crudas por grupo")
+arrows(bp, medias - 1.96*se, bp, medias + 1.96*se,
+       angle = 90, code = 3, length = 0.05)
+\end{lstlisting}
+
+\vspace{0.1cm}
+{\small Control: 80.4, Friendly: 80.9, Mentor: 83.0, Storyteller: 85.8. Los intervalos de confianza se solapan ampliamente $\Rightarrow$ las diferencias crudas \textbf{no son significativas}. Pero estas medias no controlan por el baseline.}
+\end{frame}
+
+% ============================================================================
+\section{El modelo de regresión lineal múltiple}
+% ============================================================================
+
+\begin{frame}{El modelo poblacional}
+\begin{block}{Modelo}
+\[
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} + \varepsilon_i
+\]
+donde:
+\begin{itemize}
+  \item $Y_i$ = variable dependiente (respuesta)
+  \item $X_{1i}, X_{2i}, \ldots, X_{pi}$ = variables independientes (predictores, regresores)
+  \item $\beta_0$ = intercepto
+  \item $\beta_j$ = coeficiente de $X_j$ ($j = 1, 2, \ldots, p$)
+  \item $\varepsilon_i$ = error aleatorio
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Interpretación de $\beta_j$:}\\
+$\beta_j$ representa el cambio esperado en $Y$ cuando $X_j$ aumenta en una unidad, \textbf{manteniendo constantes todas las demás variables} (ceteris paribus).
+\end{frame}
+
+\begin{frame}{Ecuación estimada}
+Estimamos los parámetros $\beta_0, \beta_1, \ldots, \beta_p$ usando OLS (mínimos cuadrados ordinarios), obteniendo:
+\[
+\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{1i} + \hat{\beta}_2 X_{2i} + \cdots + \hat{\beta}_p X_{pi}
+\]
+
+\vspace{0.2cm}
+\textbf{Residuos:}
+\[
+e_i = Y_i - \hat{Y}_i
+\]
+
+\vspace{0.2cm}
+\textbf{OLS minimiza:}
+\[
+\text{SSE} = \sum_{i=1}^{n} e_i^2 = \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2
+\]
+
+\vspace{0.2cm}
+\begin{alertblock}{Nota matricial}
+En álgebra matricial: $\boldsymbol{\hat{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$\\
+(No entraremos en detalle, pero R usa esta fórmula internamente)
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Especificación econométrica del RCT}
+\begin{block}{Nuestro modelo (McKenzie, 2012)}
+\[
+Y_{is} = \alpha + \sum_{k} \beta_k T_{is}^k + \gamma Y_{is}^{\text{pre}} + \mathbf{X}_{is}'\delta + \varepsilon_{is}
+\]
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item $Y_{is}$ = intención post-tratamiento (0--100) del estudiante $i$
+  \item $T_{is}^k$ = dummies de tratamiento (T1, T2, T3; Control es la referencia)
+  \item $Y_{is}^{\text{pre}}$ = intención \textbf{baseline} (pre-tratamiento)
+  \item $\mathbf{X}_{is}$ = controles: edad, género, migrante, educación padres
+  \item $\beta_k$ = \textbf{efecto causal} de cada persona vs.\ Control (ITT)
+\end{itemize}
+\end{block}
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# En R:
+modelo_ols <- lm(pt_enrollment_likelihood ~
+                   T1 + T2 + T3 +
+                   enrollment_likelihood,
+                 data = datos)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Modelo 1: solo dummies de tratamiento}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+modelo_trat <- lm(pt_enrollment_likelihood ~ T1 + T2 + T3,
+                  data = datos)
+summary(modelo_trat)
+
+# Coefficients:
+#             Estimate Std. Error t value Pr(>|t|)
+# (Intercept)  80.351      3.519  22.836  < 2e-16 ***
+# T1            0.565      5.011   0.113    0.910
+# T2            2.649      4.826   0.549    0.584
+# T3            5.497      5.125   1.073    0.285
+# ---
+# Residual standard error: 21.4 on 144 DF
+# Multiple R-squared:  0.010, Adjusted R-squared:  -0.011
+# F-statistic: 0.467 on 3 and 144 DF,  p-value: 0.706
+\end{lstlisting}
+
+\vspace{0.1cm}
+{\small \textbf{Resultado:} $R^2 = 0.01$. Ningún tratamiento es significativo. ¿Entonces no sirve? No tan rápido\ldots}
+\end{frame}
+
+\begin{frame}[fragile]{Modelo 2: OLS con control baseline (McKenzie, 2012)}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+modelo_ols <- lm(pt_enrollment_likelihood ~ T1 + T2 + T3 +
+                   enrollment_likelihood,
+                 data = datos)
+summary(modelo_ols)
+
+# Coefficients:
+#                       Estimate Std. Error t value Pr(>|t|)
+# (Intercept)           15.566      2.829    5.50  1.7e-07 ***
+# T1                    -0.765      2.060   -0.37    0.711
+# T2                    -0.184      1.986   -0.09    0.926
+# T3                    -1.306      2.121   -0.62    0.539
+# enrollment_likelihood  0.845      0.032   26.64  < 2e-16 ***
+# ---
+# Residual standard error: 8.80 on 143 DF
+# Multiple R-squared:  0.834, Adjusted R-squared:  0.829
+# F-statistic: 179.5 on 4 and 143 DF,  p-value: < 2.2e-16
+\end{lstlisting}
+
+\vspace{0.1cm}
+{\small \textbf{Resultado:} $R^2$ salta de 0.01 a \textbf{0.83}. El baseline explica la mayor parte de la variación. \textbf{Los tratamientos siguen sin ser significativos}, pero ahora tenemos un modelo mucho más preciso. Y los signos cambiaron.}
+\end{frame}
+
+\begin{frame}{Interpretación de los coeficientes}
+\[
+\widehat{Y_{\text{post}}} = 15.57 - 0.77 \times T1 - 0.18 \times T2 - 1.31 \times T3 + 0.85 \times Y_{\text{pre}}
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretaciones ceteris paribus:}
+\begin{itemize}
+  \item $\hat{\beta}_{\text{T2}} = -0.18$: Los estudiantes del grupo Mentor reportan 0.18 puntos \textbf{menos} de intención que el control, \textbf{manteniendo constante} la intención baseline. No significativo ($p = 0.93$).
+
+  \item $\hat{\beta}_{\text{baseline}} = 0.85$: Por cada punto adicional de intención previa, la intención post aumenta 0.85 puntos, \textbf{controlando por} el tratamiento asignado. Altamente significativo.
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Lección clave}
+El control baseline es con frecuencia el mejor predictor del resultado post. Incluirlo es una práctica estándar en economía experimental (McKenzie, \textit{J.\ Dev.\ Econ.}, 2012).
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Variables dummy y la trampa}
+% ============================================================================
+
+\begin{frame}[fragile]{Variables dummy y la trampa de las dummies}
+En nuestro modelo, T1, T2, T3 son \textbf{variables dummy} (0 o 1).
+
+\vspace{0.2cm}
+\begin{block}{Categoría de referencia}
+T0 (Control) está \textbf{omitido} del modelo. Los coeficientes de T1, T2, T3 se interpretan \textbf{relativos al control}.
+\end{block}
+
+\vspace{0.2cm}
+\begin{alertblock}{Dummy Variable Trap}
+Si incluyéramos T0, T1, T2 y T3 simultáneamente, tendríamos \textbf{multicolinealidad perfecta}: $T0 + T1 + T2 + T3 = 1$ para todo $i$. R elimina automáticamente una, pero debemos saber cuál es la referencia.
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# R lo resuelve automaticamente con factor:
+datos$grupo <- factor(datos$assigned_group,
+                      labels = c("Control","Friendly","Mentor","Narrative"))
+lm(pt_enrollment_likelihood ~ grupo, data = datos)
+# Omite grupoControl (la primera categoria)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+\section{$R^2$ y $R^2$ ajustado}
+% ============================================================================
+
+\begin{frame}{¿Por qué aprender $R^2$ ajustado?}
+\begin{exampleblock}{Porque agregar variables no siempre mejora el modelo}
+\small
+Si meten 50 variables en la regresión, $R^2$ siempre sube --- pero eso no significa que el modelo sea mejor. Es como agregar filtros a una foto de Instagram: más filtros no la hacen más real. El $R^2$ ajustado penaliza por complejidad innecesaria y les dice si agregar otra variable realmente vale la pena.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{$R^2$ en regresión múltiple}
+El $R^2$ se define igual que en regresión simple:
+\[
+R^2 = \frac{\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
+\]
+
+\vspace{0.2cm}
+\textbf{Problema:} $R^2$ \textbf{siempre aumenta} (o se mantiene) al agregar variables, incluso si son irrelevantes.
+
+\vspace{0.2cm}
+\textbf{Solución:} El $R^2$ ajustado ($R^2_{\text{adj}}$) penaliza por el número de variables:
+\[
+R^2_{\text{adj}} = 1 - \frac{\text{SSE}/(n - p - 1)}{\text{SST}/(n - 1)} = 1 - \frac{\text{MSE}}{\text{MST}}
+\]
+
+\vspace{0.1cm}
+\textbf{Propiedades:}
+\begin{itemize}
+  \item $R^2_{\text{adj}} \leq R^2$
+  \item $R^2_{\text{adj}}$ puede disminuir si agregamos una variable irrelevante
+  \item Útil para comparar modelos con diferente número de variables
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Comparación: $R^2$ vs $R^2$ ajustado con datos del RCT}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Modelo 1: solo tratamientos (3 predictores)
+summary(modelo_trat)$r.squared      # 0.010
+summary(modelo_trat)$adj.r.squared  # -0.011  (<- negativo!)
+
+# Modelo 2: + baseline (4 predictores)
+summary(modelo_ols)$r.squared      # 0.834
+summary(modelo_ols)$adj.r.squared  # 0.829
+
+# Modelo 3: + autoeficacia (5 predictores)
+modelo_completo <- lm(pt_enrollment_likelihood ~
+                        T1 + T2 + T3 +
+                        enrollment_likelihood + se_pre,
+                      data = datos)
+summary(modelo_completo)$r.squared      # 0.835
+summary(modelo_completo)$adj.r.squared  # 0.829
+\end{lstlisting}
+
+\vspace{0.1cm}
+{\small \textbf{Observación:} Agregar \texttt{se\_pre} al Modelo 2 sube $R^2$ de 0.834 a 0.835, pero $R^2_{\text{adj}}$ se mantiene en 0.829. La variable \textbf{no aporta} y el $R^2_{\text{adj}}$ lo detecta.}
+\end{frame}
+
+\begin{frame}{¿Cuándo usar $R^2$ ajustado?}
+\begin{block}{Regla práctica}
+\begin{itemize}
+  \item Para \textbf{reportar} el ajuste de un modelo: usar ambos ($R^2$ y $R^2_{\text{adj}}$)
+  \item Para \textbf{comparar} modelos con diferente número de variables: usar $R^2_{\text{adj}}$
+  \item Para \textbf{seleccionar} el mejor modelo: complementar con AIC/BIC
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{alertblock}{Precaución}
+$R^2_{\text{adj}}$ NO es una probabilidad ni una proporción estricta. Puede ser negativo si el modelo es muy malo --- de hecho, nuestro Modelo 1 (solo tratamientos) tiene $R^2_{\text{adj}} = -0.011$.
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Interpretación}
+Si $R^2_{\text{adj}} = 0.829$, aproximadamente el 83\% de la variabilidad de $Y$ se explica por los predictores, ajustando por el número de variables.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Pruebas de significancia}
+% ============================================================================
+
+\begin{frame}{¿Por qué aprender pruebas de significancia en regresión múltiple?}
+\begin{exampleblock}{Porque ahora hay dos preguntas distintas}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{Prueba F global}: ¿el modelo \textit{en conjunto} sirve para algo? (Como preguntar: ¿esta playlist tiene al menos una buena canción?)
+  \item \textbf{Prueba t individual}: ¿\textit{cada} variable aporta algo, controlando por las demás? (Como preguntar: ¿esta canción específica le aporta a la playlist?)
+  \item Pueden tener un modelo útil (F significativo) donde alguna variable individual no sea significativa
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Prueba F global}
+\begin{block}{Hipótesis}
+\begin{itemize}
+  \item $H_0$: $\beta_1 = \beta_2 = \cdots = \beta_p = 0$ (ningún predictor es útil)
+  \item $H_1$: Al menos un $\beta_j \neq 0$ (al menos un predictor es útil)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Estadístico:}
+\[
+F = \frac{\text{MSR}}{\text{MSE}} = \frac{\text{SSR}/p}{\text{SSE}/(n - p - 1)} \sim F_{p, n-p-1} \quad \text{bajo } H_0
+\]
+
+\vspace{0.2cm}
+\textbf{Regla de decisión:}
+Rechazamos $H_0$ si $F > F_{\alpha, p, n-p-1}$ o si p-valor $< \alpha$.
+
+\vspace{0.2cm}
+\begin{exampleblock}{Nuestro RCT}
+Modelo 2: $F = 179.5$, $p\text{-valor} < 2.2 \times 10^{-16}$. El modelo en conjunto es altamente significativo, aunque los tratamientos individuales no lo son --- \textbf{es el baseline el que empuja}.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Relación entre $F$ y $R^2$}
+El estadístico $F$ se puede expresar en función de $R^2$:
+\[
+F = \frac{R^2 / p}{(1 - R^2)/(n - p - 1)}
+\]
+
+\vspace{0.2cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item $R^2$ alto $\Rightarrow$ $F$ alto $\Rightarrow$ modelo significativo
+  \item $R^2$ cercano a 0 $\Rightarrow$ $F$ cercano a 0 $\Rightarrow$ modelo no útil
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{exampleblock}{Ejemplo con nuestros datos}
+Modelo 2 con $R^2 = 0.834$, $p = 4$, $n = 148$:
+\[
+F = \frac{0.834 / 4}{(1 - 0.834) / (148 - 4 - 1)} = \frac{0.2085}{0.00116} \approx 179.5
+\]
+Con p-valor $< 2.2 \times 10^{-16}$, rechazamos $H_0$.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Prueba t individual}
+\begin{block}{Hipótesis para cada coeficiente}
+\begin{itemize}
+  \item $H_0$: $\beta_j = 0$ (el predictor $X_j$ NO tiene efecto, controlando por los demás)
+  \item $H_1$: $\beta_j \neq 0$ (el predictor $X_j$ sí tiene efecto)
+\end{itemize}
+\end{block}
+
+\vspace{0.1cm}
+\textbf{Estadístico:}
+$t_j = \hat{\beta}_j / \text{SE}(\hat{\beta}_j) \sim t_{n - p - 1}$ bajo $H_0$.
+Rechazamos $H_0$ si $|t_j| > t_{\alpha/2, n-p-1}$ o si p-valor $< \alpha$.
+
+\vspace{0.1cm}
+\begin{alertblock}{Diferencia con regresión simple}
+\small En regresión múltiple, la prueba t para $\beta_j$ evalúa el efecto de $X_j$ \textbf{controlando por todas las demás variables}. El resultado puede cambiar drásticamente si agregamos o quitamos predictores.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Interpretando el output de \texttt{summary()}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+summary(modelo_ols)
+
+# Coefficients:
+#                       Estimate Std. Error t value Pr(>|t|)
+# (Intercept)           15.566      2.829    5.50  1.7e-07 ***
+# T1                    -0.765      2.060   -0.37    0.711
+# T2                    -0.184      1.986   -0.09    0.926
+# T3                    -1.306      2.121   -0.62    0.539
+# enrollment_likelihood  0.845      0.032   26.64  < 2e-16 ***
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:}
+\begin{itemize}
+  \item Solo \texttt{enrollment\_likelihood} es significativo ($t = 26.64$, $p < 2 \times 10^{-16}$)
+  \item Ningún tratamiento es significativo al 5\%
+  \item El modelo es significativo \textbf{en conjunto} (F = 179.5) pero por el baseline
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Significancia conjunta vs individual}
+\begin{alertblock}{Discrepancia aparente en nuestro modelo}
+\small
+\begin{itemize}
+  \item Prueba F global: significativa ($p < 2.2 \times 10^{-16}$)
+  \item Pruebas t de T1, T2, T3: ninguna significativa
+  \item ¿Contradicción? No. La F es significativa porque \texttt{enrollment\_likelihood} es un predictor potente
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.1cm}
+\textbf{Lecciones:}
+\begin{itemize}
+  \item Un modelo significativo (F) \textbf{no implica} que todos los coeficientes lo sean
+  \item La significancia individual depende de qué más está en el modelo
+  \item En nuestro caso: la muestra ($n = 148$) puede ser insuficiente para detectar efectos pequeños de tratamiento
+\end{itemize}
+
+\vspace{0.1cm}
+\begin{block}{Recomendación}
+Siempre reportar ambas pruebas (F global e individuales). Si hay discrepancia, investigar multicolinealidad (VIF) y considerar el poder estadístico.
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Poder estadístico: ¿tenemos suficientes datos?}
+% ============================================================================
+
+\begin{frame}{¿Qué es el poder estadístico?}
+\begin{block}{Definición}
+El \textbf{poder estadístico} es la probabilidad de detectar un efecto \textit{cuando realmente existe}:
+\[
+\text{Poder} = P(\text{rechazar } H_0 \mid H_1 \text{ es verdadera}) = 1 - \beta
+\]
+donde $\beta$ es la probabilidad de \textbf{error Tipo II} (no detectar un efecto real).
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Analogía: el detector de metales}
+\small
+El poder es como la sensibilidad de un detector de metales. Si el poder es 80\%, detectarán el tesoro 80 de cada 100 veces que esté ahí. Un poder bajo (ej.\ 30\%) significa que probablemente pasarán por encima del tesoro sin detectarlo.
+\end{exampleblock}
+
+\vspace{0.2cm}
+\textbf{Convención:} Se busca un poder mínimo del \textbf{80\%} ($\beta \leq 0.20$).
+
+\vspace{0.1cm}
+{\small \textbf{¿Por qué importa?} Si nuestros tratamientos no son significativos, ¿es porque realmente no funcionan o porque la muestra es demasiado pequeña para detectarlo?}
+\end{frame}
+
+\begin{frame}{Efecto mínimo detectable (MDE)}
+\begin{block}{Fórmula}
+El MDE es el efecto más pequeño que podemos detectar con poder $1 - \beta$ y significancia $\alpha$:
+\[
+\text{MDE} = (z_{\alpha/2} + z_{\beta}) \times \sigma \times \sqrt{\frac{1}{n_T} + \frac{1}{n_C}}
+\]
+Con $\alpha = 0.05$ y poder $= 0.80$: $(z_{0.025} + z_{0.20}) = 1.96 + 0.84 = 2.80$.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Sin controles} (usando $\sigma = 21.3$, la SD del outcome):
+\[
+\text{MDE} = 2.80 \times 21.3 \times \sqrt{\frac{2}{37}} = \textbf{13.9 \text{ pp}}
+\]
+
+\textbf{Con control baseline} ($\sigma_{\text{res}} = 21.3 \times \sqrt{1 - 0.83} = 8.8$):
+\[
+\text{MDE} = 2.80 \times 8.8 \times \sqrt{\frac{2}{37}} = \textbf{5.7 \text{ pp}}
+\]
+\end{frame}
+
+\begin{frame}{Lección de McKenzie (2012): el poder del baseline}
+\begin{alertblock}{El control baseline reduce el MDE 2.4 veces}
+¡El MDE pasa de \textbf{13.9 a 5.7 pp}! Incluir el baseline no es decoración: es una herramienta de poder estadístico.
+\end{alertblock}
+
+\vspace{0.3cm}
+\textbf{¿Por qué funciona?}
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item El baseline explica el 83\% de la varianza ($R^2 = 0.83$)
+  \item La varianza residual cae de $21.3^2$ a $8.8^2$
+  \item Menos ruido $\Rightarrow$ más fácil detectar la señal del tratamiento
+  \item Es como usar audífonos con cancelación de ruido para escuchar mejor
+\end{itemize}
+
+\vspace{0.3cm}
+{\small \textbf{Implicación práctica:} en un RCT, incluir $Y_{\text{pre}}$ puede ser más eficiente que duplicar la muestra.}
+\end{frame}
+
+\begin{frame}[fragile]{Poder en nuestro RCT}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Calcular poder para distintos tamanios de efecto
+power.t.test(n = 37, delta = 5.7, sd = 8.8,
+             sig.level = 0.05, type = "two.sample")
+# power = 0.803  (justo en el umbral!)
+
+# Nuestros efectos estimados:
+# T1 = -0.77, T2 = -0.18, T3 = -1.31
+# Todos menores que MDE = 5.7 pp => NO DETECTABLES
+
+# Pero el HTE Mentor x Impaciente = -14.9 pp
+power.t.test(n = 18, delta = 14.9, sd = 8.8,
+             sig.level = 0.05, type = "two.sample")
+# power = 0.99  (detectable incluso con n = 18!)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación del análisis de poder}
+\begin{block}{¿Qué nos dice el poder sobre nuestros resultados?}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item Efectos promedio de $\sim$1 pp $\Rightarrow$ muy por debajo del MDE (5.7 pp). No podemos saber si son cero o simplemente pequeños
+  \item Efecto heterogéneo de $-14.9$ pp $\Rightarrow$ muy por encima del MDE. Detectable incluso con pocos impacienciosos ($n = 18$, poder = 0.99)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{alertblock}{Moraleja}
+Muestras pequeñas detectan efectos \textbf{grandes} pero no pequeños. Los tratamientos podrían funcionar --- simplemente no tenemos suficiente poder para detectar efectos de 1--2 pp con $n = 37$ por brazo.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Lecciones de poder para su investigación}
+\begin{exampleblock}{Reglas prácticas}
+\small
+\begin{enumerate}\setlength{\itemsep}{4pt}
+  \item \textbf{Controles baseline aumentan el poder} --- McKenzie (2012) muestra que en RCTs, incluir $Y_{\text{pre}}$ puede ser más eficiente que duplicar la muestra
+
+  \item \textbf{Muestras pequeñas detectan efectos GRANDES pero no pequeños} --- nuestro RCT con $n = 148$ detecta efectos $\geq 5.7$ pp, no de 1--2 pp
+
+  \item \textbf{Siempre calcular el MDE \textit{antes} de recolectar datos} --- si el MDE es más grande que el efecto esperado, la investigación está condenada
+
+  \item \textbf{Reportar el MDE junto a resultados no significativos} --- ``no encontramos efectos, pero solo podemos descartar efectos mayores a 5.7 pp'' es mucho más informativo que ``no significativo''
+\end{enumerate}
+\end{exampleblock}
+
+\vspace{0.2cm}
+\begin{alertblock}{Error común}
+Concluir ``el tratamiento no funciona'' cuando en realidad la muestra no tiene poder para detectarlo. Ausencia de evidencia $\neq$ evidencia de ausencia.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Sesgo por variable omitida (OVB)}
+% ============================================================================
+
+\begin{frame}{¿Por qué aprender sobre OVB?}
+\begin{exampleblock}{Porque es el error más peligroso en estadística}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Si su modelo omite una variable importante, los coeficientes están \textbf{sesgados} --- dan respuestas equivocadas
+  \item Ejemplo clásico: ``tener iPad mejora las notas'' --- pero en realidad las familias con más recursos compran iPads \textbf{y además} invierten en educación
+  \item OVB es la razón por la que no pueden confiar en cualquier correlación que vean en TikTok o Twitter
+  \item ¿Y en un experimento? La aleatorización protege del sesgo, pero con muestras pequeñas la protección es imperfecta
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{¿Qué es el sesgo por variable omitida?}
+\begin{block}{Definición}
+El \textbf{sesgo por variable omitida} (Omitted Variable Bias, OVB) ocurre cuando:
+\begin{enumerate}
+  \item Omitimos una variable relevante del modelo
+  \item Esa variable está correlacionada con al menos uno de los predictores incluidos
+\end{enumerate}
+En este caso, los coeficientes estimados están \textbf{sesgados}.
+\end{block}
+
+\vspace{0.1cm}
+\begin{exampleblock}{Ejemplo}
+\small Si omitimos el ingreso familiar del modelo $\text{Notas} = \beta_0 + \beta_1 \times \text{iPad} + \varepsilon$, y el ingreso está correlacionado con tener iPad, entonces $\hat{\beta}_1$ \textbf{sobreestima} el efecto del iPad.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Fórmula del sesgo}
+Si el modelo verdadero es:
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon
+\]
+
+Pero estimamos el modelo omitido:
+\[
+Y = \gamma_0 + \gamma_1 X_1 + u
+\]
+
+Entonces el sesgo de $\hat{\gamma}_1$ es:
+\[
+E(\hat{\gamma}_1) = \beta_1 + \beta_2 \times \frac{\text{Cov}(X_1, X_2)}{\text{Var}(X_1)}
+\]
+
+\vspace{0.2cm}
+\textbf{Dirección del sesgo:}
+\begin{itemize}
+  \item Si $\beta_2 > 0$ y $\text{Cov}(X_1, X_2) > 0$ $\Rightarrow$ sesgo positivo (sobreestimación)
+  \item Si $\beta_2 > 0$ y $\text{Cov}(X_1, X_2) < 0$ $\Rightarrow$ sesgo negativo (subestimación)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo con el RCT: ¿qué pasa si omitimos el baseline?}
+\textbf{Modelo SIN control baseline:}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+coef(modelo_trat)
+# (Intercept)        T1        T2        T3
+#      80.35      0.57      2.65      5.50
+
+# T3 parece tener efecto +5.50 puntos. Suena prometedor!
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Modelo CON control baseline:}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+coef(modelo_ols)
+# (Intercept)          T1          T2          T3 enrollment
+#      15.57       -0.77       -0.18       -1.31       0.85
+
+# T3 ahora es -1.31. Cambio de signo!
+\end{lstlisting}
+
+\vspace{0.2cm}
+{\small \textbf{Explicación:} El grupo T3 tenía un baseline más alto \textbf{por azar} (84.7 vs 76.6 del control). Sin controlar, le atribuíamos al tratamiento una ventaja que ya existía antes del experimento.}
+\end{frame}
+
+\begin{frame}[fragile]{Verificar el desbalance por azar}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Media de enrollment_likelihood (baseline) por grupo
+tapply(datos$enrollment_likelihood, datos$treatment, mean)
+
+#  T0_control T1_friendly   T2_mentor T3_narrative
+#       76.65       78.22       80.00        84.70
+
+# Con solo 148 estudiantes, hay desbalance aleatorio.
+# T3 empezo con ventaja de ~8 puntos sobre el control.
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{alertblock}{Lección para la práctica}
+\begin{itemize}
+  \item En datos observacionales: OVB crea sesgo real. Hay que controlar por confusores.
+  \item En un RCT: la aleatorización protege \textbf{en expectativa}, pero con muestras pequeñas hay desbalance aleatorio.
+  \item Controlar por el baseline aumenta la precisión y corrige desbalances (McKenzie, 2012).
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Estrategias para mitigar OVB}
+\begin{block}{En datos observacionales}
+\begin{itemize}
+  \item Incluir todas las variables confusoras relevantes
+  \item Variables instrumentales (IV)
+  \item Diseños cuasi-experimentales (DiD, RD)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{block}{En datos experimentales (RCT)}
+\begin{itemize}
+  \item La aleatorización elimina el sesgo \textbf{en promedio}
+  \item Incluir controles baseline mejora la precisión (reduce errores estándar)
+  \item Esta práctica se llama \textbf{OLS con controles baseline} (McKenzie, 2012)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Regla de oro}
+\small Nunca concluir causalidad solo con regresión observacional. Si ven que ``usar ChatGPT'' se asocia con mejores notas, pregúntense: ¿qué variable omitida podría explicar ambas cosas?
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{VIF y multicolinealidad}
+% ============================================================================
+
+\begin{frame}{¿Qué es la multicolinealidad?}
+\begin{block}{Definición}
+La \textbf{multicolinealidad} ocurre cuando dos o más predictores están \textbf{altamente correlacionados} entre sí.
+\end{block}
+
+\vspace{0.1cm}
+\textbf{Tipos:}
+\begin{itemize}
+  \item \textbf{Perfecta:} Una variable es combinación lineal exacta de otras (la dummy variable trap)
+  \item \textbf{Alta:} Correlación fuerte pero no perfecta (común en datos observacionales)
+\end{itemize}
+
+\vspace{0.1cm}
+\textbf{Consecuencias:}
+\begin{itemize}
+  \item Errores estándar \textbf{inflados}, intervalos de confianza muy amplios
+  \item Coeficientes inestables, dificultad para detectar significancia individual
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Importante}
+La multicolinealidad \textbf{no afecta} $R^2$ ni la capacidad de predicción del modelo. Solo afecta la interpretación de los coeficientes individuales.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Factor de Inflación de la Varianza (VIF)}
+\begin{block}{Definición}
+El \textbf{VIF} (Variance Inflation Factor) mide cuánto se infla la varianza de $\hat{\beta}_j$ debido a la correlación con otros predictores.
+
+Para cada predictor $X_j$:
+\[
+\text{VIF}_j = \frac{1}{1 - R_j^2}
+\]
+donde $R_j^2$ es el $R^2$ de la regresión auxiliar de $X_j$ sobre todos los demás predictores.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Reglas de pulgar:}
+\begin{itemize}
+  \item VIF $< 5$ $\Rightarrow$ multicolinealidad \textbf{baja} (aceptable)
+  \item $5 \leq$ VIF $< 10$ $\Rightarrow$ multicolinealidad \textbf{moderada} (preocupante)
+  \item VIF $\geq 10$ $\Rightarrow$ multicolinealidad \textbf{severa} (requiere acción)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Calcular VIF en R}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+library(car)
+
+vif(modelo_completo)
+
+#                    T1                    T2
+#                  1.51                  1.53
+#                    T3 enrollment_likelihood
+#                  1.50                  1.05
+#                se_pre
+#                  1.05
+
+# Todos los VIF < 2 => NO hay multicolinealidad
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{exampleblock}{¿Por qué es tan bajo en un RCT?}
+\small
+Porque la aleatorización hace que los tratamientos (T1, T2, T3) sean \textbf{casi ortogonales} a las variables baseline. La correlación entre T1 y \texttt{enrollment\_likelihood} es solo $-0.04$. Esto es una ventaja enorme de los experimentos sobre los datos observacionales.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Soluciones si VIF es alto}
+\begin{alertblock}{Opciones}
+\begin{enumerate}
+  \item \textbf{Eliminar una variable} correlacionada (la menos importante teóricamente)
+  \item \textbf{Combinar variables:} crear un índice o promedio (ej: promedio de \texttt{self\_confidence\_1}, \texttt{self\_confidence\_2}, \texttt{self\_confidence\_3} $\rightarrow$ \texttt{se\_pre})
+  \item \textbf{Componentes principales (PCA):} reducir dimensionalidad
+  \item \textbf{Regularización:} Ridge regression (penaliza coeficientes grandes)
+  \item \textbf{Aumentar el tamaño muestral} (reduce errores estándar en general)
+\end{enumerate}
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Nuestro caso}
+\small
+En el RCT, creamos \texttt{se\_pre} como promedio de \texttt{self\_confidence\_1}, \texttt{self\_confidence\_2}, \texttt{self\_confidence\_3}. Esto es exactamente opción 2: combinar variables correlacionadas en un índice compuesto.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+\section{Interacciones y efectos heterogéneos}
+% ============================================================================
+
+\begin{frame}{¿Por qué aprender interacciones?}
+\begin{exampleblock}{Porque los efectos no siempre son iguales para todos}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item ¿El efecto del mentor IA es el mismo para un estudiante local que para uno de origen migrante? Probablemente no
+  \item ¿El beneficio de un consejero narrativo depende de si la persona ya tenía alta intención de inscribirse? Podría ser
+  \item Las interacciones modelan que el efecto de una variable \textbf{depende} de otra --- eso es mucho más realista
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.2cm}
+\begin{block}{En economía experimental: Efectos Heterogéneos de Tratamiento (HTE)}
+\small
+¿El efecto promedio nulo ($\hat{\beta} \approx 0$) esconde subgrupos donde el efecto es positivo o negativo? Los HTE son una de las preguntas más importantes en economía aplicada.
+\end{block}
+\end{frame}
+
+\begin{frame}{¿Qué es una interacción?}
+\begin{block}{Definición}
+Una \textbf{interacción} ocurre cuando el efecto de una variable $X_1$ sobre $Y$ \textbf{depende del nivel} de otra variable $X_2$.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Modelo con interacción:}
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 (X_1 \times X_2) + \varepsilon
+\]
+
+\vspace{0.1cm}
+\textbf{Interpretación:}
+\begin{itemize}
+  \item $\beta_1$ = efecto de $X_1$ cuando $X_2 = 0$
+  \item $\beta_2$ = efecto de $X_2$ cuando $X_1 = 0$
+  \item $\beta_3$ = cómo cambia el efecto de $X_1$ cuando $X_2$ aumenta en 1 unidad
+\end{itemize}
+
+\vspace{0.2cm}
+El \textbf{efecto marginal de $X_1$} es:
+\[
+\frac{\partial Y}{\partial X_1} = \beta_1 + \beta_3 X_2
+\]
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: migrant $\times$ tratamiento}
+\textbf{Pregunta:} ¿El efecto del mentor IA es diferente para estudiantes de origen migrante?
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+modelo_inter <- lm(pt_enrollment_likelihood ~
+                     T1 + T2 + T3 +
+                     enrollment_likelihood +
+                     T1:migrant + T2:migrant + T3:migrant,
+                   data = datos)
+summary(modelo_inter)
+
+# Coefficients:
+#                       Estimate Std. Error t value Pr(>|t|)
+# (Intercept)            15.978     2.865    5.58  1.2e-07 ***
+# T1                     -0.727     2.345   -0.31    0.757
+# T2                      1.368     2.168    0.63    0.529
+# T3                     -1.377     2.318   -0.59    0.554
+# enrollment_likelihood   0.840     0.032   26.03  < 2e-16 ***
+# T1:migrant             -0.081     3.091   -0.03    0.979
+# T2:migrant             -5.368     3.016   -1.78    0.077 .
+# T3:migrant              0.421     3.436    0.12    0.903
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpretación de la interacción T2 $\times$ migrant}
+Ecuación para T2 (Mentor):
+\[
+\hat{Y} = \cdots + 1.37 \times T2 - 5.37 \times (T2 \times \text{migrant}) + \cdots
+\]
+
+\vspace{0.2cm}
+\textbf{Efecto de T2 según origen:}
+\begin{itemize}
+  \item No migrante (\texttt{migrant} = 0): efecto $= 1.37$ puntos
+  \item Migrante (\texttt{migrant} = 1): efecto $= 1.37 - 5.37 = \mathbf{-4.00}$ puntos
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{alertblock}{Interpretación}
+El Mentor Estructurado parece tener un efecto \textbf{negativo} para estudiantes migrantes ($-4.00$), pero \textbf{positivo} para no migrantes ($+1.37$). La interacción es marginalmente significativa ($p = 0.077$). Con una muestra más grande, podría confirmarse.
+\end{alertblock}
+
+\vspace{0.2cm}
+{\small \textbf{Nota:} En economía experimental, estos se llaman \textbf{efectos heterogéneos de tratamiento} (Heterogeneous Treatment Effects, HTE).}
+\end{frame}
+
+\begin{frame}[fragile]{El hallazgo más importante: Mentor $\times$ Paciencia}
+\begin{block}{El efecto promedio nulo esconde heterogeneidad dramática}
+\small
+¿Recuerdan que 88\% de la muestra es paciente y 12\% impaciente? Veamos qué pasa si interactuamos tratamiento con paciencia:
+\end{block}
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+modelo_hte <- lm(pt_enrollment_likelihood ~
+                   T1 + T2 + T3 + enrollment_likelihood +
+                   T1:high_patience + T2:high_patience +
+                   T3:high_patience,
+                 data = datos)
+
+# Coeficiente clave: T2 (base, impacientes) = -14.9 ***
+# Interaccion: T2:high_patience            = +14.0 ***
+# Efecto neto para pacientes: -14.9 + 14.0 = -0.9 (n.s.)
+\end{lstlisting}
+
+\vspace{0.1cm}
+\begin{alertblock}{Resultado central del paper}
+\small
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item \textbf{Impacientes + Mentor:} $-14.9$ pp ($p < 0.001$). Efecto devastador
+  \item \textbf{Pacientes + Mentor:} $\approx -1$ pp (n.s.). Sin efecto
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Implicaciones del hallazgo HTE}
+\begin{block}{La misma intervención, efectos opuestos}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item El Mentor Empático \textbf{daña} a los impacientes ($-14.9$ pp) pero \textbf{no afecta} a los pacientes ($-0.9$ pp, n.s.)
+  \item La validación emocional puede reforzar el sesgo al presente en estudiantes impacientes
+  \item Un efecto promedio nulo ($\hat{\beta} \approx 0$) escondía esta heterogeneidad dramática
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{alertblock}{Implicación de política}
+Los sistemas ``one-size-fits-all'' de IA pueden dañar a los más vulnerables. Personalizar la intervención según el perfil conductual del estudiante no es un lujo --- es una necesidad.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Tipos de interacción}
+\textbf{Continua $\times$ continua:}
+\[
+Y = \beta_0 + \beta_1 \text{T2} + \beta_2 \text{baseline} + \beta_3 (\text{T2} \times \text{baseline}) + \varepsilon
+\]
+¿El efecto del Mentor depende del nivel previo de intención?
+
+\vspace{0.3cm}
+\textbf{Dummy $\times$ dummy:} (nuestro ejemplo)
+\[
+Y = \beta_0 + \beta_1 \text{T2} + \beta_2 \text{migrant} + \beta_3 (\text{T2} \times \text{migrant}) + \varepsilon
+\]
+¿El efecto del Mentor es diferente para migrantes?
+
+\vspace{0.3cm}
+\begin{block}{Regla general}
+\begin{itemize}
+  \item Si $\beta_3 = 0$ $\Rightarrow$ no hay interacción (efecto constante para todos)
+  \item Si $\beta_3 \neq 0$ $\Rightarrow$ el efecto de $X_1$ \textbf{varía} según el nivel de $X_2$
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+\section{Robustez: Attrición y Lee bounds}
+% ============================================================================
+
+\begin{frame}[fragile]{Attrición: ¿perdimos estudiantes de forma sistemática?}
+\begin{block}{El problema}
+\small
+De 263 estudiantes aleatorizados, solo 148 completaron el experimento (\textbf{attrición del 43.9\%}). Si los que abandonaron lo hicieron \textit{por causa del tratamiento}, nuestros resultados están sesgados.
+\end{block}
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Cargar muestra completa (264 sesiones validas)
+# Crear indicador de completitud
+# Regresion: completado ~ tratamiento
+
+# Coefficients:
+#             Estimate Std. Error t value Pr(>|t|)
+# (Intercept)  0.544      0.061    8.94  < 2e-16 ***
+# T1           0.056      0.088    0.63    0.527
+# T2           0.031      0.084    0.37    0.711
+# T3          -0.020      0.088   -0.23    0.817
+
+# Prueba F conjunta: F = 0.285, p = 0.836
+\end{lstlisting}
+
+\vspace{0.1cm}
+\textbf{Conclusión:} Los tratamientos \textbf{no} causan abandono diferencial. Las tasas de completación son similares: Control 54\%, Friendly 60\%, Mentor 58\%, Storyteller 52\%.
+\end{frame}
+
+\begin{frame}{Lee (2009) bounds: ¿qué pasa en el peor caso?}
+\begin{block}{La idea}
+\small
+Incluso sin attrición diferencial, podríamos tener \textbf{attrición selectiva}: quizás los que abandonan son los que habrían tenido peores resultados. Lee (2009) propone ``recortar'' el grupo con más completadores para igualar las tasas, dando cotas sobre el efecto real.
+\end{block}
+
+\vspace{0.2cm}
+\textbf{Resultados:}
+\begin{center}
+\small
+\begin{tabular}{l c c c c}
+\toprule
+Brazo & Cota inferior & Cota superior & Efecto crudo & Recorte \\
+\midrule
+Friendly    & $-1.2$ & $+5.0$ & $+0.6$ & 9.3\% \\
+Mentor      & $+1.8$ & $+6.2$ & $+2.6$ & 5.4\% \\
+Storyteller & $+3.3$ & $+6.0$ & $+5.5$ & 3.7\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.1cm}
+\begin{alertblock}{Hallazgo}
+\small
+Las cotas del Storyteller \textbf{excluyen el cero} $[3.3, 6.0]$: incluso en el peor escenario de attrición, el Storyteller tiene efecto positivo crudo. Los recortes son modestos (3.7\%--9.3\%), reforzando que la attrición no sesga nuestros resultados principales.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Validez interna: ¿el efecto es causal?}
+\begin{block}{Checklist de validez interna}
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item Asignación aleatoria \checkmark{} (verificada con balance de covariables)
+  \item No hay attrición diferencial \checkmark{} ($F = 0.285$, $p = 0.836$)
+  \item No hay spillovers \checkmark{} (sesiones individuales, no simultáneas)
+  \item Lee bounds confirman que attrición no invierte los resultados \checkmark
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Conclusión:} podemos interpretar los coeficientes como efectos \textbf{causales} (ITT).
+\end{frame}
+
+\begin{frame}{Validez externa: ¿se generaliza?}
+\begin{alertblock}{Limitaciones honestas}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Muestra autoseleccionada (participación voluntaria online)
+  \item Sesión única de 10--15 minutos (¿qué pasaría con exposición prolongada?)
+  \item Intención declarada, no inscripción real
+  \item Contexto específico: Flandes, sistema de tracks, jóvenes migrantes
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.3cm}
+{\small En un paper, \textbf{siempre} discutir limitaciones. Esto no debilita el paper --- lo hace más creíble. Un referee que ve limitaciones honestas confía más en los resultados.}
+\end{frame}
+
+% ============================================================================
+\section{Selección de modelos: AIC y BIC}
+% ============================================================================
+
+\begin{frame}{Criterios de información: AIC y BIC}
+\begin{block}{Dos criterios populares}
+\begin{enumerate}
+  \item \textbf{AIC} (Akaike Information Criterion):
+  \[
+  \text{AIC} = n \ln\!\left(\frac{\text{SSE}}{n}\right) + 2(p + 1)
+  \]
+
+  \item \textbf{BIC} (Bayesian Information Criterion):
+  \[
+  \text{BIC} = n \ln\!\left(\frac{\text{SSE}}{n}\right) + (p + 1) \ln(n)
+  \]
+\end{enumerate}
+\end{block}
+
+\vspace{0.2cm}
+{\small \textbf{Interpretación:} Menor AIC/BIC $\Rightarrow$ mejor modelo. BIC penaliza más la complejidad que AIC (cuando $n > 8$). Objetivo predicción: preferir AIC. Objetivo inferencia: preferir BIC.}
+\end{frame}
+
+\begin{frame}[fragile]{Calcular AIC y BIC en R}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+AIC(modelo_trat, modelo_ols, modelo_completo, modelo_inter)
+
+#                  df      AIC
+# modelo_trat       5  1332.8
+# modelo_ols        6  1070.5   <-- MEJOR
+# modelo_completo   7  1071.6
+# modelo_inter      9  1073.2
+
+BIC(modelo_trat, modelo_ols, modelo_completo, modelo_inter)
+
+#                  df      BIC
+# modelo_trat       5  1347.7
+# modelo_ols        6  1088.5   <-- MEJOR
+# modelo_completo   7  1092.5
+# modelo_inter      9  1100.1
+\end{lstlisting}
+
+\vspace{0.2cm}
+\textbf{Conclusión:} El modelo OLS + baseline (Modelo 2) gana en ambos criterios. Es el más parsimonioso: agregar \texttt{se\_pre} o las interacciones \textbf{no mejora} el modelo.
+\end{frame}
+
+\begin{frame}[fragile]{Selección automática con \texttt{step()}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Seleccion automatica hacia atras (backward)
+modelo_full <- lm(pt_enrollment_likelihood ~
+                    T1 + T2 + T3 +
+                    enrollment_likelihood + se_pre + migrant +
+                    T1:migrant + T2:migrant + T3:migrant,
+                  data = datos)
+
+modelo_step <- step(modelo_full, direction = "backward")
+
+# step() va eliminando variables que no mejoran el AIC:
+# 1. Elimina T1:migrant  (p = 0.98)
+# 2. Elimina T3:migrant  (p = 0.90)
+# 3. Elimina se_pre       (p = 0.35)
+# 4. Se detiene: enrollment_likelihood y T2:migrant quedan
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{alertblock}{Precaución}
+La selección automática puede llevar a overfitting y p-valores inflados. Úsela como exploración, pero siempre valide con teoría y conocimiento del problema.
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+\section{Resumen: Anatomía de una investigación}
+% ============================================================================
+
+\begin{frame}{Pipeline de una investigación económica}
+\begin{block}{Las 10 etapas (lo que hicimos hoy)}
+\small
+\begin{enumerate}\setlength{\itemsep}{1pt}
+  \item \textbf{Pregunta de investigación}: ¿La IA ``cálida'' mejora decisiones educativas?
+  \item \textbf{Marco teórico}: Modelo de Capital Humano bajo asimetría de información
+  \item \textbf{Diseño experimental}: RCT con 4 brazos, $N = 263$ estudiantes
+  \item \textbf{Datos}: Recolección, limpieza, de-identificación, exploración
+  \item \textbf{Balance y aleatorización}: Pruebas F, diferencias normalizadas
+  \item \textbf{Estimación OLS}: McKenzie (2012), controles baseline, ceteris paribus
+  \item \textbf{Significancia y poder}: Pruebas F/t, MDE, interpretar no-significancia
+  \item \textbf{Robustez}: OVB, attrición, Lee bounds, validez interna vs.\ externa
+  \item \textbf{Heterogeneidad}: Interacciones, HTE por paciencia y migración
+  \item \textbf{Conclusiones y limitaciones}: Implicaciones de política + honestidad
+\end{enumerate}
+\end{block}
+{\scriptsize Cada paso tiene una herramienta estadística. Hoy cubrimos los pasos 5--9.}
+\end{frame}
+
+\begin{frame}{Problemas comunes y soluciones}
+\begin{block}{Sesgo por variable omitida (OVB)}
+\begin{itemize}
+  \item Omitir variables relevantes correlacionadas con $X$ sesga $\hat{\beta}$
+  \item En un RCT, controlar por baseline mejora la precisión (McKenzie, 2012)
+\end{itemize}
+\end{block}
+
+\begin{block}{Multicolinealidad}
+\begin{itemize}
+  \item Predictores altamente correlacionados $\Rightarrow$ errores estándar inflados
+  \item Detectar con VIF ($> 5$ preocupante, $> 10$ severo)
+  \item Solución: eliminar variables redundantes, crear índices, PCA
+\end{itemize}
+\end{block}
+
+\begin{block}{Interacciones y HTE}
+\begin{itemize}
+  \item El efecto de $X_1$ depende de $X_2$: $Y \sim X_1 \times X_2$
+  \item $\beta_3$ = cómo cambia el efecto de $X_1$ con $X_2$
+  \item Un efecto promedio nulo puede esconder heterogeneidad importante
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Checklist para su examen y futuras investigaciones}
+\small
+\begin{enumerate}\setlength{\itemsep}{1pt}
+  \item \textbf{Exploración inicial:} descriptivas, scatter plots, medias por grupo, balance
+  \item \textbf{Ajustar modelo:} \texttt{lm(Y \textasciitilde{} X1 + X2 + ...)}
+  \item \textbf{Evaluar ajuste:} $R^2$, $R^2_{\text{adj}}$, prueba F global
+  \item \textbf{Significancia individual:} pruebas t, p-valores, IC 95\%
+  \item \textbf{Poder estadístico:} MDE, ¿podemos descartar efectos relevantes?
+  \item \textbf{Diagnóstico:} Residuos (\texttt{plot}), Multicolinealidad (\texttt{vif})
+  \item \textbf{Robustez:} OVB, attrición, Lee bounds
+  \item \textbf{Interacciones:} explorar efectos heterogéneos
+  \item \textbf{Selección de modelo:} AIC/BIC, $R^2_{\text{adj}}$
+  \item \textbf{Reportar:} tabla de coeficientes, MDE, limitaciones, interpretación
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Recursos y referencias}
+\begin{exampleblock}{Lecturas recomendadas}
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item Wooldridge, J. (2019). \textit{Introductory Econometrics}. Capítulos 3--7.
+  \item McKenzie, D. (2012). ``Beyond baseline and follow-up.'' \textit{J.\ Dev.\ Econ.}
+  \item Lee, D.S. (2009). ``Training, Wages, and Sample Selection.'' \textit{Rev.\ Econ.\ Studies.}
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+\begin{block}{Datos del experimento}
+El dataset de-identificado \texttt{rct\_student\_sample.csv} estará disponible para que practiquen todos los análisis de esta sesión.
+\end{block}
+\end{frame}
+
+\end{document}

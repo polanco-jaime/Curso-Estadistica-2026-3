@@ -1,11 +1,15 @@
-# Exámenes y Guías del profesor - contenido privado / interno
-examenes/
-guia_profesor*.md
-
-# LaTeX fuentes (solo se publican los PDF, excepto sesiones)
-*.tex
-!sesiones/**/*.tex
-!sesiones/preambulo_beamer.tex
+# Contenido privado / docente / PII de estudiantes (NUNCA publicar)
+Students/
+*profesor*
+*guia_profesor*
+*rubrica_evaluacion*
+*rubrica_fase3_podcast*
+*rubrica_jurado*
+*preguntas_examen_oral*
+*_respuestas*
+*_solucionario*
+*listado*
+*conflicted copy*
 
 # LaTeX auxiliares
 *.aux
@@ -22,17 +26,8 @@ guia_profesor*.md
 # Libros con copyright
 David_R*.pdf
 
-# macOS
+# R / macOS
 .DS_Store
-
-# Problem Sets futuros (Solo PS1 publicado)
-problem_sets/PS2_*
-problem_sets/PS3_*
-problem_sets/PS4_*
-problem_sets/PS5_*
-problem_sets/PS6_*
-problem_sets/PS7_*
-problem_sets/PS8_*
-
-# Proyecto
-proyecto/
+.Rproj.user/
+.Rhistory
+.RData

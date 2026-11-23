@@ -1,0 +1,615 @@
+---
+title: "Sesiones 8–9: Chi-Cuadrado y Regresión Lineal Simple"
+subtitle: "Curso de Estadística — Pontificia Universidad Javeriana"
+author: "Prof. Jaime Polanco Jiménez"
+date: "2026-10-16"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    theme: cosmo
+    highlight: tango
+    code_folding: show
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 5
+)
+```
+
+# Cargar datos
+
+Antes de empezar, cargamos los datos de ICFES (Saber Pro y Saber 11) desde el repositorio del curso.
+
+```{r cargar-datos}
+library(arrow)
+library(dplyr)
+library(ggplot2)
+
+gh <- paste0(
+  "https://raw.githubusercontent.com/",
+  "polanco-jaime/Curso-Estadistica-2026-3/",
+  "main/datos"
+)
+
+# Saber Pro
+saber_pro <- read_parquet(paste0(gh, "/saber_pro/saber_pro.parquet"))
+
+# Crear variable de tipo de IES (privada vs pública)
+saber_pro$TIPO_IES <- ifelse(
+  grepl("NO OFICIAL", saber_pro$INST_ORIGEN),
+  "Privada", "Publica"
+)
+```
+
+Veamos las primeras filas y las variables disponibles:
+
+```{r explorar-saber-pro}
+glimpse(saber_pro)
+```
+
+---
+
+# Parte 1: Chi-Cuadrado
+
+## ¿Qué hacemos con variables categóricas?
+
+Cuando **ambas** variables son categóricas (no hay una $Y$ numérica), usamos la prueba **chi-cuadrado** ($\chi^2$) para evaluar si las variables están asociadas o son independientes.
+
+## Ejemplo paso a paso: estrato y aprobación
+
+30 estudiantes clasificados por estrato socioeconómico (Bajo, Medio, Alto) y si aprobaron un examen:
+
+```{r ejemplo-mano}
+tabla_mano <- matrix(
+  c(3, 7, 6, 4, 9, 1),
+  nrow = 3, byrow = TRUE,
+  dimnames = list(
+    Estrato = c("Bajo (1-2)", "Medio (3-4)", "Alto (5-6)"),
+    Resultado = c("Aprobó", "Reprobó")
+  )
+)
+tabla_mano
+```
+
+### Paso 1: frecuencias esperadas bajo independencia
+
+Si estrato y aprobación fueran **independientes**, la proporción de aprobados sería la misma en todos los estratos: $18/30 = 60\%$.
+
+$$E_{ij} = \frac{\text{Total fila}_i \times \text{Total columna}_j}{n}$$
+
+```{r esperadas-mano}
+n <- sum(tabla_mano)
+total_filas <- rowSums(tabla_mano)
+total_cols  <- colSums(tabla_mano)
+
+esperadas <- outer(total_filas, total_cols) / n
+esperadas
+```
+
+### Paso 2: calcular $\chi^2$
+
+$$\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$$
+
+```{r chi2-mano}
+chi2 <- sum((tabla_mano - esperadas)^2 / esperadas)
+chi2  # 7.50
+
+# Grados de libertad: (r-1)(c-1)
+gl <- (nrow(tabla_mano) - 1) * (ncol(tabla_mano) - 1)
+gl  # 2
+
+# p-valor
+pchisq(chi2, df = gl, lower.tail = FALSE)  # 0.024
+```
+
+### Paso 3: decisión
+
+Con $\chi^2 = 7.50$, $\text{gl} = 2$ y $p = 0.024$, **rechazamos $H_0$** al 5%. Hay evidencia de asociación entre estrato socioeconómico y aprobación: los estudiantes de estrato alto aprobaron más de lo esperado y los de estrato bajo, menos.
+
+```{r verificar-chisq}
+# Verificar con chisq.test()
+chisq.test(tabla_mano)
+```
+
+## Prueba de independencia con datos ICFES
+
+¿El nivel de inglés MCER es **independiente** del tipo de IES (pública/privada)?
+
+```{r tabla-contingencia}
+tabla_obs <- table(saber_pro$MOD_INGLES_DESEM, saber_pro$TIPO_IES)
+tabla_obs
+```
+
+### Aplicar `chisq.test()`
+
+```{r chi2-icfes}
+resultado <- chisq.test(tabla_obs)
+resultado
+```
+
+### Frecuencias esperadas
+
+```{r esperadas-icfes}
+round(resultado$expected, 1)
+```
+
+### Residuos estandarizados
+
+Los residuos nos dicen **dónde** están las diferencias más importantes. Valores con $|r| > 2$ indican celdas con diferencias relevantes.
+
+```{r residuos-icfes}
+round(resultado$residuals, 2)
+```
+
+**Interpretación**: Las IES privadas tienen **más** estudiantes en B1 y B2 de lo esperado, y **menos** en -A1 y A1.
+
+### Visualizar la asociación
+
+```{r mosaico}
+mosaicplot(tabla_obs,
+           color = c("steelblue", "coral"),
+           main = "Nivel MCER vs Tipo de IES",
+           xlab = "Nivel MCER",
+           ylab = "Tipo de IES")
+```
+
+## V de Cramér: tamaño del efecto
+
+Así como la $d$ de Cohen mide la magnitud para medias, la **V de Cramér** mide la fuerza de la asociación entre variables categóricas:
+
+$$V = \sqrt{\frac{\chi^2}{n \times (\min(r,c) - 1)}}$$
+
+```{r cramer}
+chi2_val <- resultado$statistic
+n_obs    <- sum(tabla_obs)
+min_dim  <- min(nrow(tabla_obs), ncol(tabla_obs))
+
+V <- sqrt(chi2_val / (n_obs * (min_dim - 1)))
+V
+```
+
+| Valor de V | Interpretación |
+|-----------|----------------|
+| $< 0.1$ | Muy débil |
+| $0.1 - 0.3$ | Moderada |
+| $\geq 0.3$ | Fuerte |
+
+> **Reporte completo**: "Se encontró una asociación estadísticamente significativa entre el nivel MCER y el tipo de IES, $\chi^2(4) = 139.04$, $p < 0.001$, $V = 0.17$ (asociación moderada)."
+
+## Bondad de ajuste
+
+La prueba de **independencia** compara dos variables categóricas. La prueba de **bondad de ajuste** compara una variable observada contra una distribución teórica.
+
+**Pregunta**: ¿Los 5 niveles MCER se distribuyen uniformemente?
+
+```{r bondad-ajuste}
+niveles <- table(saber_pro$MOD_INGLES_DESEM)
+niveles
+
+# Si fuera uniforme, esperaríamos n/5 en cada nivel
+chisq.test(niveles, p = rep(1/5, 5))
+```
+
+**Conclusión**: Rechazamos $H_0$. La distribución **no** es uniforme.
+
+```{r barplot-niveles, fig.height=4, fig.width=7}
+barplot(niveles,
+        col = "steelblue",
+        main = "Distribución de niveles MCER",
+        xlab = "Nivel", ylab = "Frecuencia")
+abline(h = sum(niveles) / 5, col = "red", lty = 2, lwd = 2)
+legend("topright", "Esperado (uniforme)", col = "red", lty = 2)
+```
+
+---
+
+# Parte 2: Regresión Lineal Simple (OLS)
+
+## Preparar datos: cruzar Saber Pro y Saber 11
+
+Para la regresión necesitamos variables de ambos exámenes. Cruzamos los datos usando la tabla de cruce:
+
+```{r cruzar-datos}
+s11 <- read_parquet(paste0(gh, "/saber11/saber11.parquet"))
+cr  <- read_parquet(paste0(gh, "/cruce/cruce_saber11_saberpro.parquet"))
+
+saber_pro <- saber_pro |>
+  inner_join(cr, by = c("ESTU_CONSECUTIVO" = "estu_consecutivo_sbpro")) |>
+  inner_join(
+    s11 |> select(ESTU_CONSECUTIVO, PUNT_INGLES, PUNT_MATEMATICAS),
+    by = c("estu_consecutivo_sb11" = "ESTU_CONSECUTIVO")
+  )
+
+cat("Observaciones después del cruce:", nrow(saber_pro), "\n")
+```
+
+## ¿Por qué OLS es la herramienta central?
+
+En economía, todo es OLS. Los "t-tests" y "ANOVA" de sesiones anteriores eran OLS con dummies. Ahora vamos al caso general: $X$ continua. La correlación dice "hay relación"; OLS dice **"por cada punto más en X, esperamos $\hat{\beta}_1$ puntos más en Y"**.
+
+## ¿Por qué aprender la derivación y las matrices?
+
+Porque sin esto, `lm()` es una caja negra. Necesitamos entender:
+
+- **De dónde salen los números**: si no conocen la fórmula, no pueden diagnosticar cuándo falla.
+- **Notación matricial**: Wooldridge, Greene, Hayashi — todos escriben $\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$. Es el idioma de la econometría moderna.
+- **Generalización**: con matrices, pasar de 1 regresor a 50 es cambiar el tamaño de $\mathbf{X}$, nada más.
+- **Insesgadez**: podemos demostrar que $E(\hat{\boldsymbol{\beta}}) = \boldsymbol{\beta}$.
+
+### Propiedades de $E(\cdot)$ y $\text{Var}(\cdot)$ necesarias
+
+**Valor esperado:**
+
+1. $E(c) = c$
+2. $E(cX) = cE(X)$
+3. $E(X + Y) = E(X) + E(Y)$
+4. $E(X - E(X)) = 0$
+
+**Varianza:**
+
+1. $\text{Var}(c) = 0$
+2. $\text{Var}(cX) = c^2\text{Var}(X)$
+3. $\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y) + 2\text{Cov}(X,Y)$
+4. Si $X \perp Y$: $\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y)$
+
+**Clave:** bajo $Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$ con $E(\varepsilon_i | X_i) = 0$, tenemos $E(Y_i | X_i) = \beta_0 + \beta_1 X_i$.
+
+### Derivación escalar
+
+Minimizar $\text{SSE} = \sum(Y_i - \beta_0 - \beta_1 X_i)^2$. Las ecuaciones normales dan:
+
+$$\hat{\beta}_1 = \frac{S_{XY}}{S_{XX}} = \frac{\sum(X_i - \bar{X})(Y_i - \bar{Y})}{\sum(X_i - \bar{X})^2} \qquad \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1\bar{X}$$
+
+### De escalares a matrices
+
+Con $k$ regresores, el modelo es $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$. Minimizando $\boldsymbol{\varepsilon}'\boldsymbol{\varepsilon}$:
+
+$$\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$$
+
+Y la varianza del estimador (bajo homocedasticidad): $\text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$.
+
+### Ejemplo a mano: 5 estudiantes
+
+```{r ols-ejemplo-5datos}
+X_val <- c(40, 50, 60, 70, 80)
+Y_val <- c(130, 145, 160, 175, 200)
+
+Xbar <- mean(X_val)  # 60
+Ybar <- mean(Y_val)  # 162
+```
+
+**Fórmula escalar:**
+
+```{r ols-escalar}
+S_XY <- sum((X_val - Xbar) * (Y_val - Ybar))  # 1700
+S_XX <- sum((X_val - Xbar)^2)                  # 1000
+
+beta1_hat <- S_XY / S_XX       # 1.70
+beta0_hat <- Ybar - beta1_hat * Xbar  # 60
+
+cat("b0 =", beta0_hat, ", b1 =", beta1_hat, "\n")
+```
+
+**Fórmula matricial:** $\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$
+
+```{r ols-matricial}
+X <- cbind(1, X_val)
+Y <- matrix(Y_val, ncol = 1)
+
+# X'X
+t(X) %*% X
+
+# (X'X)^{-1}
+solve(t(X) %*% X)
+
+# X'Y
+t(X) %*% Y
+
+# beta_hat
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% Y
+beta_hat
+```
+
+**Verificación con `lm()`:**
+
+```{r ols-lm-verificacion}
+modelo_ejemplo <- lm(Y_val ~ X_val)
+coef(modelo_ejemplo)
+```
+
+Tres caminos, mismo resultado: fórmula escalar, $(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, y `lm()`. Internamente, `lm()` usa descomposición QR (más estable numéricamente), pero el resultado es el mismo.
+
+**Varianza del estimador:**
+
+```{r ols-varianza}
+resid_ej   <- Y_val - X %*% beta_hat
+sigma2_hat <- sum(resid_ej^2) / (length(Y_val) - 2)
+var_beta   <- sigma2_hat * solve(t(X) %*% X)
+cat("SE(b0) =", sqrt(var_beta[1,1]), "\n")
+cat("SE(b1) =", sqrt(var_beta[2,2]), "\n")
+```
+
+## Modelo 1: Matemáticas (Saber 11) → Inglés (Saber Pro)
+
+### Exploración visual
+
+```{r scatter-modelo1}
+ggplot(saber_pro, aes(x = PUNT_MATEMATICAS, y = MOD_INGLES_PUNT)) +
+  geom_point(alpha = 0.1, color = "steelblue", size = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "red",
+              fill = "pink", alpha = 0.3) +
+  labs(
+    title = "Matemáticas Saber 11 vs Inglés Saber Pro",
+    x = "Puntaje Matemáticas Saber 11",
+    y = "Puntaje Inglés Saber Pro"
+  ) +
+  theme_minimal()
+```
+
+### Ajustar el modelo
+
+```{r modelo1}
+modelo1 <- lm(MOD_INGLES_PUNT ~ PUNT_MATEMATICAS, data = saber_pro)
+coef(modelo1)
+```
+
+**Interpretación**:
+
+- $\hat{\beta}_0$: puntaje esperado en inglés Saber Pro si matemáticas Saber 11 = 0 (extrapolación teórica)
+- $\hat{\beta}_1$: por cada punto adicional en matemáticas, esperamos ~1.46 puntos más en inglés
+
+### Ecuación estimada
+
+$$\widehat{\text{MOD\_INGLES\_PUNT}} = \hat{\beta}_0 + \hat{\beta}_1 \times \text{PUNT\_MATEMATICAS}$$
+
+```{r ejemplo-prediccion}
+# Predicción para un estudiante con 60 en matemáticas
+beta0 <- coef(modelo1)[1]
+beta1 <- coef(modelo1)[2]
+prediccion <- beta0 + beta1 * 60
+cat("Predicción para PUNT_MATEMATICAS = 60:", round(prediccion, 1), "\n")
+```
+
+### Resumen completo del modelo
+
+```{r summary-modelo1}
+summary(modelo1)
+```
+
+### Valores ajustados y residuos
+
+```{r ajustados-residuos}
+y_hat    <- fitted(modelo1)
+residuos <- residuals(modelo1)
+
+cat("Primeros valores ajustados:\n")
+head(y_hat)
+
+cat("\nPrimeros residuos:\n")
+head(residuos)
+
+cat("\nSuma de residuos (debe ser ~0):", sum(residuos), "\n")
+
+# Usar los datos del modelo (sin NAs) para la correlación
+datos_modelo <- modelo1$model
+cat("Cor(X, residuos) (debe ser ~0):", cor(datos_modelo$PUNT_MATEMATICAS, residuos), "\n")
+```
+
+### $R^2$: ¿qué tan bueno es el modelo?
+
+$R^2$ = proporción de la variabilidad de $Y$ **explicada** por $X$.
+
+```{r r2-modelo1}
+cat("R² del modelo:", summary(modelo1)$r.squared, "\n")
+
+# Verificar con correlación
+r <- cor(saber_pro$MOD_INGLES_PUNT, saber_pro$PUNT_MATEMATICAS, use = "complete.obs")
+cat("r =", round(r, 4), "\n")
+cat("r² =", round(r^2, 4), "\n")
+```
+
+### Intervalos de confianza para los coeficientes
+
+```{r ic-modelo1}
+confint(modelo1, level = 0.95)
+confint(modelo1, level = 0.99)
+```
+
+### Diagnóstico: gráficos de residuos
+
+```{r diagnostico-modelo1, fig.width=10, fig.height=8}
+par(mfrow = c(2, 2))
+plot(modelo1)
+par(mfrow = c(1, 1))
+```
+
+**Lectura de los gráficos**:
+
+1. **Residuals vs Fitted**: línea roja horizontal y dispersión uniforme $\Rightarrow$ OK
+2. **Q-Q Plot**: puntos sobre la diagonal $\Rightarrow$ normalidad
+3. **Scale-Location**: línea horizontal $\Rightarrow$ homocedasticidad
+4. **Residuals vs Leverage**: puntos fuera de las bandas de Cook $\Rightarrow$ outliers influyentes
+
+### Verificación formal de supuestos
+
+```{r supuestos-modelo1}
+# Normalidad (muestra de 5000 por límite de shapiro.test)
+shapiro.test(sample(residuos, 5000))
+
+# Homocedasticidad (Breusch-Pagan)
+library(lmtest)
+bptest(modelo1)
+```
+
+## Modelo con variable dummy: IES privada vs pública
+
+### ¿Qué es una variable dummy?
+
+Una variable binaria (0/1) que representa una categoría. En economía, comparar dos grupos **es** OLS con una dummy — lo que en estadística llaman "t-test" es simplemente `lm(Y ~ D)`.
+
+$$\text{PRIVADA} = \begin{cases} 1 & \text{si IES privada} \\ 0 & \text{si IES pública} \end{cases}$$
+
+```{r dummy}
+saber_pro$PRIVADA <- ifelse(saber_pro$TIPO_IES == "Privada", 1, 0)
+table(saber_pro$PRIVADA)
+```
+
+### Ajustar modelo con dummy
+
+```{r modelo-dummy}
+modelo_dummy <- lm(MOD_INGLES_PUNT ~ PRIVADA, data = saber_pro)
+summary(modelo_dummy)
+```
+
+**Interpretación**:
+
+- $\hat{\beta}_0$: puntaje promedio en IES **públicas**
+- $\hat{\beta}_1$: diferencia promedio entre IES privadas y públicas
+- $\hat{\beta}_0 + \hat{\beta}_1$: puntaje promedio en IES **privadas**
+
+### Verificación: OLS con dummy = "t-test"
+
+El `lm()` con una dummy produce el **mismo** estadístico t que `t.test()`. No son dos métodos — son dos formas de escribir lo mismo:
+
+```{r equivalencia-ttest}
+t.test(MOD_INGLES_PUNT ~ TIPO_IES, data = saber_pro, var.equal = TRUE)
+```
+
+> Mismo $t$, mismo p-valor, misma conclusión. En economía usamos siempre `lm()`, que además generaliza a múltiples regresores.
+
+### Visualización
+
+```{r boxplot-dummy, fig.width=7}
+ggplot(saber_pro, aes(x = TIPO_IES, y = MOD_INGLES_PUNT, fill = TIPO_IES)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_hline(yintercept = coef(modelo_dummy)[1],
+             linetype = "dashed", color = "blue", linewidth = 1) +
+  geom_hline(yintercept = coef(modelo_dummy)[1] + coef(modelo_dummy)[2],
+             linetype = "dashed", color = "red", linewidth = 1) +
+  labs(
+    title = "Puntaje de inglés por tipo de IES",
+    x = "Tipo de IES",
+    y = "Puntaje Inglés Saber Pro"
+  ) +
+  scale_fill_manual(values = c("steelblue", "coral")) +
+  theme_minimal()
+```
+
+## Modelo 2 (integrador): Inglés (Saber 11) → Razonamiento Cuantitativo (Saber Pro)
+
+### Paso 1: Exploración
+
+```{r scatter-modelo2}
+plot(saber_pro$PUNT_INGLES,
+     saber_pro$MOD_RAZONA_CUANTITAT_PUNT,
+     xlab = "Inglés Saber 11",
+     ylab = "Razonamiento Cuantitativo Saber Pro",
+     main = "Relación entre inglés y razonamiento cuantitativo",
+     pch = 20, col = rgb(0, 0, 1, 0.3))
+```
+
+### Paso 2: Correlación
+
+```{r cor-modelo2}
+cor(saber_pro$PUNT_INGLES,
+    saber_pro$MOD_RAZONA_CUANTITAT_PUNT,
+    use = "complete.obs")
+```
+
+### Paso 3: Ajustar modelo
+
+```{r modelo2}
+modelo2 <- lm(MOD_RAZONA_CUANTITAT_PUNT ~ PUNT_INGLES, data = saber_pro)
+summary(modelo2)
+```
+
+### Paso 4: Intervalos de confianza
+
+```{r ic-modelo2}
+confint(modelo2)
+```
+
+### Paso 5: Diagnóstico
+
+```{r diagnostico-modelo2, fig.width=10, fig.height=8}
+par(mfrow = c(2, 2))
+plot(modelo2)
+par(mfrow = c(1, 1))
+```
+
+```{r supuestos-modelo2}
+# Normalidad
+shapiro.test(sample(residuals(modelo2), 5000))
+
+# Homocedasticidad
+bptest(modelo2)
+```
+
+### Paso 6: Predicción
+
+```{r prediccion-modelo2}
+nuevo_dato <- data.frame(PUNT_INGLES = 60)
+
+# Predicción puntual
+predict(modelo2, newdata = nuevo_dato)
+
+# Intervalo de confianza (para la media)
+predict(modelo2, newdata = nuevo_dato, interval = "confidence")
+
+# Intervalo de predicción (para una observación individual)
+predict(modelo2, newdata = nuevo_dato, interval = "prediction")
+```
+
+> **Diferencia**: el IC es para la **media** de $Y$ dado $X$, el IP es para una **observación individual**. El IP siempre es más amplio.
+
+### Paso 7: Visualización final
+
+```{r viz-final-modelo2}
+ggplot(saber_pro, aes(x = PUNT_INGLES, y = MOD_RAZONA_CUANTITAT_PUNT)) +
+  geom_point(alpha = 0.1, color = "steelblue", size = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "red",
+              fill = "pink", alpha = 0.3) +
+  labs(
+    title = "Inglés (Saber 11) vs Razonamiento Cuantitativo (Saber Pro)",
+    subtitle = paste("R² =", round(summary(modelo2)$r.squared, 3), ", p < 0.001"),
+    x = "Puntaje Inglés Saber 11",
+    y = "Puntaje Razonamiento Cuantitativo Saber Pro"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+```
+
+---
+
+# Resumen
+
+## Todo es OLS (excepto $\chi^2$)
+
+| Tipo de $X$ | Modelo OLS | Nombre en estadística |
+|-------------|-----------|----------------------|
+| 1 dummy | $Y = \beta_0 + \beta_1 D + \varepsilon$ | "t-test" |
+| $k$ dummies | $Y = \beta_0 + \sum \beta_j D_j + \varepsilon$ | "ANOVA" |
+| Continua | $Y = \beta_0 + \beta_1 X + \varepsilon$ | Regresión simple |
+| Dummies + continuas | $Y = \beta_0 + \beta_1 X + \beta_2 D + \varepsilon$ | "ANCOVA" |
+| **Ambas categóricas** | **No es OLS** → $\chi^2$ | Chi-cuadrado |
+
+## Siempre reportar
+
+- **Coeficientes** + errores estándar + p-valor
+- **$R^2$** (o V de Cramér para $\chi^2$)
+- **Interpretación en contexto**: qué significa $\hat{\beta}_1$ en las unidades del problema
+
+## Próxima sesión
+
+OLS **múltiple**: $Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \varepsilon_i$. Dummies + continuas en el mismo modelo.

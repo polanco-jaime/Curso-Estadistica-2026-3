@@ -1,0 +1,149 @@
+student_id,treatment,T1,T2,T3,assigned_group,high_patience,migrant,parents_college,female,age,gender,enrollment_likelihood,pt_enrollment_likelihood,se_pre,se_post,newsletter,pt_plans_clearer,pt_info_seeking_confidence,pt_ai_helpful,pt_ai_trustworthy,born_in_belgium,school_country
+608ec9e7,T1_friendly,1,0,0,2,1,1,0,0,18,Male,75,90,5.666666666666667,5.333333333333333,0,7,4,3,7,FALSE,Belgium (Flanders)
+ee844d52,T1_friendly,1,0,0,2,1,1,1,1,34,Female,44,45,7,7,0,3,5,1,2,FALSE,Belgium (Flanders)
+dcea8991,T3_narrative,0,0,1,4,1,0,1,1,16,Female,99,100,5.666666666666667,5.666666666666667,0,4,6,4,4,TRUE,Belgium (Flanders)
+3d480b59,T3_narrative,0,0,1,4,1,0,1,0,17,Male,100,100,5.666666666666667,5.666666666666667,0,4,6,4,4,TRUE,Belgium (Flanders)
+b5bba18e,T3_narrative,0,0,1,4,1,0,1,1,22,Female,65,57,4,5,0,4,4,4,4,TRUE,Belgium (Flanders)
+34dba52e,T3_narrative,0,0,1,4,1,1,1,0,16,Male,76,80,5.666666666666667,5.666666666666667,0,4,4,4,4,TRUE,Belgium (Flanders)
+c54b4f44,T2_mentor,0,1,0,3,1,1,1,0,17,Male,85,89,5.333333333333333,5,0,5,5,5,5,TRUE,Belgium (Flanders)
+20408688,T1_friendly,1,0,0,2,1,1,0,1,20,Female,100,100,6.666666666666667,6.666666666666667,0,4,7,2,3,FALSE,Belgium (Flanders)
+899e05df,T3_narrative,0,0,1,4,1,1,1,1,34,Female,100,100,6,6,0,7,6,4,3,FALSE,Belgium (Flanders)
+4d061cc7,T1_friendly,1,0,0,2,1,1,0,1,17,Female,100,100,6.666666666666667,7,0,3,4,3,3,TRUE,Belgium (Flanders)
+c350f706,T2_mentor,0,1,0,3,1,1,0,0,16,Male,80,85,4.333333333333333,4.666666666666667,0,5,4,4,5,FALSE,Belgium (Flanders)
+d3c68427,T0_control,0,0,0,1,1,0,1,1,17,Female,69,81,4.333333333333333,4.666666666666667,0,4,5,3,3,TRUE,Belgium (Flanders)
+54e9f507,T1_friendly,1,0,0,2,1,0,1,0,17,Male,85,85,4.666666666666667,4,0,5,5,4,4,TRUE,Belgium (Flanders)
+30846ef5,T1_friendly,1,0,0,2,1,1,1,1,17,Female,64,99,6,6,0,4,6,4,5,TRUE,Belgium (Flanders)
+6da19e60,T2_mentor,0,1,0,3,0,1,1,1,25,Female,60,52,5,4.666666666666667,0,4,5,5,4,FALSE,Belgium (Flanders)
+d9e40f72,T0_control,0,0,0,1,1,1,0,1,30,Female,20,20,5,5.333333333333333,0,5,6,5,5,FALSE,Belgium (Flanders)
+795adbbb,T1_friendly,1,0,0,2,1,0,1,0,17,Male,100,100,5,4.666666666666667,0,4,5,4,4,TRUE,Belgium (Flanders)
+f4c51431,T2_mentor,0,1,0,3,1,0,1,0,17,Male,90,90,5.333333333333333,5.333333333333333,0,4,4,4,4,TRUE,Belgium (Flanders)
+9811ffd5,T2_mentor,0,1,0,3,1,0,1,0,17,Male,100,100,5,5,0,3,4,1,5,TRUE,Belgium (Flanders)
+7f244e18,T1_friendly,1,0,0,2,1,0,1,1,17,Female,100,79,4.666666666666667,5,0,4,5,4,4,FALSE,Belgium (Flanders)
+55ccb12a,T2_mentor,0,1,0,3,1,0,1,1,16,Female,95,95,4,4,0,4,4,3,4,TRUE,Belgium (Flanders)
+082a9eb1,T0_control,0,0,0,1,1,1,0,0,16,Male,92,95,4.333333333333333,4,0,4,4,4,4,TRUE,Belgium (Flanders)
+f189b014,T3_narrative,0,0,1,4,1,0,0,1,17,Female,95,97,5,5,0,4,4,4,4,TRUE,Belgium (Flanders)
+9fe2cd8d,T1_friendly,1,0,0,2,1,1,1,0,17,Male,100,100,6,6,0,4,6,2,4,TRUE,Belgium (Flanders)
+1939e3ab,T3_narrative,0,0,1,4,1,0,1,0,16,Male,100,100,6.333333333333333,6.333333333333333,0,4,7,4,4,TRUE,Belgium (Flanders)
+f431a4f3,T2_mentor,0,1,0,3,1,1,1,0,17,Male,85,85,5.333333333333333,5.666666666666667,0,2,4,4,4,TRUE,Belgium (Flanders)
+21f346a4,T2_mentor,0,1,0,3,1,0,1,0,17,Male,100,100,6,6,0,4,5,4,4,TRUE,Belgium (Flanders)
+0a9b00d4,T3_narrative,0,0,1,4,1,0,0,1,17,Female,70,75,5.666666666666667,5.333333333333333,0,6,6,5,5,TRUE,Belgium (Flanders)
+d69f38b3,T1_friendly,1,0,0,2,1,0,1,0,17,Male,96,99,5.666666666666667,5.666666666666667,0,4,5,2,3,TRUE,Belgium (Flanders)
+d8585760,T1_friendly,1,0,0,2,1,0,1,0,17,Male,100,100,7,7,0,4,4,1,2,TRUE,Belgium (Flanders)
+a1925694,T2_mentor,0,1,0,3,1,0,1,0,17,Male,100,100,6,6,0,4,5,3,5,TRUE,Belgium (Flanders)
+0888e702,T2_mentor,0,1,0,3,1,1,0,1,29,Female,25,16,6,5.666666666666667,0,4,4,1,5,FALSE,Belgium (Flanders)
+e2612bd1,T0_control,0,0,0,1,0,0,1,1,16,Female,100,100,5.333333333333333,5.666666666666667,0,4,4,2,6,TRUE,Belgium (Flanders)
+1b211914,T1_friendly,1,0,0,2,1,1,1,1,51,Female,52,51,6.666666666666667,6,0,5,5,5,4,FALSE,Belgium (Flanders)
+13d31833,T0_control,0,0,0,1,1,1,1,1,2003,Female,90,96,7,7,0,6,5,6,6,FALSE,Belgium (Flanders)
+e819ee15,T0_control,0,0,0,1,1,1,1,1,21,Female,59,59,4,4,0,4,4,3,3,FALSE,Belgium (Flanders)
+05d03d7f,T1_friendly,1,0,0,2,1,0,1,1,17,Female,100,100,5,5,0,4,3,4,4,TRUE,Belgium (Flanders)
+9619f97f,T3_narrative,0,0,1,4,0,0,1,1,17,Female,92,92,5,5,0,1,1,1,1,FALSE,Belgium (Flanders)
+03ae4a8b,T3_narrative,0,0,1,4,1,0,1,0,17,Male,60,60,5,5,0,4,5,5,5,TRUE,Belgium (Flanders)
+982b1cc0,T3_narrative,0,0,1,4,1,0,0,0,17,Male,100,100,5.333333333333333,5,0,4,4,4,5,TRUE,Belgium (Flanders)
+5d368ed0,T1_friendly,1,0,0,2,1,0,1,1,17,Female,97,97,5.333333333333333,5.666666666666667,0,4,4,2,6,TRUE,Belgium (Flanders)
+f02f6217,T0_control,0,0,0,1,1,0,1,0,17,Male,60,65,5,5.666666666666667,0,4,6,2,5,TRUE,Belgium (Flanders)
+b5e5e40c,T2_mentor,0,1,0,3,1,0,1,0,17,Male,100,100,6.333333333333333,6.333333333333333,0,1,6,2,2,TRUE,Belgium (Flanders)
+03694b07,T2_mentor,0,1,0,3,1,1,0,1,17,Female,98,98,5.333333333333333,5,0,4,4,4,5,FALSE,Belgium (Flanders)
+28b5039c,T1_friendly,1,0,0,2,1,1,1,1,41,Female,51,72,7,7,0,6,5,6,6,FALSE,Belgium (Flanders)
+5e44105e,T2_mentor,0,1,0,3,1,0,1,0,17,Male,70,74,5.666666666666667,5.333333333333333,0,4,5,4,4,TRUE,Belgium (Flanders)
+b4478da6,T1_friendly,1,0,0,2,1,0,1,1,99,Vrouw,100,100,6,6,0,4,5,5,5,FALSE,België (Vlaanderen)
+b2914dbd,T1_friendly,1,0,0,2,1,0,1,0,17,Man,93,93,5,5,0,4,4,4,4,FALSE,België (Vlaanderen)
+26cb98fa,T2_mentor,0,1,0,3,1,0,1,0,17,Man,99,99,4,4,0,4,4,4,4,FALSE,België (Vlaanderen)
+b21094e0,T0_control,0,0,0,1,1,0,1,1,17,Vrouw,77,97,5,5,0,3,5,1,4,FALSE,België (Vlaanderen)
+e56721f3,T1_friendly,1,0,0,2,1,0,1,0,17,Man,97,91,5,4.333333333333333,0,4,4,5,5,FALSE,België (Vlaanderen)
+832f7649,T2_mentor,0,1,0,3,1,0,0,0,21,Man,63,84,4.333333333333333,4.666666666666667,0,2,4,6,6,FALSE,België (Vlaanderen)
+c5e7681c,T1_friendly,1,0,0,2,1,0,0,0,16,Man,72,84,4.666666666666667,4.666666666666667,0,5,5,1,2,FALSE,België (Vlaanderen)
+02ff3640,T0_control,0,0,0,1,1,0,1,1,17,Vrouw,90,100,4.666666666666667,4.666666666666667,0,4,5,3,4,FALSE,België (Vlaanderen)
+085b6a0e,T2_mentor,0,1,0,3,1,0,0,0,18,Man,100,100,5.333333333333333,5.666666666666667,0,4,6,5,5,FALSE,België (Vlaanderen)
+41eff8dc,T3_narrative,0,0,1,4,0,0,1,1,17,Vrouw,93,93,5.666666666666667,5.333333333333333,0,6,5,6,6,FALSE,België (Vlaanderen)
+c396b106,T2_mentor,0,1,0,3,1,0,1,0,17,Man,85,80,7,7,0,5,5,5,5,FALSE,België (Vlaanderen)
+1f289bad,T0_control,0,0,0,1,1,0,1,1,34,Vrouw,99,99,5.666666666666667,6.333333333333333,0,6,7,6,7,FALSE,België (Vlaanderen)
+26c3d893,T2_mentor,0,1,0,3,1,0,0,1,29,Vrouw,99,100,5.666666666666667,6,0,5,6,6,6,FALSE,België (Vlaanderen)
+ed2e92c9,T0_control,0,0,0,1,1,0,1,0,16,Man,100,100,6.333333333333333,6.333333333333333,0,4,4,4,4,FALSE,België (Vlaanderen)
+32ed52f5,T3_narrative,0,0,1,4,1,0,1,0,17,Man,79,80,5.666666666666667,5.666666666666667,0,6,6,4,4,FALSE,België (Vlaanderen)
+3a1be1d7,T0_control,0,0,0,1,1,0,0,1,17,Vrouw,100,100,3.6666666666666665,4.333333333333333,0,4,4,4,4,FALSE,België (Vlaanderen)
+90d4406c,T2_mentor,0,1,0,3,1,0,0,0,17,Man,100,100,4.333333333333333,6,0,5,6,4,4,FALSE,België (Vlaanderen)
+d3d97665,T2_mentor,0,1,0,3,1,0,1,1,1997,Vrouw,63,100,5,5,0,7,7,7,7,FALSE,België (Vlaanderen)
+bc14d6e7,T1_friendly,1,0,0,2,1,0,1,1,17,Vrouw,99,100,5,5,0,4,5,5,5,FALSE,België (Vlaanderen)
+1b96fae5,T0_control,0,0,0,1,1,0,1,0,18,Man,99,99,5,5.333333333333333,0,4,4,1,1,FALSE,België (Vlaanderen)
+3565fd8d,T2_mentor,0,1,0,3,1,0,1,1,17,Vrouw,100,100,5.666666666666667,5.666666666666667,0,4,5,3,3,FALSE,België (Vlaanderen)
+adb092f8,T2_mentor,0,1,0,3,1,0,1,1,17,Vrouw,85,85,5.333333333333333,5.333333333333333,0,1,7,1,4,FALSE,België (Vlaanderen)
+2231e04c,T3_narrative,0,0,1,4,0,0,1,0,17,Man,100,100,6.333333333333333,6.333333333333333,0,6,6,2,7,FALSE,België (Vlaanderen)
+e76c40d6,T0_control,0,0,0,1,1,0,0,1,17,Vrouw,94,98,5,5,0,6,5,5,5,FALSE,België (Vlaanderen)
+8975e3d6,T0_control,0,0,0,1,1,0,1,0,16,Man,95,95,4.333333333333333,4.333333333333333,0,5,5,4,4,FALSE,België (Vlaanderen)
+06463af6,T3_narrative,0,0,1,4,1,0,0,0,18,Zeg ik liever niet,64,64,3,2.6666666666666665,0,4,3,1,1,FALSE,België (Vlaanderen)
+9c428413,T2_mentor,0,1,0,3,1,0,0,1,22,Vrouw,30,55,3,3.6666666666666665,0,5,4,5,4,FALSE,België (Vlaanderen)
+0014bb28,T1_friendly,1,0,0,2,1,0,0,0,25,Man,50,80,5,6.333333333333333,0,5,7,5,7,FALSE,België (Vlaanderen)
+3bae8f76,T0_control,0,0,0,1,1,0,0,0,19,Man,50,50,4.666666666666667,6.333333333333333,0,5,6,6,6,FALSE,België (Vlaanderen)
+42aab672,T1_friendly,1,0,0,2,1,0,0,1,18,Vrouw,65,85,4.666666666666667,4.666666666666667,0,7,6,6,3,FALSE,België (Vlaanderen)
+88317473,T1_friendly,1,0,0,2,0,0,0,1,17,Vrouw,80,70,4.333333333333333,4.333333333333333,0,4,4,5,5,FALSE,België (Vlaanderen)
+585b5270,T2_mentor,0,1,0,3,1,0,1,1,19,Vrouw,100,100,6.333333333333333,6.666666666666667,0,6,6,2,3,FALSE,België (Vlaanderen)
+6eaf19a7,T3_narrative,0,0,1,4,1,0,1,0,37,Homme,95,90,4,4,0,4,5,4,6,FALSE,Belgique (Flandre)
+9e07bf44,T3_narrative,0,0,1,4,1,0,1,0,16,Homme,80,73,5,5.333333333333333,0,5,6,5,4,FALSE,Belgique (Flandre)
+4cbfd58d,T3_narrative,0,0,1,4,1,1,1,0,39,Male,96,95,4.666666666666667,4.666666666666667,0,3,5,4,4,FALSE,Belgium (Flanders)
+82c1d9a3,T2_mentor,0,1,0,3,1,0,0,0,22,Man,2,10,2,1.6666666666666667,0,1,1,4,3,FALSE,België (Vlaanderen)
+eab5c69b,T3_narrative,0,0,1,4,0,0,0,1,18,Vrouw,70,80,5.666666666666667,6,0,6,7,7,6,FALSE,België (Vlaanderen)
+c7823106,T1_friendly,1,0,0,2,1,1,0,1,35,Female,20,20,5,4.666666666666667,0,3,3,5,4,FALSE,Turkey 
+bf83f7d2,T0_control,0,0,0,1,1,0,0,1,45,Female,0,0,6.666666666666667,6.666666666666667,0,4,7,1,1,TRUE,Brazil
+2e66ce2d,T0_control,0,0,0,1,1,0,0,0,26,Male,95,100,6.666666666666667,7,0,7,7,7,6,FALSE,Italy
+a747683a,T2_mentor,0,1,0,3,1,0,0,0,53,Male,100,100,7,7,0,7,7,5,6,TRUE,Nigeria
+cacbae95,T0_control,0,0,0,1,1,0,1,0,35,Male,75,75,7,7,0,7,7,7,7,TRUE,Ethiopia
+f8676d2f,T1_friendly,1,0,0,2,1,0,0,0,25,Male,85,85,5.666666666666667,6.333333333333333,0,6,6,6,6,FALSE,Belgium (Flanders)
+63aa648c,T1_friendly,1,0,0,2,1,0,1,0,18,Male,80,83,5,5.333333333333333,0,6,6,7,6,TRUE,Belgium (Flanders)
+462f1c0f,T1_friendly,1,0,0,2,1,1,1,1,16,Female,80,83,6.333333333333333,6.333333333333333,0,4,7,6,7,FALSE,Belgium (Flanders)
+b724ea04,T2_mentor,0,1,0,3,1,1,0,1,19,Female,49,49,3.3333333333333335,4,0,5,6,2,3,FALSE,Belgium (Flanders)
+90854fca,T3_narrative,0,0,1,4,1,0,0,0,19,Male,100,100,7,3,0,3,3,4,5,FALSE,Belgium (Flanders)
+63fe8bdb,T0_control,0,0,0,1,1,1,0,0,16,Male,2,50,5,5,0,5,5,6,6,FALSE,Belgium (Flanders)
+af8c6e65,T3_narrative,0,0,1,4,1,1,0,1,19,Female,70,70,5.666666666666667,5.333333333333333,0,5,5,5,4,FALSE,Belgium (Flanders)
+eee0e9ae,T0_control,0,0,0,1,1,1,0,0,16,Male,100,100,6,6.666666666666667,0,7,7,7,7,FALSE,Belgium (Flanders)
+1ab11f18,T0_control,0,0,0,1,1,1,1,1,18,Female,100,100,6,6,0,7,5,6,6,FALSE,Belgium (Flanders)
+99c6cdf6,T0_control,0,0,0,1,1,1,0,0,18,Male,80,70,4,4.666666666666667,0,6,5,6,4,FALSE,Ghana 
+c0425432,T0_control,0,0,0,1,0,1,0,1,19,Female,70,80,5.666666666666667,5,0,6,5,6,6,FALSE,Belgium (Wallonia)
+f45c97c2,T1_friendly,1,0,0,2,1,0,0,0,16,Male,85,85,6,5.666666666666667,0,6,5,6,5,FALSE,Belgium (Flanders)
+d550ccb8,T2_mentor,0,1,0,3,1,1,0,0,16,Male,78,78,6.333333333333333,6.333333333333333,0,6,6,5,6,FALSE,Belgium (Flanders)
+b7162334,T0_control,0,0,0,1,0,1,1,0,16,Male,85,80,6,6,0,6,5,1,1,FALSE,Belgium (Flanders)
+67efae52,T1_friendly,1,0,0,2,1,0,1,0,16,Male,85,80,6.333333333333333,5.666666666666667,0,4,4,4,4,FALSE,Belgium (Flanders)
+9ad2f8ed,T2_mentor,0,1,0,3,1,1,0,1,16,Female,80,85,5.333333333333333,5.333333333333333,0,6,5,6,5,FALSE,Belgium (Flanders)
+9ce7b859,T1_friendly,1,0,0,2,0,1,1,1,33,Female,60,71,5.666666666666667,6,0,5,6,4,6,FALSE,Belgium (Flanders)
+d330f8bf,T0_control,0,0,0,1,1,0,0,0,16,Hombre,50,50,4,4.333333333333333,0,5,6,5,5,FALSE,Bélgica (Valonia)
+a88bb3a9,T2_mentor,0,1,0,3,1,1,0,0,22,Male,50,50,7,7,0,4,5,1,1,FALSE,Belgium (Flanders)
+f5e8fbd8,T1_friendly,1,0,0,2,0,1,1,1,18,Female,60,50,5,5,0,3,3,7,7,TRUE,Belgium (Flanders)
+bb84cbe7,T2_mentor,0,1,0,3,1,0,1,1,18,Vrouw,100,98,5.333333333333333,5,0,2,5,2,2,FALSE,België (Vlaanderen)
+09b2e1e1,T1_friendly,1,0,0,2,1,0,0,0,18,Man,30,30,5.666666666666667,5.333333333333333,0,4,3,4,5,FALSE,België (Vlaanderen)
+1373614c,T0_control,0,0,0,1,1,0,0,1,42,Жінка,16,43,5.666666666666667,5.666666666666667,0,6,5,5,6,FALSE,Бельгія (Фландрія)
+5ed8b930,T3_narrative,0,0,1,4,1,0,1,1,42,Жінка,60,60,6,6,0,6,6,6,6,FALSE,Бельгія (Фландрія)
+4c8399a9,T3_narrative,0,0,1,4,1,0,1,1,17,Женщина,80,90,6,6.333333333333333,0,7,7,7,6,FALSE,Бельгия (Фландрия)
+128d12b2,T0_control,0,0,0,1,1,0,0,0,22,ذكر,100,100,6.666666666666667,6,0,2,5,5,7,FALSE,آخر
+a46ba5b8,T2_mentor,0,1,0,3,1,0,0,0,18,Man,31,31,5,5,1,4,5,3,3,FALSE,België (Vlaanderen)
+bdf073f5,T0_control,0,0,0,1,1,1,0,1,16,Female,80,69,5,5,0,6,6,5,6,TRUE,Belgium (Flanders)
+8bd52226,T1_friendly,1,0,0,2,0,0,0,1,22,Female,74,84,6.333333333333333,6.666666666666667,0,7,6,7,6,FALSE,Belgium (Flanders)
+cc352c8d,T3_narrative,0,0,1,4,1,1,1,0,18,Male,45,66,7,1,0,7,7,7,7,FALSE,Netherlands
+4ae4a892,T2_mentor,0,1,0,3,1,0,1,0,16,Male,75,80,5,5,0,4,4,4,4,TRUE,Netherlands
+1e181866,T3_narrative,0,0,1,4,1,1,0,0,16,Male,76,85,6.666666666666667,6.666666666666667,0,5,5,5,6,FALSE,Netherlands
+e3ff7612,T3_narrative,0,0,1,4,1,0,0,0,16,Male,100,100,6,6,0,4,6,1,6,TRUE,Netherlands
+4fe928d1,T2_mentor,0,1,0,3,1,0,1,0,16,Male,95,95,5.333333333333333,5.333333333333333,0,5,6,5,5,TRUE,Netherlands
+3b33b1c9,T2_mentor,0,1,0,3,1,0,0,1,16,Vrouw,95,95,5.666666666666667,6,0,5,5,4,5,FALSE,Nederland
+b2c8249d,T0_control,0,0,0,1,1,1,1,1,16,Female,75,75,6,6,0,4,7,6,6,TRUE,Netherlands
+9623dc33,T0_control,0,0,0,1,1,0,1,1,16,Female,100,99,4,3.6666666666666665,0,2,5,6,7,TRUE,Netherlands
+20aaf629,T2_mentor,0,1,0,3,1,0,1,1,16,Female,80,80,5.333333333333333,6,0,6,5,6,5,TRUE,Netherlands
+5d81c768,T2_mentor,0,1,0,3,1,0,0,1,16,Vrouw,50,50,5.666666666666667,5.666666666666667,0,4,5,5,7,FALSE,Nederland
+8316fa34,T0_control,0,0,0,1,0,1,1,1,16,Female,91,100,6.333333333333333,7,0,3,7,2,6,TRUE,Netherlands
+96ab45be,T1_friendly,1,0,0,2,0,0,1,1,16,Vrouw,75,80,4.333333333333333,5,1,5,5,2,2,FALSE,Nederland
+05f891bf,T3_narrative,0,0,1,4,1,1,1,1,16,Female,100,100,6,6,1,2,5,4,4,FALSE,Netherlands
+ed0e9bb7,T3_narrative,0,0,1,4,1,0,1,0,16,Male,70,70,5.333333333333333,5.333333333333333,0,4,6,5,3,FALSE,Netherlands
+a84c2ec9,T2_mentor,0,1,0,3,1,0,1,1,16,Female,98,98,5.333333333333333,5.333333333333333,0,4,4,3,5,TRUE,Netherlands
+de620b30,T0_control,0,0,0,1,0,1,1,0,16,Male,83,83,5.333333333333333,5.333333333333333,0,5,3,5,5,TRUE,Netherlands
+f621db20,T3_narrative,0,0,1,4,0,1,1,1,17,Female,100,100,7,7,0,7,7,7,7,FALSE,Netherlands
+a10e5d96,T3_narrative,0,0,1,4,1,1,1,1,16,Female,100,80,5.333333333333333,5.666666666666667,0,6,5,5,5,TRUE,Netherlands
+55c285cb,T3_narrative,0,0,1,4,0,0,1,1,17,Vrouw,90,100,5,5.333333333333333,0,1,4,2,4,FALSE,Nederland
+fb7926cb,T3_narrative,0,0,1,4,1,0,1,1,16,Vrouw,75,80,5.333333333333333,5.333333333333333,0,4,5,5,6,FALSE,Nederland
+f3672252,T2_mentor,0,1,0,3,1,0,1,0,16,Man,70,100,6,6,0,6,7,6,6,FALSE,Nederland
+f5e9a06d,T1_friendly,1,0,0,2,1,1,0,1,16,Female,82,62,5.333333333333333,5,0,5,5,5,6,TRUE,Netherlands
+01e9a33e,T0_control,0,0,0,1,1,0,1,0,16,Man,100,100,6.333333333333333,6,0,6,6,6,5,FALSE,Nederland
+9c496226,T0_control,0,0,0,1,1,0,1,0,16,Man,80,80,6.333333333333333,6.666666666666667,0,2,6,2,6,FALSE,Nederland
+adefc5a5,T3_narrative,0,0,1,4,1,0,0,1,16,Vrouw,95,96,6.333333333333333,7,0,6,6,5,6,FALSE,Nederland
+d9e62c13,T0_control,0,0,0,1,1,0,0,1,16,Vrouw,80,80,5,4.666666666666667,0,4,5,4,4,FALSE,Nederland
+4593d000,T1_friendly,1,0,0,2,0,0,0,1,16,Vrouw,80,80,5,4.333333333333333,0,4,4,4,4,FALSE,Nederland
+4963cc94,T0_control,0,0,0,1,1,1,0,1,16,Female,80,85,3.6666666666666665,3.6666666666666665,0,5,5,6,6,TRUE,Netherlands
+02fc6ee4,T2_mentor,0,1,0,3,1,1,1,1,17,Female,100,100,5,5,0,5,5,5,5,FALSE,Netherlands
+060d66f7,T2_mentor,0,1,0,3,1,1,1,0,99,Male,95,100,6,7,0,7,7,7,7,FALSE,Belgium (Wallonia)
+7abac5a7,T2_mentor,0,1,0,3,1,0,1,1,17,Vrouw,100,100,5.333333333333333,6,0,4,4,5,6,FALSE,België (Vlaanderen)

@@ -1,0 +1,111 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{Publica vs privada: ?`que tipo de universidad agrega mas valor?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 5}\\[0.3cm]
+Reyes Rodriguez Jose Miguel\\
+Santamaria Caballero Isabella\\
+Bermudez Caicedo Gabriela\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: debate sobre calidad de educacion publica vs privada en Colombia.
+% Pregunta: las IES oficiales agregan mas o menos valor que las no oficiales,
+% controlando por el nivel de entrada del estudiante?
+% Concepto de valor agregado (delta) como medida de lo que aporta la universidad.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Variable dependiente: delta = scale(PUNT\_GLOBAL\_sbpro) - scale(PUNT\_GLOBAL\_sb11).
+% Predictores: IES\_tipo (Oficial vs No Oficial, simplificado de INST\_ORIGEN\_sbpro),
+%   PUNT\_GLOBAL\_sb11, FAMI\_ESTRATOVIVIENDA\_sb11, INST\_CARACTER\_ACADEMICO\_sbpro.
+% Modelo OLS unico con diagnosticos completos.
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Distribucion de delta por tipo de IES.
+% Histograma y boxplot del valor agregado.
+% Estadisticas descriptivas por tipo de IES y caracter academico.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de delta por tipo de IES.
+% Prueba t para diferencia de medias delta oficial vs no oficial.
+% Prueba de Wilcoxon como alternativa no parametrica.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo: delta $\sim$ IES\_tipo + PUNT\_GLOBAL\_sb11 + FAMI\_ESTRATOVIVIENDA\_sb11
+%   + INST\_CARACTER\_ACADEMICO\_sbpro.
+% Tabla de coeficientes con IC al 95\%.
+% Predicciones: delta predicho para IES oficial vs no oficial al P50 de SB11.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Graficos de residuales (residuales vs ajustados, QQ-plot, Scale-Location).
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1: comparacion con errores estandar clasicos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% Magnitud y significancia del coeficiente de IES\_tipo.
+% Comparacion de predicciones publica vs privada.
+% Reflexion sobre calidad educativa y valor agregado institucional.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para la discusion sobre financiamiento de educacion publica.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, literatura sobre calidad educativa publica vs privada en Colombia.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo5.R) o referenciarlo.
+
+\end{document}

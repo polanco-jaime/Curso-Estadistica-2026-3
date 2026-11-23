@@ -1,0 +1,116 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{Brecha digital: ?`el acceso a internet y computador afecta el valor agregado universitario?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 3}\\[0.3cm]
+Castillo Lopez Angie Mariana\\
+Olaya Esguerra Juan Pablo\\
+Novoa Diaz Sebastian\\
+Garcia Sanabria Santiago\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: brecha digital en Colombia y acceso desigual a tecnologia.
+% Pregunta: los estudiantes sin acceso a internet y computador durante
+% el bachillerato obtienen menor valor agregado en la universidad?
+% Concepto de delta (valor agregado estandarizado) como medida de progreso.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Variable dependiente 1: delta = scale(PUNT\_GLOBAL\_sbpro) - scale(PUNT\_GLOBAL\_sb11).
+% Variable dependiente 2: MOD\_LECTURA\_CRITICA\_PUNT.
+% Predictores: FAMI\_TIENEINTERNET\_sb11, FAMI\_TIENECOMPUTADOR\_sb11,
+%   FAMI\_ESTRATOVIVIENDA\_sb11, ESTU\_ZONA\_RESIDE\_sb11 (+ PUNT\_LECTURA\_CRITICA\_sb11 en M2).
+% Modelo 1: delta en funcion de acceso digital y contexto.
+% Modelo 2: lectura critica SBPro controlando por lectura critica SB11.
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Distribucion de delta por acceso a internet y computador.
+% Tablas cruzadas internet/computador vs zona y estrato.
+% Estadisticas descriptivas de lectura critica SB11 y SBPro.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de delta por acceso a internet.
+% Prueba t para diferencia de medias delta con vs sin internet.
+% Prueba de Wilcoxon como alternativa no parametrica.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo 1: delta $\sim$ internet + computador + estrato + zona.
+% Modelo 2: lectura critica SBPro $\sim$ internet + computador + estrato + zona
+%   + lectura critica SB11.
+% Tabla de coeficientes con IC al 95\%.
+% Comparacion de modelos: R2 ajustado, AIC, BIC.
+% Predicciones: delta predicho para estudiante con vs sin acceso digital.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Diagnosticos para ambos modelos: residuales vs ajustados, QQ-plot.
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1: comparacion con errores estandar clasicos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% Magnitud del efecto del acceso digital sobre el valor agregado.
+% Comparacion de predicciones con vs sin internet.
+% Reflexion sobre la brecha digital como barrera a la movilidad educativa.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para politica de conectividad y acceso digital en educacion.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, literatura sobre brecha digital y educacion en Colombia.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo3.R) o referenciarlo.
+
+\end{document}

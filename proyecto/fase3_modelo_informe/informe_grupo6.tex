@@ -1,0 +1,122 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{Educacion de los padres y movilidad: ?`pueden los estudiantes de primera generacion cerrar la brecha?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 6}\\[0.3cm]
+Duque Rivera Natalia\\
+Flechas Gonzalez Karol Mariana\\
+Medrano Marquez Samuel Fernando\\
+Salcedo Gonzalez Maria Fernanda\\
+Amaya Lara Samuel\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: movilidad social intergeneracional en Colombia.
+% Pregunta: los estudiantes de primera generacion (padres sin educacion superior)
+% obtienen resultados diferentes en SBPro controlando por habilidad previa?
+% Concepto de capital cultural y su efecto en la trayectoria educativa.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Construccion de la variable primera\_gen: ambos padres SIN educacion superior.
+% Variable dependiente 1: PUNT\_GLOBAL\_sbpro.
+% Variable dependiente 2: MOD\_INGLES\_PUNT.
+% Predictores: PUNT\_GLOBAL\_sb11 (o PUNT\_INGLES\_sb11), primera\_gen,
+%   FAMI\_ESTRATOVIVIENDA\_sb11, INST\_ORIGEN\_sbpro.
+% Modelo 1 (aditivo), Modelo 2 (interaccion SB11 * primera\_gen),
+%   Modelo 3 (ingles con interaccion), Modelo 4 (subsample econ/admin).
+% Justificacion: el capital cultural importa mas para ingles?
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Proporcion de estudiantes de primera generacion.
+% Distribucion de PUNT\_GLOBAL\_sbpro por primera\_gen.
+% Scatter SB11 vs SBPro coloreado por primera generacion.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de PUNT\_GLOBAL\_sbpro por primera\_gen.
+% Prueba t para diferencia de medias primera gen vs no primera gen.
+% Prueba de Wilcoxon como alternativa no parametrica.
+% Prueba chi-cuadrado para asociacion primera\_gen e INST\_ORIGEN\_sbpro.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo 1: PUNT\_GLOBAL\_sbpro $\sim$ SB11 + primera\_gen + estrato + inst\_origen.
+% Modelo 2: PUNT\_GLOBAL\_sbpro $\sim$ SB11 * primera\_gen + estrato.
+% Modelo 3: MOD\_INGLES\_PUNT $\sim$ PUNT\_INGLES\_sb11 * primera\_gen + estrato.
+% Modelo 4: PUNT\_GLOBAL\_sbpro $\sim$ SB11 * primera\_gen + inst\_origen (econ/admin).
+% Tabla de coeficientes con IC al 95\%.
+% Comparacion de modelos: R2 ajustado, AIC, BIC.
+% Predicciones: primera gen vs no primera gen al P50 de SB11.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Diagnosticos para cada modelo: residuales vs ajustados, QQ-plot.
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1 para los 4 modelos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% La interaccion SB11 * primera\_gen es significativa?
+% El capital cultural importa mas para ingles que para puntaje global?
+% Graficos de interaccion, coeficientes, predicciones.
+% Reflexion sobre movilidad intergeneracional y el rol de la universidad.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para politica de acompanamiento a primera generacion.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, Bourdieu, literatura sobre capital cultural y primera generacion.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo6.R) o referenciarlo.
+
+\end{document}

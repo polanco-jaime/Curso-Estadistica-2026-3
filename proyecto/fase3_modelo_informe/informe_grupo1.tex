@@ -1,0 +1,116 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{Meritocracia y origen territorial: ?`determina el lugar de origen el exito en educacion superior?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 1}\\[0.3cm]
+Perdigon Salinas Juan Felipe\\
+Paez Sabogal Laura Valentina\\
+Rodriguez Duque Catalina\\
+Ramirez Cuesta Wendy Julieth\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: desigualdad territorial en Colombia y acceso a educacion de calidad.
+% Pregunta: un estudiante de Cauca, Choco o Narino con alto puntaje SB11
+% obtiene el mismo resultado en SBPro que uno de Bogota?
+% Concepto de meritocracia vs determinismo geografico.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Variable dependiente: PUNT\_GLOBAL\_sbpro.
+% Predictores: PUNT\_GLOBAL\_sb11, COLE\_NATURALEZA, COLE\_AREA\_UBICACION,
+%   region (Cauca/Choco/Narino vs Bogota), FAMI\_ESTRATOVIVIENDA\_sb11.
+% Construccion de la variable region a partir de ESTU\_DEPTO\_RESIDE\_sb11.
+% Modelo OLS completo y modelo sin SB11 (solo variables de origen).
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Distribucion de PUNT\_GLOBAL\_sbpro y PUNT\_GLOBAL\_sb11 por region.
+% Tablas de frecuencias para COLE\_NATURALEZA y COLE\_AREA\_UBICACION.
+% Estadisticas descriptivas por region y estrato.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de PUNT\_GLOBAL\_sbpro por region.
+% Prueba t para diferencia de medias Bogota vs Periferia\_sur.
+% Prueba chi-cuadrado para asociacion entre region y COLE\_NATURALEZA.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo completo: PUNT\_GLOBAL\_sbpro $\sim$ PUNT\_GLOBAL\_sb11 + COLE\_NATURALEZA +
+%   COLE\_AREA\_UBICACION + region + FAMI\_ESTRATOVIVIENDA\_sb11.
+% Modelo sin SB11: solo variables de origen territorial y socioeconomicas.
+% Tabla de coeficientes con IC al 95\%.
+% Comparacion de modelos: R2 ajustado, AIC, BIC.
+% Predicciones: P90-SB11 rural Cauca vs P10-SB11 privado Bogota.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Graficos de residuales (residuales vs ajustados, QQ-plot, Scale-Location).
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1: comparacion con errores estandar clasicos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% Magnitud del efecto de region controlando por SB11.
+% Cuanto explica el origen territorial vs el merito individual?
+% Grafico de coeficientes, observado vs predicho, comparacion de predicciones.
+% Reflexion sobre meritocracia y barreras estructurales.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para politica publica de equidad territorial en educacion.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, literatura sobre desigualdad territorial y educacion en Colombia.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo1.R) o referenciarlo.
+
+\end{document}

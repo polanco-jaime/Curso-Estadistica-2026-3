@@ -1,0 +1,123 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PORTADA
+% ------------------------------------------------------------------------------
+\begin{center}
+{\Large \textbf{Pontificia Universidad Javeriana}}\\[0.3cm]
+Facultad de Ciencias Economicas y Administrativas\\[0.3cm]
+Estadistica -- 2026-II\\[1cm]
+{\LARGE \textbf{Genero y carreras de economia: ?`existe una brecha de genero en competencias cuantitativas?}}\\[0.5cm]
+{\large Informe Final del Proyecto}\\[1cm]
+\textbf{Grupo 4}\\[0.3cm]
+Carrisosa Tovar Jhon Neyder\\
+Hernandez Avila Luna Sofia\\
+Gutierrez Lopez Yaddy Valentina\\
+Martinez Marentes Juliana\\
+Perez Abril Sebastian Andres\\[1cm]
+27 de noviembre de 2026
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------------------
+\section{Introduccion}
+% ------------------------------------------------------------------------------
+% Contexto: brecha de genero en educacion superior, particularmente en
+% competencias cuantitativas y de ingles en carreras economicas.
+% Pregunta: la brecha de genero en razonamiento cuantitativo depende del
+% nivel de habilidad previa (SB11)? Es diferente en economia vs ingenieria?
+% Relevancia social: equidad de genero en el mercado laboral de economistas.
+
+% ------------------------------------------------------------------------------
+\section{Datos y Metodologia}
+% ------------------------------------------------------------------------------
+% Fuente: cruce Saber 11 -- Saber Pro (ICFES).
+% Archivos: cruce\_saber11\_saberpro.parquet, saber11.parquet, saber\_pro.parquet.
+% Filtro por carrera: ESTU\_PRGM\_ACADEMICO matching ADMINISTRA|ECONOM|CONTAD|NEGOCIOS.
+% Variable dependiente 1: MOD\_RAZONA\_CUANTITAT\_PUNT.
+% Variable dependiente 2: MOD\_INGLES\_PUNT.
+% Predictores: PUNT\_GLOBAL\_sb11, ESTU\_GENERO\_sb11, FAMI\_ESTRATOVIVIENDA\_sb11,
+%   INST\_ORIGEN\_sbpro.
+% Modelo 1 (aditivo econ), Modelo 2 (interaccion genero * SB11, econ),
+%   Modelo 3 (ingles como Y, econ), Modelo 4 (interaccion en ingenieria).
+% Justificacion de la comparacion entre carreras economicas e ingenieria.
+
+% ------------------------------------------------------------------------------
+\section{Analisis Exploratorio (Fase 1)}
+% ------------------------------------------------------------------------------
+% Distribucion de razonamiento cuantitativo e ingles por genero.
+% Scatter SB11 vs razonamiento cuantitativo coloreado por genero.
+% Composicion de genero en carreras economicas vs ingenieria.
+
+% ------------------------------------------------------------------------------
+\section{Intervalos de Confianza y Pruebas de Hipotesis (Fase 2)}
+% ------------------------------------------------------------------------------
+% IC para la media de razonamiento cuantitativo por genero en carreras econ.
+% Prueba t para diferencia de medias entre hombres y mujeres.
+% Prueba de Wilcoxon como alternativa no parametrica.
+% Prueba chi-cuadrado para composicion de genero por tipo de carrera.
+
+% ------------------------------------------------------------------------------
+\section{Modelo de Regresion (Fase 3)}
+% ------------------------------------------------------------------------------
+% Modelo 1: razon. cuantitativo $\sim$ SB11 + genero + estrato + inst\_origen (econ).
+% Modelo 2: razon. cuantitativo $\sim$ SB11 * genero + estrato + inst\_origen (econ).
+% Modelo 3: ingles $\sim$ SB11 * genero + estrato + inst\_origen (econ).
+% Modelo 4: razon. cuantitativo $\sim$ SB11 * genero + estrato + inst\_origen (ing).
+% Tabla de coeficientes con IC al 95\%.
+% Comparacion de modelos: R2 ajustado, AIC, BIC.
+% Predicciones: mujer vs hombre al percentil 50 de SB11.
+
+% ------------------------------------------------------------------------------
+\section{Diagnosticos y Robustez}
+% ------------------------------------------------------------------------------
+% Diagnosticos para cada modelo: residuales vs ajustados, QQ-plot.
+% Test de Breusch-Pagan (homocedasticidad).
+% VIF (multicolinealidad, incluyendo manejo de interacciones).
+% Distancia de Cook (observaciones influyentes).
+% Errores robustos HC1 para los 4 modelos.
+
+% ------------------------------------------------------------------------------
+\section{Resultados y Discusion}
+% ------------------------------------------------------------------------------
+% La interaccion genero * SB11 es significativa?
+% Comparacion de la brecha entre carreras economicas e ingenieria.
+% Graficos de interaccion, coeficientes, predicciones.
+% Reflexion sobre equidad de genero en formacion economica y cuantitativa.
+
+% ------------------------------------------------------------------------------
+\section{Conclusiones}
+% ------------------------------------------------------------------------------
+% Respuesta a la pregunta de investigacion.
+% Limitaciones del estudio.
+% Implicaciones para politica de genero en educacion superior.
+
+% ------------------------------------------------------------------------------
+\section*{Referencias}
+% ------------------------------------------------------------------------------
+% ICFES, literatura sobre brecha de genero en STEM y ciencias economicas.
+
+% ------------------------------------------------------------------------------
+\section*{Anexo: Codigo R}
+% ------------------------------------------------------------------------------
+% Incluir codigo R utilizado (fase3\_grupo4.R) o referenciarlo.
+
+\end{document}

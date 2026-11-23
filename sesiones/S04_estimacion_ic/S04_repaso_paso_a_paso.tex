@@ -1,0 +1,769 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{tikz}
+\usepackage{multicol}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\definecolor{comentario}{RGB}{100,100,100}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, commentstyle=\color{comentario}\itshape,
+  frame=single, breaklines=true, showstringspaces=false}
+
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Repaso Integrado: Paso a Paso con 10 Datos}\\[3pt]
+{\large Todo lo visto en S01--S03}\\[6pt]
+Sesi\'on 4 --- Viernes 25 de septiembre de 2026
+\end{center}
+
+\vspace{4pt}
+\rule{\linewidth}{0.5pt}
+
+% ============================================================================
+\section{Los Datos}
+% ============================================================================
+
+Tenemos los puntajes de ingl\'es (\texttt{MOD\_INGLES\_PUNT}) de $n = 10$ estudiantes
+de Ciencias Econ\'omicas:
+
+\[
+\mathbf{x} = \{142,\; 155,\; 138,\; 167,\; 171,\; 149,\; 160,\; 145,\; 158,\; 175\}
+\]
+
+Adem\'as, conocemos su puntaje de razonamiento cuantitativo
+(\texttt{MOD\_RAZONA\_CUANTITAT\_PUNT}):
+
+\[
+\mathbf{y} = \{135,\; 148,\; 130,\; 162,\; 158,\; 140,\; 155,\; 138,\; 150,\; 165\}
+\]
+
+Y el tipo de IES de cada uno:
+
+\[
+\text{IES} = \{\text{Pub},\; \text{Priv},\; \text{Pub},\; \text{Priv},\; \text{Priv},\;
+\text{Pub},\; \text{Priv},\; \text{Pub},\; \text{Priv},\; \text{Priv}\}
+\]
+
+\begin{lstlisting}
+x <- c(142, 155, 138, 167, 171, 149, 160, 145, 158, 175)
+y <- c(135, 148, 130, 162, 158, 140, 155, 138, 150, 165)
+ies <- c("Pub","Priv","Pub","Priv","Priv","Pub","Priv","Pub","Priv","Priv")
+\end{lstlisting}
+
+% ============================================================================
+\section{S01: Estad\'istica Descriptiva Num\'erica}
+% ============================================================================
+
+% --- MEDIA ---
+\subsection{Paso 1: Media aritm\'etica ($\bar{x}$)}
+
+\textbf{?`Qu\'e mide?} El centro de gravedad de los datos.
+
+\textbf{F\'ormula}:
+\[
+\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
+\]
+
+\textbf{C\'alculo}:
+\[
+\bar{x} = \frac{142 + 155 + 138 + 167 + 171 + 149 + 160 + 145 + 158 + 175}{10}
+= \frac{1560}{10} = \boxed{156.0}
+\]
+
+\textbf{Decisi\'on}: La media es sensible a valores extremos (outliers). Si los datos tienen
+outliers, considerar tambi\'en la mediana.
+
+\begin{lstlisting}
+mean(x)  # 156.0
+\end{lstlisting}
+
+% --- MEDIANA ---
+\subsection{Paso 2: Mediana ($\tilde{x}$)}
+
+\textbf{?`Qu\'e mide?} El valor que divide los datos en dos mitades iguales.
+
+\textbf{Procedimiento}:
+
+\textbf{Paso 2a}: Ordenar los datos de menor a mayor:
+\[
+x_{(1)}, x_{(2)}, \ldots, x_{(10)} = 138,\; 142,\; 145,\; 149,\; 155,\; 158,\; 160,\; 167,\; 171,\; 175
+\]
+
+\textbf{Paso 2b}: Como $n = 10$ es par, la mediana es el promedio de las posiciones $n/2 = 5$ y $n/2 + 1 = 6$:
+\[
+\tilde{x} = \frac{x_{(5)} + x_{(6)}}{2} = \frac{155 + 158}{2} = \boxed{156.5}
+\]
+
+\textbf{Decisi\'on}: $\bar{x} = 156.0 \approx \tilde{x} = 156.5$. Son muy similares, lo que sugiere
+que la distribuci\'on es aproximadamente sim\'etrica y no hay outliers graves.
+
+\begin{lstlisting}
+median(x)  # 156.5
+sort(x)    # 138 142 145 149 155 158 160 167 171 175
+\end{lstlisting}
+
+% --- VARIANZA Y SD ---
+\subsection{Paso 3: Varianza muestral ($s^2$) y desviaci\'on est\'andar ($s$)}
+
+\textbf{?`Qu\'e miden?} La dispersi\'on de los datos alrededor de la media.
+
+\textbf{F\'ormula} (varianza muestral, con $n-1$ en el denominador):
+\[
+s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2
+\]
+
+\textbf{Paso 3a}: Calcular cada desviaci\'on $(x_i - \bar{x})$ y elevar al cuadrado:
+
+\begin{center}
+\small
+\begin{tabular}{crrr}
+\toprule
+$i$ & $x_i$ & $x_i - \bar{x}$ & $(x_i - \bar{x})^2$ \\
+\midrule
+1 & 142 & $-14.0$ & 196.00 \\
+2 & 155 & $-1.0$  & 1.00 \\
+3 & 138 & $-18.0$ & 324.00 \\
+4 & 167 & $+11.0$ & 121.00 \\
+5 & 171 & $+15.0$ & 225.00 \\
+6 & 149 & $-7.0$  & 49.00 \\
+7 & 160 & $+4.0$  & 16.00 \\
+8 & 145 & $-11.0$ & 121.00 \\
+9 & 158 & $+2.0$  & 4.00 \\
+10 & 175 & $+19.0$ & 361.00 \\
+\midrule
+ & & \textbf{Suma} & \textbf{1418.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Paso 3b}: Dividir por $n - 1 = 9$:
+\[
+s^2 = \frac{1418.00}{9} = \boxed{157.56}
+\]
+
+\textbf{Paso 3c}: Desviaci\'on est\'andar:
+\[
+s = \sqrt{s^2} = \sqrt{157.56} = \boxed{12.55}
+\]
+
+\textbf{?`Por qu\'e $n-1$ y no $n$?} Porque dividir por $n-1$ (correcci\'on de Bessel) produce
+un estimador \emph{insesgado} de $\sigma^2$. Si dividi\'eramos por $n$, subestimar\'iamos
+sistem\'aticamente la varianza poblacional.
+
+\begin{lstlisting}
+var(x)   # 157.5556
+sd(x)    # 12.5522
+\end{lstlisting}
+
+% --- RANGO E IQR ---
+\subsection{Paso 4: Rango y Rango Intercuart\'ilico (IQR)}
+
+\textbf{Rango}: diferencia entre el m\'aximo y el m\'inimo.
+\[
+\text{Rango} = x_{(10)} - x_{(1)} = 175 - 138 = \boxed{37}
+\]
+
+\textbf{Cuartiles} (con datos ordenados):
+\begin{itemize}
+  \item $Q_1$ (percentil 25): mediana de la mitad inferior $\{138, 142, 145, 149, 155\}$
+  \[
+  Q_1 = 145
+  \]
+  \item $Q_2$ (percentil 50): la mediana = 156.5
+  \item $Q_3$ (percentil 75): mediana de la mitad superior $\{158, 160, 167, 171, 175\}$
+  \[
+  Q_3 = 167
+  \]
+\end{itemize}
+
+\textbf{IQR}:
+\[
+\text{IQR} = Q_3 - Q_1 = 167 - 145 = \boxed{22}
+\]
+
+\textbf{Decisi\'on para detectar outliers}: un dato es outlier si cae fuera de $[Q_1 - 1.5 \cdot \text{IQR},\; Q_3 + 1.5 \cdot \text{IQR}]$:
+\[
+[145 - 33,\; 167 + 33] = [112,\; 200]
+\]
+Todos nuestros datos est\'an dentro $\Rightarrow$ \textbf{no hay outliers}.
+
+\begin{lstlisting}
+range(x)                 # 138 175
+diff(range(x))           # 37
+quantile(x)              # Q1=145.25, Q2=156.5, Q3=165.25
+IQR(x)                   # 20  (R usa interpolacion, difiere ligeramente)
+fivenum(x)               # 138 145 156.5 167 175
+\end{lstlisting}
+
+% --- ASIMETRIA Y CURTOSIS ---
+\subsection{Paso 5: Asimetr\'ia y Curtosis}
+
+\textbf{Asimetr\'ia (skewness)}: mide si la distribuci\'on est\'a sesgada.
+\[
+g_1 = \frac{\frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^3}{s^3}
+\]
+
+\textbf{C\'alculo del numerador}: necesitamos $\sum(x_i - \bar{x})^3$:
+
+\begin{center}
+\small
+\begin{tabular}{crr}
+\toprule
+$i$ & $x_i - \bar{x}$ & $(x_i - \bar{x})^3$ \\
+\midrule
+1 & $-14$ & $-2744$ \\
+2 & $-1$  & $-1$ \\
+3 & $-18$ & $-5832$ \\
+4 & $+11$ & $+1331$ \\
+5 & $+15$ & $+3375$ \\
+6 & $-7$  & $-343$ \\
+7 & $+4$  & $+64$ \\
+8 & $-11$ & $-1331$ \\
+9 & $+2$  & $+8$ \\
+10 & $+19$ & $+6859$ \\
+\midrule
+ & \textbf{Suma} & $\mathbf{+1386}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\[
+g_1 = \frac{1386 / 10}{12.55^3} = \frac{138.6}{1978.4} = \boxed{+0.070}
+\]
+
+\textbf{Interpretaci\'on}: $g_1 \approx 0$ $\Rightarrow$ distribuci\'on aproximadamente \textbf{sim\'etrica}.
+\begin{itemize}
+  \item $g_1 > 0$: sesgo a la derecha (cola derecha m\'as larga)
+  \item $g_1 < 0$: sesgo a la izquierda
+  \item $|g_1| < 0.5$: aproximadamente sim\'etrica
+\end{itemize}
+
+\textbf{Curtosis}: mide si las colas son pesadas o ligeras respecto a la normal.
+\[
+g_2 = \frac{\frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})^4}{s^4} - 3
+\]
+
+\textbf{Interpretaci\'on} (curtosis en exceso, restando 3):
+\begin{itemize}
+  \item $g_2 = 0$: mesoc\'urtica (como la normal)
+  \item $g_2 > 0$: leptoc\'urtica (colas pesadas, pico m\'as agudo)
+  \item $g_2 < 0$: platic\'urtica (colas ligeras, pico m\'as plano)
+\end{itemize}
+
+\begin{lstlisting}
+library(moments)
+skewness(x)   # cercano a 0
+kurtosis(x) - 3  # curtosis en exceso
+\end{lstlisting}
+
+% ============================================================================
+\section{S02: Descriptiva Gr\'afica, Correlaci\'on y Paradoja de Simpson}
+% ============================================================================
+
+% --- GRAFICOS ---
+\subsection{Paso 6: Gr\'aficos descriptivos}
+
+\textbf{Decisi\'on}: ?`qu\'e gr\'afico usar?
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Objetivo} & \textbf{Tipo de variable} & \textbf{Gr\'afico} \\
+\midrule
+Distribuci\'on de 1 variable continua & Num\'erica & Histograma, KDE \\
+Comparar grupos & Num\'erica $\times$ categ\'orica & Box plot \\
+Relaci\'on entre 2 variables continuas & Num\'erica $\times$ num\'erica & Scatter plot \\
+Frecuencias de categor\'ias & Categ\'orica & Barras \\
+Distribuci\'on geogr\'afica & Num\'erica $\times$ departamento & Heatmap / mapa \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}
+library(ggplot2)
+df <- data.frame(ingles = x, razon = y, ies = ies)
+
+# Histograma
+ggplot(df, aes(x = ingles)) +
+  geom_histogram(bins = 5, fill = "steelblue", color = "white") +
+  labs(x = "Puntaje ingles", y = "Frecuencia") +
+  theme_minimal()
+
+# Box plot por tipo de IES
+ggplot(df, aes(x = ies, y = ingles, fill = ies)) +
+  geom_boxplot() +
+  labs(x = "Tipo IES", y = "Puntaje ingles") +
+  theme_minimal()
+
+# Scatter: ingles vs razonamiento
+ggplot(df, aes(x = ingles, y = razon)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Ingles", y = "Razonamiento cuantitativo") +
+  theme_minimal()
+\end{lstlisting}
+
+% --- CORRELACION PEARSON ---
+\subsection{Paso 7: Correlaci\'on de Pearson ($r$)}
+
+\textbf{?`Qu\'e mide?} La fuerza y direcci\'on de la relaci\'on \emph{lineal} entre dos variables.
+
+\textbf{F\'ormula}:
+\[
+r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}
+         {\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^2 \cdot \sum_{i=1}^{n}(y_i - \bar{y})^2}}
+= \frac{S_{xy}}{\sqrt{S_{xx} \cdot S_{yy}}}
+\]
+
+\textbf{Paso 7a}: Calcular las medias.
+\[
+\bar{x} = 156.0, \qquad \bar{y} = \frac{135+148+130+162+158+140+155+138+150+165}{10} = \frac{1481}{10} = 148.1
+\]
+
+\textbf{Paso 7b}: Calcular los productos cruzados $(x_i - \bar{x})(y_i - \bar{y})$:
+
+\begin{center}
+\small
+\begin{tabular}{crrrr}
+\toprule
+$i$ & $x_i - \bar{x}$ & $y_i - \bar{y}$ & $(x_i-\bar{x})^2$ & $(x_i-\bar{x})(y_i-\bar{y})$ \\
+\midrule
+1 & $-14.0$ & $-13.1$ & 196.00 & $+183.40$ \\
+2 & $-1.0$  & $-0.1$  & 1.00   & $+0.10$ \\
+3 & $-18.0$ & $-18.1$ & 324.00 & $+325.80$ \\
+4 & $+11.0$ & $+13.9$ & 121.00 & $+152.90$ \\
+5 & $+15.0$ & $+9.9$  & 225.00 & $+148.50$ \\
+6 & $-7.0$  & $-8.1$  & 49.00  & $+56.70$ \\
+7 & $+4.0$  & $+6.9$  & 16.00  & $+27.60$ \\
+8 & $-11.0$ & $-10.1$ & 121.00 & $+111.10$ \\
+9 & $+2.0$  & $+1.9$  & 4.00   & $+3.80$ \\
+10 & $+19.0$ & $+16.9$ & 361.00 & $+321.10$ \\
+\midrule
+ & & & $S_{xx} = 1418.00$ & $S_{xy} = 1331.00$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Paso 7c}: Calcular $S_{yy} = \sum(y_i - \bar{y})^2$:
+\[
+S_{yy} = 13.1^2 + 0.1^2 + 18.1^2 + \cdots + 16.9^2 = 1266.90
+\]
+
+\textbf{Paso 7d}: Calcular $r$:
+\[
+r = \frac{1331.00}{\sqrt{1418.00 \times 1266.90}} = \frac{1331.00}{\sqrt{1796,418.2}} = \frac{1331.00}{1340.3} = \boxed{0.993}
+\]
+
+\textbf{Interpretaci\'on}:
+\begin{itemize}
+  \item $r = 0.993$ $\Rightarrow$ correlaci\'on positiva \textbf{muy fuerte}
+  \item Escala: $|r| < 0.3$ d\'ebil, $0.3$--$0.7$ moderada, $> 0.7$ fuerte
+  \item Significa que a mayor puntaje en ingl\'es, mayor puntaje en razonamiento cuantitativo
+  \item \textbf{Cuidado}: correlaci\'on $\neq$ causalidad
+\end{itemize}
+
+\begin{lstlisting}
+cor(x, y, method = "pearson")   # 0.993
+\end{lstlisting}
+
+% --- CORRELACION SPEARMAN ---
+\subsection{Paso 8: Correlaci\'on de Spearman ($r_s$)}
+
+\textbf{?`Cu\'ando usar Spearman en vez de Pearson?}
+\begin{itemize}
+  \item Cuando la relaci\'on es \textbf{mon\'otona} pero no necesariamente lineal
+  \item Cuando hay \textbf{outliers} (Spearman es m\'as robusta)
+  \item Cuando las variables son \textbf{ordinales}
+\end{itemize}
+
+\textbf{Procedimiento}: reemplazar los datos por sus \textbf{rangos} y calcular Pearson sobre los rangos.
+
+\textbf{Paso 8a}: Asignar rangos a $x$ y $y$ (1 = menor, 10 = mayor):
+
+\begin{center}
+\small
+\begin{tabular}{crrrr}
+\toprule
+$i$ & $x_i$ & Rango($x_i$) & $y_i$ & Rango($y_i$) \\
+\midrule
+1 & 138 & 1 & 130 & 1 \\
+2 & 142 & 2 & 135 & 2 \\
+3 & 145 & 3 & 138 & 3 \\
+4 & 149 & 4 & 140 & 4 \\
+5 & 155 & 5 & 148 & 5 \\
+6 & 158 & 6 & 150 & 6 \\
+7 & 160 & 7 & 155 & 7 \\
+8 & 167 & 8 & 158 & 8 \\
+9 & 171 & 9 & 162 & 9 \\
+10 & 175 & 10 & 165 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Los rangos coinciden perfectamente $\Rightarrow$ $r_s = 1.0$ (correlaci\'on mon\'otona perfecta).
+
+\textbf{F\'ormula r\'apida} (sin empates):
+\[
+r_s = 1 - \frac{6\sum d_i^2}{n(n^2 - 1)}
+\]
+donde $d_i = \text{Rango}(x_i) - \text{Rango}(y_i)$.
+
+Como todos los $d_i = 0$: $r_s = 1 - 0 = \boxed{1.0}$
+
+\begin{lstlisting}
+cor(x, y, method = "spearman")  # 1.0
+\end{lstlisting}
+
+% --- TABLA DE CONTINGENCIA ---
+\subsection{Paso 9: Tabla de Contingencia}
+
+\textbf{?`Qu\'e es?} Una tabla que cruza dos variables categ\'oricas mostrando frecuencias.
+
+Creemos una variable categ\'orica: ?`el estudiante supera 155 puntos (``Alto'') o no (``Bajo'')?
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{Bajo} ($\leq 155$) & \textbf{Alto} ($> 155$) & \textbf{Total} \\
+\midrule
+\textbf{P\'ublica}  & 4 & 0 & 4 \\
+\textbf{Privada}    & 1 & 5 & 6 \\
+\midrule
+\textbf{Total}      & 5 & 5 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Frecuencias relativas} (dividir cada celda por el total de la fila):
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{Bajo} & \textbf{Alto} \\
+\midrule
+P\'ublica & 100\% & 0\% \\
+Privada   & 16.7\% & 83.3\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Observaci\'on}: el 83.3\% de los estudiantes de IES privada tiene puntaje alto,
+vs.\ 0\% de IES p\'ublica. Hay un patr\'on claro de asociaci\'on.
+
+\begin{lstlisting}
+nivel <- ifelse(x > 155, "Alto", "Bajo")
+tabla <- table(ies, nivel)
+print(tabla)
+prop.table(tabla, margin = 1)  # proporciones por fila
+\end{lstlisting}
+
+% --- PARADOJA DE SIMPSON ---
+\subsection{Paso 10: Paradoja de Simpson}
+
+\textbf{?`Qu\'e es?} Una relaci\'on que cambia de direcci\'on (o desaparece) al controlar
+por una tercera variable.
+
+\textbf{Ejemplo conceptual con nuestros datos}:
+
+Supongamos que al agregar los 10 datos vemos una correlaci\'on d\'ebil entre ingreso
+familiar y puntaje de ingl\'es ($r = 0.15$). Pero al desagregar por tipo de IES:
+\begin{itemize}
+  \item En IES p\'ublicas: $r = 0.80$ (positiva fuerte)
+  \item En IES privadas: $r = 0.75$ (positiva fuerte)
+\end{itemize}
+
+\textbf{?`C\'omo es posible?} Las IES privadas tienen estudiantes con ingresos altos
+\emph{y} puntajes altos. Las p\'ublicas tienen ingresos bajos \emph{y} puntajes bajos.
+Al mezclarlos, la relaci\'on verdadera dentro de cada grupo queda enmascarada por la
+diferencia \emph{entre} grupos.
+
+\textbf{Lecci\'on}: \textbf{siempre} desagregar por variables confusoras potenciales antes de concluir.
+
+\begin{lstlisting}
+# Agregado (puede ser enganoso)
+cor(ingreso, ingles)
+
+# Desagregado (revela la relacion real)
+cor(ingreso[ies == "Pub"], ingles[ies == "Pub"])
+cor(ingreso[ies == "Priv"], ingles[ies == "Priv"])
+\end{lstlisting}
+
+% ============================================================================
+\section{S03: Probabilidad, Distribuci\'on Normal y Muestreo}
+% ============================================================================
+
+% --- Z SCORES ---
+\subsection{Paso 11: $z$-scores (puntajes estandarizados)}
+
+\textbf{?`Qu\'e es un $z$-score?} Cu\'antas desviaciones est\'andar un dato est\'a por encima
+o por debajo de la media.
+
+\textbf{F\'ormula}:
+\[
+z_i = \frac{x_i - \bar{x}}{s}
+\]
+
+\textbf{C\'alculo} para cada dato (con $\bar{x} = 156.0$ y $s = 12.55$):
+
+\begin{center}
+\small
+\begin{tabular}{crrrl}
+\toprule
+$i$ & $x_i$ & $x_i - \bar{x}$ & $z_i$ & Interpretaci\'on \\
+\midrule
+1 & 142 & $-14.0$ & $-1.12$ & 1.12 SD bajo la media \\
+2 & 155 & $-1.0$  & $-0.08$ & Pr\'acticamente en la media \\
+3 & 138 & $-18.0$ & $-1.43$ & 1.43 SD bajo la media \\
+4 & 167 & $+11.0$ & $+0.88$ & 0.88 SD sobre la media \\
+5 & 171 & $+15.0$ & $+1.20$ & 1.20 SD sobre la media \\
+6 & 149 & $-7.0$  & $-0.56$ & Ligeramente bajo la media \\
+7 & 160 & $+4.0$  & $+0.32$ & Ligeramente sobre la media \\
+8 & 145 & $-11.0$ & $-0.88$ & 0.88 SD bajo la media \\
+9 & 158 & $+2.0$  & $+0.16$ & Pr\'acticamente en la media \\
+10 & 175 & $+19.0$ & $+1.51$ & 1.51 SD sobre la media \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Regla emp\'irica} (si los datos son aprox.\ normales):
+\begin{itemize}
+  \item $\approx 68\%$ de los datos tienen $|z| \leq 1$
+  \item $\approx 95\%$ de los datos tienen $|z| \leq 2$
+  \item $\approx 99.7\%$ de los datos tienen $|z| \leq 3$
+\end{itemize}
+
+Ning\'un dato tiene $|z| > 2$ $\Rightarrow$ no hay outliers seg\'un la regla de 2 SD.
+
+\begin{lstlisting}
+z_scores <- (x - mean(x)) / sd(x)
+round(z_scores, 2)
+\end{lstlisting}
+
+% --- DISTRIBUCION NORMAL ---
+\subsection{Paso 12: Probabilidades con la Distribuci\'on Normal}
+
+\textbf{Supuesto}: asumimos que \texttt{MOD\_INGLES\_PUNT} sigue una distribuci\'on normal
+con $\mu = 156$ y $\sigma = 12.55$.
+
+\textbf{Pregunta 1}: ?`qu\'e proporci\'on de estudiantes obtiene m\'as de 170 puntos?
+
+\textbf{Paso 12a}: Estandarizar:
+\[
+z = \frac{170 - 156}{12.55} = \frac{14}{12.55} = 1.12
+\]
+
+\textbf{Paso 12b}: Buscar $P(Z > 1.12) = 1 - P(Z \leq 1.12)$:
+\[
+P(Z > 1.12) = 1 - \Phi(1.12) = 1 - 0.8686 = \boxed{0.1314}
+\]
+
+Aproximadamente \textbf{13.1\%} de los estudiantes supera 170 puntos.
+
+\begin{lstlisting}
+# P(X > 170)
+1 - pnorm(170, mean = 156, sd = 12.55)  # 0.1314
+# equivalente:
+pnorm(170, mean = 156, sd = 12.55, lower.tail = FALSE)
+\end{lstlisting}
+
+\textbf{Pregunta 2}: ?`qu\'e proporci\'on obtiene entre 140 y 165?
+
+\[
+P(140 < X < 165) = P\!\left(\frac{140-156}{12.55} < Z < \frac{165-156}{12.55}\right)
+= P(-1.27 < Z < 0.72)
+\]
+\[
+= \Phi(0.72) - \Phi(-1.27) = 0.7642 - 0.1020 = \boxed{0.6622}
+\]
+
+Aproximadamente \textbf{66.2\%} de los estudiantes est\'an entre 140 y 165 puntos.
+
+\begin{lstlisting}
+pnorm(165, 156, 12.55) - pnorm(140, 156, 12.55)  # 0.6622
+\end{lstlisting}
+
+\textbf{Pregunta 3}: ?`qu\'e puntaje deja por debajo al 90\% de los estudiantes?
+
+Buscamos $x$ tal que $P(X \leq x) = 0.90$:
+\[
+x = \mu + z_{0.90} \cdot \sigma = 156 + 1.282 \times 12.55 = 156 + 16.09 = \boxed{172.1}
+\]
+
+\begin{lstlisting}
+qnorm(0.90, mean = 156, sd = 12.55)  # 172.08
+\end{lstlisting}
+
+\textbf{Resumen de funciones R}:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Funci\'on} & \textbf{Calcula} & \textbf{Ejemplo} \\
+\midrule
+\texttt{pnorm(x, $\mu$, $\sigma$)} & $P(X \leq x)$ & \texttt{pnorm(170, 156, 12.55)} \\
+\texttt{qnorm(p, $\mu$, $\sigma$)} & cuantil (valor de $x$) & \texttt{qnorm(0.90, 156, 12.55)} \\
+\texttt{dnorm(x, $\mu$, $\sigma$)} & densidad $f(x)$ & Para graficar la curva \\
+\texttt{rnorm(n, $\mu$, $\sigma$)} & generar datos aleatorios & \texttt{rnorm(1000, 156, 12.55)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% --- TCL ---
+\subsection{Paso 13: Teorema Central del L\'imite (TCL)}
+
+\textbf{Enunciado}: Si tomamos muestras aleatorias de tama\~no $n$ de \emph{cualquier}
+poblaci\'on con media $\mu$ y varianza $\sigma^2$, entonces cuando $n$ es suficientemente grande:
+
+\[
+\boxed{\bar{X} \sim N\!\left(\mu, \;\frac{\sigma^2}{n}\right)} \quad \text{aproximadamente}
+\]
+
+O equivalentemente:
+\[
+Z = \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \sim N(0, 1) \quad \text{aproximadamente}
+\]
+
+\textbf{?`Por qu\'e importa?}
+\begin{enumerate}
+  \item No importa la forma de la poblaci\'on original (puede ser sesgada, bimodal, etc.)
+  \item La distribuci\'on de $\bar{X}$ siempre se aproxima a una normal
+  \item Cuanto mayor $n$, mejor la aproximaci\'on
+  \item Esto fundamenta \emph{toda} la inferencia estad\'istica (IC, pruebas de hip\'otesis)
+\end{enumerate}
+
+\textbf{Ejemplo con nuestros 10 datos}: si nuestra muestra de $n = 10$ proviene
+de una poblaci\'on con $\mu = 156$ y $\sigma = 12.55$:
+
+\textbf{Error est\'andar de $\bar{X}$}:
+\[
+\text{SE} = \frac{\sigma}{\sqrt{n}} = \frac{12.55}{\sqrt{10}} = \frac{12.55}{3.162} = \boxed{3.97}
+\]
+
+\textbf{Interpretaci\'on}: si repiti\'eramos el muestreo muchas veces con $n=10$,
+las medias muestrales tendr\'ian una desviaci\'on est\'andar de $\approx 3.97$ puntos alrededor de $\mu$.
+
+\textbf{Comparaci\'on del error est\'andar para diferentes $n$}:
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+$n$ & $\text{SE} = \sigma/\sqrt{n}$ & Interpretaci\'on \\
+\midrule
+10  & 3.97 & Mucha incertidumbre \\
+30  & 2.29 & Incertidumbre moderada \\
+100 & 1.26 & Buena precisi\'on \\
+500 & 0.56 & Alta precisi\'on \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Observaci\'on clave}: duplicar la precisi\'on (reducir SE a la mitad) requiere
+\textbf{cuadruplicar} $n$ (porque $\text{SE} \propto 1/\sqrt{n}$).
+
+\begin{lstlisting}
+# Simulacion del TCL con datos ICFES reales
+set.seed(2026)
+poblacion <- saber_pro$MOD_INGLES_PUNT[!is.na(saber_pro$MOD_INGLES_PUNT)]
+mu <- mean(poblacion);  sigma <- sd(poblacion)
+
+# 2000 muestras de tamano n = 30
+medias_30 <- replicate(2000, mean(sample(poblacion, 30)))
+
+# Verificar TCL
+mean(medias_30)          # cercano a mu
+sd(medias_30)            # cercano a sigma/sqrt(30)
+sigma / sqrt(30)         # SE teorico
+
+# Graficar
+hist(medias_30, breaks = 40, probability = TRUE,
+     main = "Distribucion de medias muestrales (n=30)",
+     xlab = expression(bar(X)))
+curve(dnorm(x, mu, sigma/sqrt(30)), add = TRUE,
+      col = "red", lwd = 2)
+\end{lstlisting}
+
+% --- DISTRIBUCIONES MUESTRALES ---
+\subsection{Paso 14: Distribuciones Muestrales ($\chi^2$, $t$, $F$)}
+
+\textbf{?`De d\'onde vienen y cu\'ando aparecen?}
+
+\begin{center}
+\begin{tabular}{p{2cm}p{4.5cm}p{5cm}}
+\toprule
+\textbf{Dist.} & \textbf{Definici\'on} & \textbf{Aparece cuando\ldots} \\
+\midrule
+$\chi^2(k)$ &
+  Si $Z_1, \ldots, Z_k \overset{iid}{\sim} N(0,1)$, entonces
+  $\sum Z_i^2 \sim \chi^2(k)$ &
+  Estimamos varianzas: $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$ \\[6pt]
+$t(k)$ &
+  Si $Z \sim N(0,1)$ y $V \sim \chi^2(k)$ indep., entonces
+  $\frac{Z}{\sqrt{V/k}} \sim t(k)$ &
+  Estimamos $\mu$ con $\sigma$ desconocida: $\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$ \\[6pt]
+$F(k_1,k_2)$ &
+  Si $V_1 \sim \chi^2(k_1)$ y $V_2 \sim \chi^2(k_2)$ indep., entonces
+  $\frac{V_1/k_1}{V_2/k_2} \sim F(k_1,k_2)$ &
+  Comparamos varianzas o medias de varios grupos (prueba $F$ en regresi\'on) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}
+# Valores criticos en R
+qt(0.975, df = 9)       # t con 9 gl (para n=10)
+qchisq(0.975, df = 9)   # chi-cuadrado con 9 gl
+qf(0.95, df1 = 2, df2 = 7)  # F con 2 y 7 gl
+\end{lstlisting}
+
+% ============================================================================
+\section{Resumen: Mapa de Decisiones}
+% ============================================================================
+
+\begin{center}
+\small
+\begin{tabular}{p{4cm}p{3cm}p{5.5cm}}
+\toprule
+\textbf{Quiero\ldots} & \textbf{Herramienta} & \textbf{Funci\'on R} \\
+\midrule
+Describir el centro & Media, mediana & \texttt{mean()}, \texttt{median()} \\
+Describir la dispersi\'on & SD, varianza, IQR & \texttt{sd()}, \texttt{var()}, \texttt{IQR()} \\
+Describir la forma & Asimetr\'ia, curtosis & \texttt{skewness()}, \texttt{kurtosis()} \\
+Detectar outliers & IQR $\times$ 1.5, $z$-score & \texttt{boxplot.stats()\$out} \\
+Ver la distribuci\'on & Histograma, KDE & \texttt{geom\_histogram()}, \texttt{geom\_density()} \\
+Comparar grupos & Box plot & \texttt{geom\_boxplot()} \\
+Medir relaci\'on lineal & Pearson $r$ & \texttt{cor(x, y, method="pearson")} \\
+Medir relaci\'on mon\'otona & Spearman $r_s$ & \texttt{cor(x, y, method="spearman")} \\
+Cruzar 2 categ\'oricas & Tabla de contingencia & \texttt{table()}, \texttt{prop.table()} \\
+Calcular $P(X \leq x)$ & Normal + \texttt{pnorm} & \texttt{pnorm(x, mu, sigma)} \\
+Encontrar cuantil & Normal + \texttt{qnorm} & \texttt{qnorm(p, mu, sigma)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{12pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Pontificia Universidad Javeriana $\cdot$
+  Facultad de Ciencias Econ\'omicas y Administrativas $\cdot$ 2026-II}
+\end{center}
+
+\end{document}

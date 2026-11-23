@@ -1,0 +1,445 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% === Preambulo (copia de sesiones/preambulo_beamer.tex) =======================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, arrows.meta, calc}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{array}
+
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{footline}{%
+  \hfill\usebeamerfont{footline}\insertframenumber/\inserttotalframenumber\hspace{1em}\vspace{0.5em}%
+}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% --- Colores institucionales ---
+\definecolor{javeriana}{RGB}{0, 62, 105}
+\definecolor{javerianalight}{RGB}{0, 105, 170}
+\definecolor{dorado}{RGB}{180, 130, 20}
+\definecolor{verdeok}{RGB}{25, 115, 55}
+\definecolor{rojoalerta}{RGB}{175, 30, 30}
+\definecolor{grisclaro}{RGB}{244, 246, 249}
+
+\setbeamercolor{title}{fg=javeriana}
+\setbeamercolor{frametitle}{fg=javeriana}
+\setbeamercolor{structure}{fg=javeriana}
+\setbeamercolor{block title}{fg=white, bg=javeriana!85}
+\setbeamercolor{block body}{bg=javeriana!5}
+\setbeamercolor{block title alerted}{fg=white, bg=rojoalerta}
+\setbeamercolor{block body alerted}{bg=rojoalerta!6}
+\setbeamercolor{block title example}{fg=white, bg=verdeok}
+\setbeamercolor{block body example}{bg=verdeok!6}
+\setbeamercolor{item}{fg=javeriana}
+
+\setbeamerfont{title}{series=\bfseries, size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries}
+
+% --- Portada ---
+\title{Proyecto Integrador --- Fase 3 (Entrega Final)}
+\subtitle{De los Datos al Debate P\'ublico: Video-Podcast de Investigaci\'on Estad\'istica}
+\author{Prof.\ Jaime Polanco Jim\'enez}
+\institute{Pontificia Universidad Javeriana\\
+  Facultad de Ciencias Econ\'omicas y Administrativas --- Estad\'istica 2026-II}
+\date{Fecha l\'imite de entrega: Jueves 26 de noviembre de 2026, 11:59 p.m.}
+
+\begin{document}
+\decimalpoint
+
+% ============================================================================
+% SLIDE 1: PORTADA
+% ============================================================================
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ============================================================================
+% SLIDE 2: POR QUE UN VIDEO-PODCAST
+% ============================================================================
+\begin{frame}{?`Por qu\'e cerramos el proyecto con un Video-Podcast?}
+  \begin{columns}[T]
+    \begin{column}{0.54\textwidth}
+      \textbf{Un cambio de formato, NO de exigencia:}
+      \begin{itemize}\setlength{\itemsep}{6pt}
+        \item Sus 7 proyectos abordan \textbf{debates reales de pol\'itica p\'ublica} en Colombia (desigualdad territorial, estrato, brecha digital, g\'enero, movilidad).
+        \item En el mundo profesional, la evidencia solo genera impacto cuando sabemos \textbf{comunicarla con rigor y narrativa} (estilo \textit{Freakonomics} o \textit{Planet Money}).
+        \item Conversar con datos demuestra \textbf{comprensi\'on genuina}: se nota de inmediato qui\'en domina su modelo y qui\'en solo lee un guion.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{block}{Peso en la Evaluaci\'on}
+        \centering
+        {\Large \textbf{45\%}} del Proyecto Integrador\\[4pt]
+        \small Integra Fase~1 (EDA), Fase~2 (IC y Pruebas) y \textbf{Fase~3 (Regresi\'on OLS y Diagn\'osticos)}.
+      \end{block}
+      \vspace{6pt}
+      \begin{alertblock}{Regla de Oro}
+        \small El formato es conversacional y audiovisual, pero \textbf{la profundidad estad\'istica no se negocia}: sin regresiones rigurosas ni diagn\'osticos, el podcast no aprueba.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 3: LOGISTICA, PLAZO Y ENTREGABLES
+% ============================================================================
+\begin{frame}{Reglas de Entrega: Fecha, YouTube y Duraci\'on}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Plazo y Canal de Entrega}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3pt}
+          \item \textbf{Fecha l\'imite:} Jueves \textbf{26 de noviembre de 2026}, antes de la medianoche (\textbf{11:59 p.m.}, hora Colombia).
+          \item \textbf{Plataforma:} Video cargado en \textbf{YouTube}.
+          \item \textbf{Visibilidad:} \textbf{P\'ublico} o \textbf{No listado (\textit{Unlisted})}.
+          \item \textbf{Env\'io (Campus Virtual):} Subir en \textbf{Campus Virtual} el link de YouTube verificado + el script reproducible \texttt{fase3\_grupoX.R} antes de las 11:59 p.m.
+        \end{itemize}
+      \end{block}
+      \vspace{4pt}
+      \begin{alertblock}{Atenci\'on con la privacidad}
+        \footnotesize \textbf{NUNCA} suban el video en modo \textbf{Privado}. Si el profesor no puede abrirlo, la nota ser\'a \textbf{0.0}. Prueben el link en ventana de inc\'ognito.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \textbf{Duraci\'on seg\'un alcance del grupo:}
+      \vspace{3pt}
+      \renewcommand{\arraystretch}{1.22}
+      \setlength{\tabcolsep}{4.5pt}
+      \begin{center}
+      \footnotesize
+      \begin{tabular}{l c c}
+        \toprule
+        \textbf{Alcance (Grupos)} & \textbf{Pers.} & \textbf{Duraci\'on} \\
+        \midrule
+        Acotado (G5, G7) & 3 & \textbf{10--13 min} \\
+        Medio (G1, G3) & 4 & \textbf{12--15 min} \\
+        Ambicioso (G2, G4, G6) & 5 & \textbf{15--18 min} \\
+        \bottomrule
+      \end{tabular}
+      \end{center}
+      \renewcommand{\arraystretch}{1.0}
+      \vspace{4pt}
+      {\small\textbf{Recomendaciones t\'ecnicas:}}
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \footnotesize
+        \item Subir a YouTube con \textbf{2 horas de margen} (procesamiento HD).
+        \item Resoluci\'on m\'inima \textbf{720p/1080p} para legibilidad de tablas y gr\'aficos.
+        \item Todos los integrantes visibles en c\'amara.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 4: LOS 7 EPISODIOS DEL SEMESTRE
+% ============================================================================
+\begin{frame}{Los 7 Episodios del Semestre (Cruce Saber~11 $\rightarrow$ Saber~Pro)}
+  \renewcommand{\arraystretch}{1.18}
+  \begin{center}
+  \scriptsize
+  \begin{tabular}{c l >{\raggedright\arraybackslash}p{7.4cm} c}
+    \toprule
+    \textbf{Gr.} & \textbf{Tema del Episodio} & \textbf{Pregunta Central de Investigaci\'on} & \textbf{Alcance} \\
+    \midrule
+    \textbf{1} & Meritocracia territorial & ?`Los mejores rurales de Cauca/Choc\'o/Nari\~no superan a los m\'as bajos privados de Bogot\'a en Saber~Pro? & Medio (4) \\
+    \textbf{2} & La trampa del estrato & ?`Un estrato~1 con igual Saber~11 alcanza el mismo Saber~Pro que un estrato~5? & Ambicioso (5) \\
+    \textbf{3} & Brecha digital & ?`Quienes no ten\'ian internet ni computador cierran o mantienen la brecha en Saber~Pro? & Medio (4) \\
+    \textbf{4} & G\'enero y econom\'ia & ?`Las mujeres en econom\'ia/administraci\'on convergen en Saber~Pro o la brecha persiste? & Ambicioso (5) \\
+    \textbf{5} & P\'ublica vs.\ privada & ?`Las IES oficiales agregan m\'as valor ($\Delta = \text{SBPro}_z - \text{SB11}_z$) que las privadas? & Acotado (3) \\
+    \textbf{6} & Capital cultural & ?`Los hijos de padres sin educaci\'on superior logran cerrar la brecha en Saber~Pro? & Ambicioso (5) \\
+    \textbf{7} & Centro vs.\ periferia & ?`Estudiantes de Choc\'o/Guain\'ia/Vaup\'es/Amazonas cierran distancia con Bogot\'a/Antioquia? & Acotado (3) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \renewcommand{\arraystretch}{1.0}
+  \vspace{2pt}
+  {\footnotesize \textit{Sugerencia:} Pongan un \textbf{t\'itulo period\'istico atractivo} a su episodio en YouTube y una descripci\'on breve con integrantes y pregunta central.}
+\end{frame}
+
+% ============================================================================
+% SLIDE 5: ARQUITECTURA DEL EPISODIO EN 5 ACTOS
+% ============================================================================
+\begin{frame}{Arquitectura Sugerida del Episodio (Guion en 5 Actos)}
+  \begin{center}
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    box/.style={draw=javeriana, fill=javeriana!7, rounded corners=4pt, text width=2.45cm,
+                minimum height=2.5cm, align=center, font=\footnotesize, inner sep=5pt,
+                anchor=north},
+    hdr/.style={fill=javeriana, text=white, rounded corners=3pt, font=\scriptsize\bfseries,
+                minimum width=2.55cm, minimum height=0.55cm, align=center, inner sep=3pt,
+                anchor=south},
+    arr/.style={->, >=Stealth, thick, javeriana}
+  ]
+    \node[hdr] (h1) at (0, 0.08) {Acto 1 ($\sim$15\%)};
+    \node[box] (a1) at (0, 0) {\textbf{Problem\'atica}\\[4pt] ?`Por qu\'e importa en Colombia? Pregunta central e hip\'otesis.};
+
+    \node[hdr] (h2) at (2.95, 0.08) {Acto 2 ($\sim$15\%)};
+    \node[box] (a2) at (2.95, 0) {\textbf{Datos y F1--F2}\\[4pt] Cruce SB11--SBPro, $n$, hallazgos clave de EDA, IC y pruebas.};
+
+    \node[hdr, fill=dorado] (h3) at (5.9, 0.08) {Acto 3 ($\sim$35\%)};
+    \node[box, draw=dorado, fill=dorado!10, line width=1pt] (a3) at (5.9, 0) {\textbf{Modelos OLS}\\[4pt] Regresi\'on m\'ultiple, $\hat{\beta}$, OVB, $R^2$ aj., AIC/BIC e interacciones.};
+
+    \node[hdr] (h4) at (8.85, 0.08) {Acto 4 ($\sim$20\%)};
+    \node[box] (a4) at (8.85, 0) {\textbf{Diagn\'osticos}\\[4pt] VIF, residuos, Breusch-Pagan, Cook's~D y l\'imite causal.};
+
+    \node[hdr] (h5) at (11.8, 0.08) {Acto 5 ($\sim$15\%)};
+    \node[box] (a5) at (11.8, 0) {\textbf{Veredicto}\\[4pt] Respuesta directa a la pregunta, impacto y pol\'itica p\'ublica.};
+
+    \draw[arr] (a1.east) -- (a2.west);
+    \draw[arr] (a2.east) -- (a3.west);
+    \draw[arr] (a3.east) -- (a4.west);
+    \draw[arr] (a4.east) -- (a5.west);
+  \end{tikzpicture}%
+  }
+  \end{center}
+  \vspace{6pt}
+  \begin{block}{Claves de Ritmo Conversacional}
+    \small \textbf{No dividan el podcast en 5 mon\'ologos pegados.} Usen formato de mesa redonda: un integrante hace preguntas cr\'iticas (``?`pero eso no podr\'ia ser sesgo por variable omitida?'') y otro responde con la evidencia del gr\'afico o la tabla en pantalla.
+  \end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE 6: CONTENIDO ESTADISTICO OBLIGATORIO (PARTE 1)
+% ============================================================================
+\begin{frame}{Profundidad Estad\'istica Obligatoria (1/2): Hip\'otesis y OLS}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{1. Problem\'atica, Datos e Hip\'otesis}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3pt}
+          \item Explicar \textbf{qu\'e brecha} investigan y por qu\'e importa en Colombia.
+          \item Resumir el cruce \textbf{Saber~11 $\rightarrow$ Saber~Pro} ($n$, filtros, variable $Y$ y predictores).
+          \item Retomar \textbf{Fase~2}: hip\'otesis ($H_0$ vs.\ $H_1$), IC al 95\%, $p$-valor y tama\~no del efecto ($d$ de Cohen o $V$ de Cram\'er).
+          \item \textbf{Foco:} No repetir toda F1/F2; solo los 2--3 hallazgos que motivan el modelo OLS.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{2. Modelos OLS M\'ultiples (El N\'ucleo)}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3pt}
+          \item Comparar \textbf{al menos 2 modelos OLS}:
+            \begin{itemize}\setlength{\itemsep}{1pt}
+              \footnotesize
+              \item \textit{Modelo base:} solo variable de origen (sin Saber~11).
+              \item \textit{Modelo completo:} con \texttt{PUNT\_GLOBAL\_sb11} y controles.
+            \end{itemize}
+          \item \textbf{Grupos de 5 (G2, G4, G6):} incluir e interpretar el \textbf{t\'ermino de interacci\'on} (HTE).
+          \item Interpretar cada $\hat{\beta}$ en \textbf{puntos de Saber~Pro}, con EE, IC 95\% y $p$-valor.
+          \item Comparar modelos: \textbf{$R^2$, $R^2$ ajustado, $F$, AIC y BIC}.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 7: CONTENIDO ESTADISTICO OBLIGATORIO (PARTE 2)
+% ============================================================================
+\begin{frame}{Profundidad Estad\'istica Obligatoria (2/2): OVB, Diagn\'osticos y Causalidad}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{3. OVB y Diagn\'osticos de Regresi\'on}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3.5pt}
+          \item \textbf{OVB:} ?`C\'omo cambia el coeficiente de su variable central al controlar por Saber~11? ?`Se reduce, persiste o cambia de signo?
+          \item \textbf{Multicolinealidad (VIF):} reportar si alguna variable supera $\text{VIF} > 5$ y qu\'e decidieron.
+          \item \textbf{Residuos y Heterocedasticidad:} mostrar \textit{Residuals vs.\ Fitted} / Q--Q plot, test \textbf{Breusch-Pagan} y errores robustos (HC1) si aplica.
+          \item \textbf{Puntos influyentes:} revisar Distancia de Cook (\textit{Cook's D}).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \begin{alertblock}{4. Honestidad Causal (Obligatorio)}
+        \small El cruce Saber~11 $\rightarrow$ Saber~Pro son \textbf{datos observacionales}, \textbf{NO} un RCT.
+        \begin{itemize}\setlength{\itemsep}{3pt}
+          \footnotesize
+          \item Discutan qu\'e \textbf{inobservables} siguen omitidos (motivaci\'on, calidad docente, redes, recursos).
+          \item Hablen de \textbf{asociaci\'on condicional} o brecha ajustada, \textbf{nunca} digan ``probamos que $X$ causa $Y$''.
+          \item Reflexionen sobre \textbf{validez externa} y sesgo de selecci\'on (solo observamos a quienes llegan a Saber~Pro).
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 8: ESTANDAR AUDIOVISUAL Y PARTICIPACION
+% ============================================================================
+\begin{frame}{Est\'andar Audiovisual: C\'omo Lograr Impacto Real}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Din\'amica del equipo en pantalla:}
+      \small
+      \begin{itemize}\setlength{\itemsep}{4pt}
+        \item \textbf{100\% del grupo participa:} todos visibles en c\'amara con tiempo equitativo.
+        \item \textbf{Formato conversacional:} definan un \textit{host}/moderador y panelistas que debatan los hallazgos.
+        \item \textbf{Sin lectura rob\'otica:} usen escaleta o puntos clave, pero hablen mirando a la c\'amara.
+        \item \textbf{Audio limpio:} grabar en espacio silencioso y probar micr\'ofonos antes de iniciar.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{Apoyos Visuales Obligatorios (m\'in.\ 4)}
+        \footnotesize Mientras conversan, proyecten en pantalla (o inserten en edici\'on):
+        \begin{enumerate}\setlength{\itemsep}{2.5pt}
+          \footnotesize
+          \item \textbf{Gr\'afico estrella} de EDA o Fase~2 (brecha inicial / IC).
+          \item \textbf{Tabla comparativa de OLS} (Modelo base vs.\ Modelo completo).
+          \item \textbf{Gr\'afico de resultados} (coeficientes con IC 95\%, predicciones o interacci\'on).
+          \item \textbf{Evidencia de diagn\'osticos} (residuos, VIF o Breusch-Pagan).
+        \end{enumerate}
+      \end{exampleblock}
+      \vspace{3pt}
+      {\footnotesize \textbf{Herramientas gratuitas:} OBS Studio, Zoom/Meet (vista galer\'ia + compartir pantalla), StreamYard, Canva o CapCut.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 9: LO QUE SI VS LO QUE NO
+% ============================================================================
+\begin{frame}{Lo Que S\'I Queremos Ver vs.\ Lo Que Deben Evitar}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{S\'I --- Podcast de Alto Impacto}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3.5pt}
+          \item Arrancar con un dato contundente o dilema real de Colombia que atrape al oyente.
+          \item Traducir coeficientes a ejemplos concretos (``dos estudiantes con igual Saber~11...'').
+          \item Debatir entre ustedes (``?`y si el efecto cae al controlar por estrato?'').
+          \item Gr\'aficos limpios con fuentes grandes y t\'itulos claros (no capturas de consola).
+          \item Cerrar con una recomendaci\'on concreta y realista de pol\'itica educativa.
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{NO --- Errores Que Bajan la Nota}
+        \small
+        \begin{itemize}\setlength{\itemsep}{3.5pt}
+          \item Leer un guion de IA con voz mon\'otona y sin dominar las cifras.
+          \item Hablar 10 minutos de opini\'on y dedicar 30 segundos a las regresiones.
+          \item Pegar \texttt{summary(lm())} crudo e ilegible en pantalla sin explicarlo.
+          \item Confundir correlaci\'on con causalidad o decir que $R^2$ bajo ``invalida el modelo''.
+          \item Dejar a alguien sin hablar o subir el video en \textbf{Privado} a las 11:58 p.m.
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 10: RUBRICA DE EVALUACION POR NIVELES
+% ============================================================================
+\begin{frame}{?`C\'omo Se Calificar\'a? --- R\'ubrica por Niveles (45\% del Proyecto)}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{center}
+  \scriptsize
+  \begin{tabular}{>{\raggedright\arraybackslash}p{2.1cm} c >{\raggedright\arraybackslash}p{3.45cm} >{\raggedright\arraybackslash}p{3.1cm} >{\raggedright\arraybackslash}p{2.6cm}}
+    \toprule
+    \textbf{Dimensi\'on} & \textbf{Peso} & \textbf{Sobresaliente (4.5--5.0)} & \textbf{Aceptable (3.0--3.9)} & \textbf{Insuficiente ($< 3.0$)} \\
+    \midrule
+    \textbf{1. Rigor Estad\'istico y OLS} & \textbf{40\%} (2.0) &
+      Hip\'otesis + $\ge 2$ OLS (interacci\'on si G2/G4/G6); interpreta $\hat{\beta}$, EE, IC, $p$, $R^2$ aj., AIC/BIC, OVB; diagn\'osticos (VIF, BP, Cook's~D); l\'imite causal riguroso. &
+      Corre OLS y reporta coeficientes, pero interpretaci\'on mec\'anica, diagn\'osticos incompletos o poca discusi\'on de OVB. &
+      Sin regresi\'on m\'ultiple, interpreta mal $\hat{\beta}$, omite diagn\'osticos o vende causalidad falsa. \\[4pt]
+    \textbf{2. Narrativa e Impacto} & \textbf{25\%} (1.25) &
+      Problem\'atica potente, hilo claro de principio a fin, traduce cifras a debate real y pol\'itica educativa en Colombia. &
+      Presenta resultados correctos pero desconectados, tono plano o cierre superficial sin impacto pr\'actico. &
+      Pura opini\'on sin datos, sin hilo conductor o no responde su pregunta central. \\[4pt]
+    \textbf{3. Dominio y Participaci\'on} & \textbf{20\%} (1.0) &
+      Conversaci\'on natural sin lectura rob\'otica; 100\% del grupo en c\'amara con tiempo equitativo y dominio conceptual. &
+      Todos hablan pero se nota lectura de guion o participaci\'on desigual entre integrantes. &
+      Lectura literal sin comprensi\'on o integrantes ausentes / sin participar. \\[4pt]
+    \textbf{4. Producci\'on y C\'odigo R} & \textbf{15\%} (0.75) &
+      Audio/video n\'itidos, $\ge 4$ apoyos visuales legibles, cumple duraci\'on, link p\'ublico/no listado + \texttt{fase3\_grupoX.R} reproducible. &
+      Audio o gr\'aficos mejorables, leve desv\'io de duraci\'on o script R con ajustes menores. &
+      Sin apoyos visuales, capturas ilegibles, falta script R o video \textbf{Privado} (0.0). \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \renewcommand{\arraystretch}{1.0}
+\end{frame}
+
+% ============================================================================
+% SLIDE 11: LOS 20 ITEMS EXACTOS QUE CALIFICARA EL PROFESOR
+% ============================================================================
+\begin{frame}{Transparencia Total: Los 20 \'Items Exactos (0.25 pts c/u = 5.0)}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\small Bloque A: Rigor Estad\'istico (8 = 2.0 pts)}
+        \scriptsize
+        \begin{enumerate}\setlength{\itemsep}{2pt}
+          \item Retoma hip\'otesis ($H_0/H_1$), IC y pruebas clave de Fase~2.
+          \item Define muestra ($n$), variable $Y$ y predictores del cruce.
+          \item Estima y compara $\ge 2$ modelos OLS (base vs.\ con Saber~11).
+          \item Interpreta $\hat{\beta}$ en puntos de Saber~Pro (EE, IC 95\%, $p$-valor).
+          \item Analiza OVB al controlar por Saber~11 e interacci\'on (G2/G4/G6).
+          \item Compara ajuste con $R^2$, $R^2$ ajustado, prueba $F$, AIC y BIC.
+          \item Presenta diagn\'osticos: VIF, residuos/Breusch-Pagan y Cook's~D.
+          \item Reconoce l\'imite causal (observacional, no RCT) e inobservables.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\small Bloque B: Narrativa e Impacto (5 = 1.25 pts)}
+        \scriptsize
+        \begin{enumerate}\setcounter{enumi}{8}\setlength{\itemsep}{1pt}
+          \item Gancho inicial y relevancia del problema en Colombia.
+          \item Hilo narrativo claro conectando F1 $\rightarrow$ F2 $\rightarrow$ F3.
+          \item Traduce coeficientes a ejemplos concretos y comprensibles.
+          \item Respuesta directa y honesta a la pregunta central.
+          \item Recomendaci\'on de pol\'itica educativa y validez externa.
+        \end{enumerate}
+      \end{block}
+      \vspace{1pt}
+      \begin{block}{\small Bloques C--D: Dominio y Producci\'on (7 = 1.75)}
+        \scriptsize
+        \begin{enumerate}\setcounter{enumi}{13}\setlength{\itemsep}{1pt}
+          \item 100\% del grupo en c\'amara con tiempo equitativo.
+          \item Conversaci\'on fluida y debate cr\'itico (sin lectura rob\'otica).
+          \item Precisi\'on en lenguaje estad\'istico y dominio conceptual.
+          \item Distingue significancia estad\'istica de relevancia pr\'actica.
+          \item M\'inimo 4 apoyos visuales limpios y legibles en pantalla.
+          \item Audio claro, video HD ($\ge 720$p) y duraci\'on en rango.
+          \item Link YouTube accesible + script \texttt{fase3\_grupoX.R} funcional.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE 12: CHECKLIST FINAL ANTES DE ENVIAR
+% ============================================================================
+\begin{frame}{Checklist Final --- Jueves 26 de Noviembre (11:59 p.m.)}
+  \begin{block}{Verifiquen estos 7 puntos antes de enviar el enlace}
+    \small
+    \begin{enumerate}\setlength{\itemsep}{3.5pt}
+      \item[$\square$] \textbf{Rigor completo:} ?`Explicamos problem\'atica, hip\'otesis, modelos OLS (base vs.\ completo), OVB, $R^2$ aj./AIC-BIC, diagn\'osticos (VIF, Breusch-Pagan, residuos) y l\'imites causales?
+      \item[$\square$] \textbf{Apoyos visuales:} ?`Se ven n\'itidamente en pantalla al menos 4 tablas/gr\'aficos limpios?
+      \item[$\square$] \textbf{Equipo completo:} ?`Todos aparecen en c\'amara y hablan con tiempo equilibrado?
+      \item[$\square$] \textbf{Duraci\'on:} ?`Cumple el rango de nuestro alcance (10--13 / 12--15 / 15--18 min)?
+      \item[$\square$] \textbf{YouTube listo:} ?`Subimos el video con $\ge 2$ horas de margen en modo \textbf{P\'ublico} o \textbf{No listado}?
+      \item[$\square$] \textbf{Prueba de inc\'ognito:} ?`El link reproduce audio y video HD sin iniciar sesi\'on?
+      \item[$\square$] \textbf{Env\'io completo:} ?`Cargamos en \textbf{Campus Virtual} el link de YouTube + \texttt{fase3\_grupoX.R} antes de las \textbf{11:59 p.m.}?
+    \end{enumerate}
+  \end{block}
+  \vspace{4pt}
+  \centering
+  {\normalsize\textbf{\textcolor{javeriana}{!`\'Exitos con sus episodios! Hagan que los datos cuenten una gran historia.}}}
+\end{frame}
+
+\end{document}

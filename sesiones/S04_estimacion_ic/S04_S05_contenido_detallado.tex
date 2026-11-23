@@ -1,0 +1,808 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, arrows.meta}
+
+\definecolor{codigobg}{RGB}{245,245,245}
+\definecolor{keyword}{RGB}{0,100,150}
+\definecolor{comentario}{RGB}{100,100,100}
+\definecolor{string}{RGB}{180,60,30}
+\lstset{language=R, basicstyle=\ttfamily\small, backgroundcolor=\color{codigobg},
+  keywordstyle=\color{keyword}\bfseries, commentstyle=\color{comentario}\itshape,
+  stringstyle=\color{string},
+  frame=single, breaklines=true, showstringspaces=false,
+  morekeywords={library, ggplot, aes, geom_histogram, geom_boxplot,
+    geom_point, geom_smooth, geom_density, geom_errorbarh, geom_vline,
+    labs, theme_minimal, summarise, group_by, filter, mutate, arrange,
+    reorder, read_parquet, t.test, prop.test, qnorm, qt, qchisq,
+    weighted.mean, power.t.test, pwr.t.test}}
+
+\setlength{\parindent}{0pt}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries PONTIFICIA UNIVERSIDAD JAVERIANA}\\[3pt]
+Facultad de Ciencias Econ\'omicas y Administrativas\\[2pt]
+Estad\'istica 2026-II --- Prof.\ Jaime Polanco Jim\'enez\\[6pt]
+{\LARGE\bfseries Sesi\'on 4 (unificada con S05)}\\[3pt]
+{\large Estimaci\'on Puntual, Intervalos de Confianza\\
+para Medias, Varianzas, Proporciones y Tama\~no de Muestra}\\[6pt]
+Viernes 25 de septiembre de 2026 \quad (7:00--10:00 a.m.)
+\end{center}
+
+\vspace{6pt}
+\rule{\linewidth}{0.5pt}
+
+\tableofcontents
+
+\newpage
+
+% ============================================================================
+\section{Estimaci\'on Puntual}
+% ============================================================================
+
+\subsection{Par\'ametros vs.\ Estad\'isticos}
+
+\textbf{Par\'ametro}: caracter\'istica num\'erica de la \emph{poblaci\'on}, usualmente desconocida.
+\begin{itemize}
+  \item $\mu$ = media poblacional
+  \item $\sigma^2$ = varianza poblacional
+  \item $p$ = proporci\'on poblacional
+\end{itemize}
+
+\textbf{Estad\'istico}: caracter\'istica num\'erica de la \emph{muestra}, observable y calculable.
+\begin{itemize}
+  \item $\bar{x}$ = media muestral, estima $\mu$
+  \item $s^2$ = varianza muestral, estima $\sigma^2$
+  \item $\hat{p}$ = proporci\'on muestral, estima $p$
+\end{itemize}
+
+\textbf{Problema central de la inferencia}: usar estad\'isticos (observables) para aprender sobre par\'ametros (desconocidos).
+
+\subsection{Propiedades Deseables de un Estimador}
+
+Sea $\hat{\theta}$ un estimador del par\'ametro $\theta$.
+
+\subsubsection{1. Insesgamiento (\textit{unbiasedness})}
+
+Un estimador es \textbf{insesgado} si su valor esperado es igual al par\'ametro:
+\[
+E(\hat{\theta}) = \theta
+\]
+
+\textbf{Ejemplos}:
+\begin{itemize}
+  \item $E(\bar{X}) = \mu$ \quad (la media muestral es insesgada para $\mu$)
+  \item $E(S^2) = \sigma^2$ \quad (la varianza muestral con $n-1$ en el denominador es insesgada)
+\end{itemize}
+
+\textbf{Demostraci\'on} de que $E(\bar{X}) = \mu$:
+\[
+E(\bar{X}) = E\!\left(\frac{1}{n}\sum_{i=1}^{n} X_i\right)
+= \frac{1}{n}\sum_{i=1}^{n} E(X_i)
+= \frac{1}{n} \cdot n\mu = \mu
+\]
+
+\subsubsection{2. Eficiencia}
+
+Entre dos estimadores insesgados de $\theta$, preferimos el de \textbf{menor varianza}:
+\[
+\text{Var}(\hat{\theta}_1) < \text{Var}(\hat{\theta}_2) \implies \hat{\theta}_1 \text{ es m\'as eficiente}
+\]
+
+\textbf{Ejemplo}: para poblaciones normales, $\bar{X}$ es m\'as eficiente que la mediana para estimar $\mu$:
+\[
+\text{Var}(\bar{X}) = \frac{\sigma^2}{n}, \qquad
+\text{Var}(\text{Mediana}) \approx \frac{\pi}{2} \cdot \frac{\sigma^2}{n} \approx 1.57 \cdot \frac{\sigma^2}{n}
+\]
+
+\subsubsection{3. Consistencia}
+
+Un estimador es \textbf{consistente} si converge en probabilidad al par\'ametro cuando $n \to \infty$:
+\[
+\hat{\theta}_n \xrightarrow{p} \theta \quad \text{cuando } n \to \infty
+\]
+
+Formalmente: $\forall \varepsilon > 0$, $P(|\hat{\theta}_n - \theta| > \varepsilon) \to 0$ cuando $n \to \infty$.
+
+\textbf{Ejemplo}: por la Ley de Grandes N\'umeros, $\bar{X} \xrightarrow{p} \mu$.
+
+\subsection{Error Cuadr\'atico Medio (ECM)}
+
+El ECM combina sesgo y varianza:
+\[
+\text{ECM}(\hat{\theta}) = E\!\left[(\hat{\theta} - \theta)^2\right]
+= \text{Var}(\hat{\theta}) + [\text{Sesgo}(\hat{\theta})]^2
+\]
+
+Si el estimador es insesgado, $\text{ECM} = \text{Var}(\hat{\theta})$.
+
+\subsection{C\'odigo R: Simulaci\'on de Propiedades}
+
+\begin{lstlisting}
+library(tidyverse); library(arrow)
+saber_pro <- read_parquet("datos/saber_pro/saber_pro.parquet")
+poblacion <- saber_pro$MOD_INGLES_PUNT[!is.na(saber_pro$MOD_INGLES_PUNT)]
+mu_real <- mean(poblacion)
+
+# --- Insesgamiento y Consistencia ---
+set.seed(2026)
+B <- 2000
+tamanos <- c(10, 30, 100, 500, 2000)
+
+resultados <- map_dfr(tamanos, function(n) {
+  medias <- replicate(B, mean(sample(poblacion, n, replace = TRUE)))
+  tibble(n = n, media_muestral = medias)
+})
+
+resultados %>%
+  group_by(n) %>%
+  summarise(E_Xbar = mean(media_muestral),
+            sesgo  = mean(media_muestral) - mu_real,
+            var_Xbar = var(media_muestral))
+
+# --- Eficiencia: media vs mediana ---
+comparacion <- map_dfr(tamanos, function(n) {
+  medias   <- replicate(B, mean(sample(poblacion, n)))
+  medianas <- replicate(B, median(sample(poblacion, n)))
+  tibble(n = n,
+         estimador = rep(c("Media", "Mediana"), each = B),
+         valor = c(medias, medianas))
+})
+
+comparacion %>%
+  group_by(n, estimador) %>%
+  summarise(varianza = var(valor)) %>%
+  pivot_wider(names_from = estimador, values_from = varianza) %>%
+  mutate(eficiencia_relativa = Mediana / Media)
+\end{lstlisting}
+
+% ============================================================================
+\section{L\'ogica de los Intervalos de Confianza}
+% ============================================================================
+
+\subsection{Definici\'on}
+
+Un \textbf{intervalo de confianza (IC)} al nivel $(1-\alpha) \times 100\%$ para un par\'ametro $\theta$ es un intervalo $[L, U]$ tal que, si repiti\'eramos el muestreo muchas veces, $(1-\alpha) \times 100\%$ de los intervalos construidos contendr\'ian el verdadero $\theta$.
+
+\textbf{Estructura general}:
+\[
+\boxed{\text{IC} = \text{Estimaci\'on puntual} \pm \text{Margen de error}}
+\]
+
+\subsection{Margen de Error}
+
+Para la media con $\sigma$ conocida:
+\[
+E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
+\]
+
+\textbf{Componentes}:
+\begin{itemize}
+  \item $z_{\alpha/2}$: valor cr\'itico de la normal est\'andar (depende del nivel de confianza)
+  \item $\sigma / \sqrt{n}$: error est\'andar de $\bar{X}$
+  \item Mayor confianza $\Rightarrow$ mayor $z_{\alpha/2}$ $\Rightarrow$ mayor $E$ $\Rightarrow$ intervalo m\'as ancho
+  \item Mayor $n$ $\Rightarrow$ menor $E$ $\Rightarrow$ intervalo m\'as estrecho
+\end{itemize}
+
+\subsection{Interpretaci\'on Correcta}
+
+\begin{quote}
+\textbf{CORRECTO}: ``Si tom\'aramos 100 muestras y construy\'eramos un IC al 95\% con cada una, esperamos que aproximadamente 95 de esos intervalos contengan $\mu$.''
+\end{quote}
+
+\begin{quote}
+\textbf{INCORRECTO}: ``Hay un 95\% de probabilidad de que $\mu$ est\'e en $(a, b)$.'' \\
+\textit{Raz\'on}: $\mu$ es fijo; lo que var\'ia es el intervalo de muestra a muestra.
+\end{quote}
+
+% ============================================================================
+\section{IC para la Media: $\sigma$ Conocida (Distribuci\'on $z$)}
+% ============================================================================
+
+\subsection{Supuestos}
+\begin{enumerate}
+  \item Muestra aleatoria simple de tama\~no $n$
+  \item Poblaci\'on normal \textbf{O} $n \geq 30$ (por el TCL)
+  \item $\sigma$ conocida
+\end{enumerate}
+
+\subsection{Derivaci\'on}
+
+Por el TCL: $\bar{X} \sim N\!\left(\mu, \frac{\sigma^2}{n}\right)$. Estandarizando:
+\[
+Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\]
+
+Queremos que $P(-z_{\alpha/2} \leq Z \leq z_{\alpha/2}) = 1-\alpha$:
+\begin{align*}
+P\!\left(-z_{\alpha/2} \leq \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \leq z_{\alpha/2}\right) &= 1-\alpha \\[4pt]
+P\!\left(\bar{X} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \leq \mu \leq \bar{X} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right) &= 1-\alpha
+\end{align*}
+
+\subsection{F\'ormula}
+
+\[
+\boxed{\text{IC}_{1-\alpha}(\mu) = \bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}
+= \left(\bar{x} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}},\;\; \bar{x} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right)}
+\]
+
+\subsection{Valores Cr\'iticos de $z$}
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Nivel de confianza} & $(1-\alpha)$ & $\alpha/2$ & $z_{\alpha/2}$ \\
+\midrule
+90\% & 0.90 & 0.05 & 1.645 \\
+95\% & 0.95 & 0.025 & 1.960 \\
+99\% & 0.99 & 0.005 & 2.576 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ejemplo Num\'erico Paso a Paso}
+
+\textbf{Datos}: $n = 120$, $\bar{x} = 162.5$, $\sigma = 18$ (conocida de censos previos).
+
+\textbf{Paso 1}: Identificar nivel de confianza y valor cr\'itico.
+\[
+(1-\alpha) = 0.95 \implies \alpha = 0.05 \implies z_{0.025} = 1.960
+\]
+
+\textbf{Paso 2}: Calcular error est\'andar.
+\[
+\text{SE} = \frac{\sigma}{\sqrt{n}} = \frac{18}{\sqrt{120}} = \frac{18}{10.954} = 1.643
+\]
+
+\textbf{Paso 3}: Calcular margen de error.
+\[
+E = z_{\alpha/2} \cdot \text{SE} = 1.960 \times 1.643 = 3.22
+\]
+
+\textbf{Paso 4}: Construir el intervalo.
+\[
+\text{IC}_{95\%} = 162.5 \pm 3.22 = (159.28, \; 165.72)
+\]
+
+\textbf{Interpretaci\'on}: estamos 95\% confiados de que la media poblacional de \texttt{MOD\_INGLES\_PUNT} para Ciencias Econ\'omicas est\'a entre 159.28 y 165.72.
+
+\begin{lstlisting}
+# En R
+xbar <- 162.5; sigma <- 18; n <- 120; alpha <- 0.05
+z <- qnorm(1 - alpha/2)             # 1.96
+ee <- sigma / sqrt(n)               # 1.643
+E <- z * ee                         # 3.22
+c(xbar - E, xbar + E)               # (159.28, 165.72)
+\end{lstlisting}
+
+% ============================================================================
+\section{IC para la Media: $\sigma$ Desconocida (Distribuci\'on $t$)}
+% ============================================================================
+
+\subsection{El Problema}
+
+En la pr\'actica, \textbf{casi nunca} conocemos $\sigma$. Al reemplazar $\sigma$ por $s$ (desviaci\'on est\'andar muestral), el estad\'istico ya no sigue una normal est\'andar:
+\[
+t = \frac{\bar{X} - \mu}{s/\sqrt{n}} \sim t(n-1)
+\]
+
+La distribuci\'on $t$ de Student tiene:
+\begin{itemize}
+  \item Forma de campana, sim\'etrica, centrada en 0
+  \item \textbf{Colas m\'as pesadas} que la normal (m\'as incertidumbre)
+  \item Par\'ametro: grados de libertad $\text{gl} = n - 1$
+  \item Cuando $n \to \infty$: $t(n-1) \to N(0,1)$
+\end{itemize}
+
+\subsection{F\'ormula}
+
+\[
+\boxed{\text{IC}_{1-\alpha}(\mu) = \bar{x} \pm t_{\alpha/2,\; n-1} \cdot \frac{s}{\sqrt{n}}}
+\]
+
+donde $t_{\alpha/2,\; n-1}$ es el valor cr\'itico de la distribuci\'on $t$ con $n-1$ grados de libertad.
+
+\subsection{Comparaci\'on $z$ vs.\ $t$}
+
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+\textbf{gl} & $n$ & $t_{0.025,\; n-1}$ & $z_{0.025}$ & Diferencia \\
+\midrule
+5  & 6   & 2.571 & 1.960 & $+31\%$ \\
+10 & 11  & 2.228 & 1.960 & $+14\%$ \\
+20 & 21  & 2.086 & 1.960 & $+6\%$ \\
+30 & 31  & 2.042 & 1.960 & $+4\%$ \\
+60 & 61  & 2.000 & 1.960 & $+2\%$ \\
+$\infty$ & $\infty$ & 1.960 & 1.960 & $0\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Con $n \geq 30$, la diferencia es peque\~na ($<5\%$), pero siempre es mejor usar $t$ cuando $\sigma$ es desconocida.
+
+\subsection{Ejemplo con \texttt{t.test()} en R}
+
+\begin{lstlisting}
+ingles <- saber_pro$MOD_INGLES_PUNT[!is.na(saber_pro$MOD_INGLES_PUNT)]
+
+# IC al 95% con t.test()
+resultado <- t.test(ingles, conf.level = 0.95)
+print(resultado)
+
+# Extraer IC
+resultado$conf.int
+
+# IC al 99%
+t.test(ingles, conf.level = 0.99)$conf.int
+
+# IC al 90%
+t.test(ingles, conf.level = 0.90)$conf.int
+\end{lstlisting}
+
+\textbf{Interpretaci\'on del output de \texttt{t.test()}}:
+\begin{itemize}
+  \item \texttt{t = ...}: estad\'istico $t$ (para $H_0: \mu = 0$)
+  \item \texttt{df = n-1}: grados de libertad
+  \item \texttt{95 percent confidence interval}: l\'imites del IC
+  \item \texttt{mean of x}: estimaci\'on puntual $\bar{x}$
+\end{itemize}
+
+% ============================================================================
+\section{IC para la Varianza (Distribuci\'on $\chi^2$)}
+% ============================================================================
+
+\subsection{Motivaci\'on}
+
+A veces interesa estimar la \textbf{variabilidad} poblacional:
+\begin{itemize}
+  \item Educaci\'on: ?`qu\'e tan heterog\'eneo es el rendimiento en ingl\'es?
+  \item Finanzas: volatilidad de la TRM para planear importaciones
+  \item Log\'istica: variabilidad en tiempos de entrega
+\end{itemize}
+
+\subsection{Distribuci\'on Muestral de $S^2$}
+
+Si la poblaci\'on es normal, entonces:
+\[
+\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)
+\]
+
+\textbf{Propiedades de $\chi^2(k)$}:
+\begin{itemize}
+  \item Asim\'etrica (sesgada a la derecha)
+  \item Solo valores positivos ($\chi^2 \geq 0$)
+  \item $E(\chi^2) = k$, \; $\text{Var}(\chi^2) = 2k$
+  \item Con $k$ grande, se aproxima a la normal
+\end{itemize}
+
+\subsection{F\'ormula del IC para $\sigma^2$}
+
+\[
+\boxed{\text{IC}_{1-\alpha}(\sigma^2) = \left(\frac{(n-1)s^2}{\chi^2_{\alpha/2,\; n-1}}, \;\; \frac{(n-1)s^2}{\chi^2_{1-\alpha/2,\; n-1}}\right)}
+\]
+
+donde:
+\begin{itemize}
+  \item $\chi^2_{\alpha/2,\; n-1}$ = cuantil superior (deja $\alpha/2$ en la cola derecha)
+  \item $\chi^2_{1-\alpha/2,\; n-1}$ = cuantil inferior (deja $\alpha/2$ en la cola izquierda)
+\end{itemize}
+
+\textbf{IC para $\sigma$}: tomar ra\'iz cuadrada de ambos l\'imites.
+
+\subsection{Ejemplo Num\'erico}
+
+\textbf{Datos}: $n = 120$, $s^2 = 324$ (entonces $s = 18$).
+
+\textbf{Paso 1}: Valores cr\'iticos $\chi^2$ con $\text{gl} = 119$, $\alpha = 0.05$:
+\[
+\chi^2_{0.025,\; 119} = 152.22, \qquad \chi^2_{0.975,\; 119} = 89.39
+\]
+
+\textbf{Paso 2}: IC para $\sigma^2$:
+\[
+\left(\frac{119 \times 324}{152.22}, \;\; \frac{119 \times 324}{89.39}\right) = (253.5, \; 431.6)
+\]
+
+\textbf{Paso 3}: IC para $\sigma$:
+\[
+\left(\sqrt{253.5}, \; \sqrt{431.6}\right) = (15.9, \; 20.8)
+\]
+
+El IC es \textbf{asim\'etrico}: la estimaci\'on $s = 18$ no est\'a en el centro del intervalo.
+
+\begin{lstlisting}
+n <- 120; s2 <- 324; gl <- n - 1; alpha <- 0.05
+chi2_inf <- qchisq(alpha/2, df = gl)       # 89.39
+chi2_sup <- qchisq(1 - alpha/2, df = gl)   # 152.22
+
+ic_var <- c((gl * s2) / chi2_sup, (gl * s2) / chi2_inf)
+ic_sd  <- sqrt(ic_var)
+cat("IC para sigma^2:", round(ic_var, 1))   # (253.5, 431.6)
+cat("IC para sigma:",   round(ic_sd, 1))    # (15.9, 20.8)
+\end{lstlisting}
+
+% ============================================================================
+\section{IC para Proporciones}
+% ============================================================================
+
+\subsection{Contexto}
+
+Queremos estimar la proporci\'on poblacional $p$ de estudiantes de Ciencias Econ\'omicas que superan el nivel B1 en ingl\'es.
+
+\subsection{Distribuci\'on Muestral de $\hat{p}$}
+
+Si $n$ es suficientemente grande ($np \geq 5$ y $n(1-p) \geq 5$):
+\[
+\hat{p} = \frac{X}{n} \approx N\!\left(p, \; \frac{p(1-p)}{n}\right)
+\]
+
+donde $X$ = n\'umero de \'exitos en la muestra.
+
+\subsection{F\'ormula del IC para $p$}
+
+\[
+\boxed{\text{IC}_{1-\alpha}(p) = \hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}}
+\]
+
+\textbf{Error est\'andar estimado}:
+\[
+\widehat{\text{SE}}(\hat{p}) = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+
+\subsection{Ejemplo Paso a Paso}
+
+\textbf{Datos}: de $n = 500$ estudiantes de Ciencias Econ\'omicas, $X = 135$ superan B1. Calcular IC al 95\%.
+
+\textbf{Paso 1}: Proporci\'on muestral.
+\[
+\hat{p} = \frac{135}{500} = 0.27
+\]
+
+\textbf{Paso 2}: Error est\'andar estimado.
+\[
+\widehat{\text{SE}} = \sqrt{\frac{0.27 \times 0.73}{500}} = \sqrt{\frac{0.1971}{500}} = \sqrt{0.000394} = 0.01986
+\]
+
+\textbf{Paso 3}: Margen de error.
+\[
+E = 1.96 \times 0.01986 = 0.0389
+\]
+
+\textbf{Paso 4}: Intervalo.
+\[
+\text{IC}_{95\%}(p) = 0.27 \pm 0.039 = (0.231, \; 0.309)
+\]
+
+\textbf{Interpretaci\'on}: estamos 95\% confiados de que entre 23.1\% y 30.9\% de los estudiantes de Ciencias Econ\'omicas superan B1 en ingl\'es.
+
+\subsection{Verificaci\'on de Supuestos}
+
+Antes de usar esta f\'ormula, verificar:
+\[
+n\hat{p} = 500 \times 0.27 = 135 \geq 5 \quad\checkmark
+\]
+\[
+n(1-\hat{p}) = 500 \times 0.73 = 365 \geq 5 \quad\checkmark
+\]
+
+\subsection{C\'odigo R}
+
+\begin{lstlisting}
+# Calcular proporcion de estudiantes que superan B1
+tabla_mcer <- table(saber_pro$MOD_INGLES_DESEM)
+print(tabla_mcer)
+
+# Definir "exito" = B1 o B+
+exitos <- sum(saber_pro$MOD_INGLES_DESEM %in% c("B1", "B+"),
+              na.rm = TRUE)
+n_total <- sum(!is.na(saber_pro$MOD_INGLES_DESEM))
+p_hat <- exitos / n_total
+
+cat("p_hat =", round(p_hat, 4))
+cat("Exitos:", exitos, "de", n_total)
+
+# IC con prop.test()
+resultado_prop <- prop.test(exitos, n_total, conf.level = 0.95)
+print(resultado_prop)
+resultado_prop$conf.int
+
+# IC manual
+se_p <- sqrt(p_hat * (1 - p_hat) / n_total)
+E <- qnorm(0.975) * se_p
+c(p_hat - E, p_hat + E)
+\end{lstlisting}
+
+\subsection{IC para Proporci\'on por Departamento}
+
+\begin{lstlisting}
+library(dplyr)
+
+ic_prop_deptos <- saber_pro %>%
+  filter(!is.na(MOD_INGLES_DESEM)) %>%
+  group_by(ESTU_DEPTO_RESIDE) %>%
+  summarise(
+    n = n(),
+    exitos = sum(MOD_INGLES_DESEM %in% c("B1", "B+")),
+    p_hat = exitos / n,
+    se = sqrt(p_hat * (1 - p_hat) / n),
+    ic_inf = p_hat - 1.96 * se,
+    ic_sup = p_hat + 1.96 * se
+  ) %>%
+  filter(n >= 30)
+
+# Forest plot de proporciones
+library(ggplot2)
+ggplot(ic_prop_deptos,
+       aes(x = p_hat, y = reorder(ESTU_DEPTO_RESIDE, p_hat))) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = ic_inf, xmax = ic_sup),
+                 height = 0.3, color = "steelblue") +
+  geom_vline(xintercept = mean(ic_prop_deptos$p_hat),
+             linetype = "dashed", color = "red") +
+  labs(x = "Proporcion que supera B1 (IC 95%)",
+       y = "Departamento",
+       title = "Proporcion de estudiantes sobre B1 por departamento") +
+  theme_minimal()
+\end{lstlisting}
+
+% ============================================================================
+\section{Tama\~no de Muestra \'Optimo}
+% ============================================================================
+
+\subsection{Para la Media}
+
+\textbf{Pregunta}: ?`cu\'antas observaciones necesitamos para estimar $\mu$ con un margen de error $E$ al nivel de confianza $(1-\alpha)$?
+
+Partimos de $E = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}$ y despejamos $n$:
+
+\[
+\boxed{n = \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2}
+\]
+
+\textbf{Ejemplo}: estimar la media de \texttt{MOD\_INGLES\_PUNT} con $E = \pm 2$ puntos al 95\%.
+
+Suponiendo $\sigma \approx 18$ (de datos anteriores):
+\[
+n = \left(\frac{1.96 \times 18}{2}\right)^2 = \left(\frac{35.28}{2}\right)^2 = (17.64)^2 = 311.2 \approx 312
+\]
+
+Se necesitan al menos \textbf{312 estudiantes}.
+
+\begin{lstlisting}
+sigma <- 18; E <- 2; z <- qnorm(0.975)
+n_optimo <- ceiling((z * sigma / E)^2)
+cat("Tamano de muestra optimo:", n_optimo)  # 312
+\end{lstlisting}
+
+\subsection{Para una Proporci\'on}
+
+Partimos de $E = z_{\alpha/2} \sqrt{\frac{p(1-p)}{n}}$ y despejamos $n$:
+
+\[
+\boxed{n = \frac{z_{\alpha/2}^2 \cdot p(1-p)}{E^2}}
+\]
+
+Si no tenemos estimaci\'on previa de $p$, usamos $p = 0.5$ (caso conservador, maximiza $p(1-p)$).
+
+\textbf{Ejemplo}: estimar la proporci\'on de estudiantes que superan B1 con $E = \pm 0.03$ (3 puntos porcentuales) al 95\%.
+
+Con $p = 0.27$ (estimaci\'on previa):
+\[
+n = \frac{1.96^2 \times 0.27 \times 0.73}{0.03^2} = \frac{3.8416 \times 0.1971}{0.0009} = \frac{0.7573}{0.0009} = 841.4 \approx 842
+\]
+
+Con $p = 0.5$ (conservador):
+\[
+n = \frac{1.96^2 \times 0.25}{0.03^2} = \frac{0.9604}{0.0009} = 1067.1 \approx 1068
+\]
+
+\begin{lstlisting}
+# Con estimacion previa de p
+p_est <- 0.27; E <- 0.03; z <- qnorm(0.975)
+n_prop <- ceiling(z^2 * p_est * (1 - p_est) / E^2)
+cat("n con p = 0.27:", n_prop)   # 842
+
+# Caso conservador (p = 0.5)
+n_conservador <- ceiling(z^2 * 0.25 / E^2)
+cat("n conservador:", n_conservador)  # 1068
+\end{lstlisting}
+
+\subsection{Efecto del Margen de Error sobre $n$}
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$E$ & $n$ (media, $\sigma=18$) & $E$ & $n$ (proporci\'on, $p=0.27$) \\
+\midrule
+$\pm 5$ & 50 & $\pm 0.05$ & 303 \\
+$\pm 3$ & 139 & $\pm 0.04$ & 474 \\
+$\pm 2$ & 312 & $\pm 0.03$ & 842 \\
+$\pm 1$ & 1246 & $\pm 0.02$ & 1894 \\
+$\pm 0.5$ & 4983 & $\pm 0.01$ & 7573 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Observaci\'on clave}: reducir el margen de error a la mitad requiere \textbf{cuadruplicar} el tama\~no de muestra (porque $n \propto 1/E^2$).
+
+% ============================================================================
+\section{Forest Plot Departamental}
+% ============================================================================
+
+\subsection{Procedimiento}
+
+\begin{enumerate}
+  \item Calcular IC al 95\% para $\mu$ en cada departamento usando $t$
+  \item Ordenar departamentos por media
+  \item Graficar puntos (medias) con barras de error horizontales (IC)
+  \item A\~nadir l\'inea de referencia en la media nacional
+  \item Identificar departamentos que difieren significativamente
+\end{enumerate}
+
+\subsection{C\'odigo R Completo}
+
+\begin{lstlisting}
+ic_deptos <- saber_pro %>%
+  filter(!is.na(MOD_INGLES_PUNT)) %>%
+  group_by(ESTU_DEPTO_RESIDE) %>%
+  summarise(
+    n = n(),
+    media = mean(MOD_INGLES_PUNT),
+    sd = sd(MOD_INGLES_PUNT),
+    ee = sd / sqrt(n),
+    t_crit = qt(0.975, df = n - 1),
+    ic_inf = media - t_crit * ee,
+    ic_sup = media + t_crit * ee
+  ) %>%
+  filter(n >= 30) %>%
+  arrange(media)
+
+media_nacional <- weighted.mean(ic_deptos$media, ic_deptos$n)
+
+ggplot(ic_deptos,
+       aes(x = media, y = reorder(ESTU_DEPTO_RESIDE, media))) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = ic_inf, xmax = ic_sup),
+                 height = 0.3, color = "steelblue") +
+  geom_vline(xintercept = media_nacional,
+             linetype = "dashed", color = "red") +
+  labs(x = "Media de MOD_INGLES_PUNT (IC 95%)",
+       y = "Departamento",
+       title = "IC por Departamento - Ciencias Economicas") +
+  theme_minimal()
+
+# Departamentos significativamente diferentes
+cat("Superiores a la media nacional:\n")
+ic_deptos %>% filter(ic_inf > media_nacional) %>% print()
+cat("\nInferiores a la media nacional:\n")
+ic_deptos %>% filter(ic_sup < media_nacional) %>% print()
+\end{lstlisting}
+
+% ============================================================================
+\section{Resumen: ?`Cu\'ando Usar $z$, $t$ o $\chi^2$?}
+% ============================================================================
+
+\begin{center}
+\begin{tabular}{p{2.5cm}p{3cm}p{3cm}p{4.5cm}}
+\toprule
+\textbf{Par\'ametro} & \textbf{Condici\'on} & \textbf{Distribuci\'on} & \textbf{F\'ormula} \\
+\midrule
+$\mu$ & $\sigma$ conocida & $z$ (normal) & $\bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}$ \\[6pt]
+$\mu$ & $\sigma$ desconocida & $t(n-1)$ & $\bar{x} \pm t_{\alpha/2,n-1} \frac{s}{\sqrt{n}}$ \\[6pt]
+$\sigma^2$ & Pobl.\ normal & $\chi^2(n-1)$ & $\left(\frac{(n-1)s^2}{\chi^2_{\alpha/2}},\; \frac{(n-1)s^2}{\chi^2_{1-\alpha/2}}\right)$ \\[6pt]
+$p$ & $np \geq 5$, $n(1-p) \geq 5$ & $z$ (normal) & $\hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Regla pr\'actica}: si est\'as estimando $\mu$ y no te dicen expl\'icitamente que $\sigma$ es conocida, \textbf{usa la distribuci\'on $t$}.
+
+\subsection{Diagrama de Flujo}
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=0.8cm and 2cm,
+  decision/.style={diamond, draw, fill=blue!15, text width=2.2cm, align=center, inner sep=1pt, font=\small},
+  block/.style={rectangle, draw, fill=green!15, text width=3cm, align=center, rounded corners, minimum height=0.8cm, font=\small},
+  line/.style={draw, -{Latex[length=2mm]}}
+]
+  \node [block] (inicio) {?`Qu\'e par\'ametro?};
+  \node [decision, below=0.6cm of inicio] (param) {$\mu$, $\sigma^2$ o $p$?};
+
+  \node [decision, below left=1cm and 2cm of param] (sigma) {?`$\sigma$ conocida?};
+  \node [block, below left=0.8cm and 0.5cm of sigma] (z_dist) {Usar $z$};
+  \node [block, below right=0.8cm and 0.5cm of sigma] (t_dist) {Usar $t(n-1)$};
+
+  \node [block, below=1cm of param] (chi2) {Usar $\chi^2(n-1)$};
+  \node [block, below right=1cm and 2cm of param] (z_prop) {Usar $z$ con $\widehat{\text{SE}}(\hat{p})$};
+
+  \path [line] (inicio) -- (param);
+  \path [line] (param) -- node[above, sloped, font=\scriptsize] {$\mu$} (sigma);
+  \path [line] (param) -- node[left, font=\scriptsize] {$\sigma^2$} (chi2);
+  \path [line] (param) -- node[above, sloped, font=\scriptsize] {$p$} (z_prop);
+  \path [line] (sigma) -- node[left, font=\scriptsize] {S\'i} (z_dist);
+  \path [line] (sigma) -- node[right, font=\scriptsize] {No} (t_dist);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Supuestos y Robustez}
+
+\begin{center}
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+\textbf{M\'etodo} & \textbf{Supuesto clave} & \textbf{Robustez} \\
+\midrule
+IC para $\mu$ ($z$ o $t$) & Normalidad O $n \geq 30$ & Robusta con $n$ grande \\[4pt]
+IC para $\sigma^2$ ($\chi^2$) & Poblaci\'on normal & \textbf{NO robusta}; sensible a no normalidad \\[4pt]
+IC para $p$ ($z$) & $np \geq 5$ y $n(1-p) \geq 5$ & Robusta cuando se cumple la condici\'on \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+\section{Formulario R\'apido}
+% ============================================================================
+
+\subsection{F\'ormulas de IC}
+
+\begin{align}
+\text{IC}(\mu, \sigma \text{ conoc.}) &= \bar{x} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \tag{1} \\[6pt]
+\text{IC}(\mu, \sigma \text{ desc.}) &= \bar{x} \pm t_{\alpha/2,n-1} \frac{s}{\sqrt{n}} \tag{2} \\[6pt]
+\text{IC}(\sigma^2) &= \left(\frac{(n-1)s^2}{\chi^2_{\alpha/2,n-1}},\; \frac{(n-1)s^2}{\chi^2_{1-\alpha/2,n-1}}\right) \tag{3} \\[6pt]
+\text{IC}(p) &= \hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \tag{4}
+\end{align}
+
+\subsection{F\'ormulas de Tama\~no de Muestra}
+
+\begin{align}
+n_{\mu} &= \left(\frac{z_{\alpha/2} \cdot \sigma}{E}\right)^2 \tag{5} \\[6pt]
+n_{p} &= \frac{z_{\alpha/2}^2 \cdot p(1-p)}{E^2} \tag{6}
+\end{align}
+
+\subsection{Funciones R Clave}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Funci\'on} & \textbf{Uso} \\
+\midrule
+\texttt{qnorm(1 - alpha/2)} & Valor cr\'itico $z_{\alpha/2}$ \\
+\texttt{qt(1 - alpha/2, df)} & Valor cr\'itico $t_{\alpha/2, \text{gl}}$ \\
+\texttt{qchisq(p, df)} & Cuantil $p$ de $\chi^2(\text{gl})$ \\
+\texttt{t.test(x, conf.level)} & IC para $\mu$ con $\sigma$ desconocida \\
+\texttt{prop.test(x, n, conf.level)} & IC para proporci\'on $p$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+\section{Lecturas y Ejercicios}
+% ============================================================================
+
+\textbf{Lectura}: Anderson et al., Cap\'itulo 8 --- \textit{Interval Estimation} (secciones 8.1--8.4).
+
+\textbf{Problem Set 4}: asignado hoy (25 sep), entrega el 1 de octubre (antes de la sesi\'on 6). Cubre IC para medias, proporciones, forest plot departamental y tama\~no de muestra.
+
+\vspace{12pt}
+\rule{\linewidth}{0.4pt}
+\begin{center}
+{\small Pontificia Universidad Javeriana $\cdot$
+  Facultad de Ciencias Econ\'omicas y Administrativas $\cdot$ 2026-II}
+\end{center}
+
+\end{document}
